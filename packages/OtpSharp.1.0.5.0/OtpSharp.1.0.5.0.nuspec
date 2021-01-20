@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>OtpSharp</id>
+    <version>1.0.5.0</version>
+    <title>OTP Sharp</title>
+    <authors>Devin Martin</authors>
+    <owners>Devin Martin</owners>
+    <licenseUrl>https://s3.amazonaws.com/OtpSharp/LICENSE.txt</licenseUrl>
+    <projectUrl>https://bitbucket.org/devinmartin/otp-sharp/wiki/Home</projectUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>This is an implementation of HOTP and TOTP which are commonly used for multi factor authentication by using a shared key between the client and the server to generate and verify one time use codes.  This library is capable of generating and verifying both TOTP and HOTP authentication codes.  The calculations in this library are known to be compatible with Google 2-Step Verification and consequently the Google Authenticator smartphone app.  It is also known to be able to generate codes for Amazon Web Services Multi Factor Authentication and Dropbox 2 step authentication.  It should work with any other service or client that is RFC compliant.
+
+This library is released under an MIT license. No warranty is provided as to the correctness of the library and the consumer of the library assumes all risk for the use thereof, as per the MIT license.
+
+Every effort has gone into implementing this library in accordance with the RFCs mentioned above. However it is up to the users of this library to read through the RFCs and ensure that this implementation is in accordance with the security procedures outlined therein.
+
+The implementation includes the code calculation as well as simple verification. Persistence of the keys, secure key storage, ensuring that a single code can't be validated multiple times and other things are not a part of this library. Thus far those functions (and any others mentioned in the RFCs) are up to the consumer of this library.
+
+For documentation please visit the project website.</description>
+    <summary>An implementation of HOTP or HMAC One Time Paswords (RFC 4226) and TOTP or Timed One Time Passwords (RFC 6238) in C#.  Additionally contains a base 32 encoder.</summary>
+    <releaseNotes>1.0.4 Changed the Protected Key API to be more explicit (may break existing direct useage of the protected key)
+
+The protected key no longer implicitly causes side effects (destroying the plaintext key provided must be done explicitly)
+
+Added a time correction class with experimental NTP abilities.
+
+Support for .net 3.5 as well as client profiles with some minor limitations.
+
+1.0.3 Fixed unexpected behavior where the plaintext key provided to an HOTP or TOTP object will be scrambled.  Now it will remain intact.  Added constructor overloads to provide a protected key instead of a byte array if desired.</releaseNotes>
+    <copyright>Copyright 2012-2013 Devin Martin</copyright>
+    <tags>authentication OATH totp otp hotp base32 multi-factor two-factor factor security login OATH-HOTP OATH-TOTP</tags>
+    <references>
+      <reference file="OtpSharp.dll" />
+    </references>
+  </metadata>
+</package>

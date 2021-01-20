@@ -1,0 +1,198 @@
+﻿namespace KeeOtp2
+{
+    partial class Settings
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.pictureBoxBanner = new System.Windows.Forms.PictureBox();
+            this.groupBoxSettings = new System.Windows.Forms.GroupBox();
+            this.labelMigrateButton = new System.Windows.Forms.Label();
+            this.buttonMigrate = new System.Windows.Forms.Button();
+            this.labelMigrateInfo = new System.Windows.Forms.Label();
+            this.groupBoxAbout = new System.Windows.Forms.GroupBox();
+            this.labelAbout = new System.Windows.Forms.Label();
+            this.buttonOK = new System.Windows.Forms.Button();
+            this.buttonCancel = new System.Windows.Forms.Button();
+            this.labelMigrationStatus = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBanner)).BeginInit();
+            this.groupBoxSettings.SuspendLayout();
+            this.groupBoxAbout.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // pictureBoxBanner
+            // 
+            this.pictureBoxBanner.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pictureBoxBanner.Location = new System.Drawing.Point(0, 0);
+            this.pictureBoxBanner.Name = "pictureBoxBanner";
+            this.pictureBoxBanner.Size = new System.Drawing.Size(327, 50);
+            this.pictureBoxBanner.TabIndex = 0;
+            this.pictureBoxBanner.TabStop = false;
+            // 
+            // groupBoxSettings
+            // 
+            this.groupBoxSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSettings.Controls.Add(this.labelMigrateInfo);
+            this.groupBoxSettings.Controls.Add(this.buttonMigrate);
+            this.groupBoxSettings.Controls.Add(this.labelMigrateButton);
+            this.groupBoxSettings.Location = new System.Drawing.Point(12, 56);
+            this.groupBoxSettings.Name = "groupBoxSettings";
+            this.groupBoxSettings.Size = new System.Drawing.Size(303, 84);
+            this.groupBoxSettings.TabIndex = 1;
+            this.groupBoxSettings.TabStop = false;
+            this.groupBoxSettings.Text = "Settings";
+            // 
+            // labelMigrateButton
+            // 
+            this.labelMigrateButton.AutoSize = true;
+            this.labelMigrateButton.Location = new System.Drawing.Point(6, 16);
+            this.labelMigrateButton.Name = "labelMigrateButton";
+            this.labelMigrateButton.Size = new System.Drawing.Size(167, 13);
+            this.labelMigrateButton.TabIndex = 2;
+            this.labelMigrateButton.Text = "Migrate every enty to built-in OTP:";
+            // 
+            // buttonMigrate
+            // 
+            this.buttonMigrate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonMigrate.Location = new System.Drawing.Point(222, 11);
+            this.buttonMigrate.Name = "buttonMigrate";
+            this.buttonMigrate.Size = new System.Drawing.Size(75, 23);
+            this.buttonMigrate.TabIndex = 3;
+            this.buttonMigrate.Text = "Migrate";
+            this.buttonMigrate.UseVisualStyleBackColor = true;
+            this.buttonMigrate.Click += new System.EventHandler(this.buttonMigrate_Click);
+            // 
+            // labelMigrateInfo
+            // 
+            this.labelMigrateInfo.AutoSize = true;
+            this.labelMigrateInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.5F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelMigrateInfo.Location = new System.Drawing.Point(6, 37);
+            this.labelMigrateInfo.Name = "labelMigrateInfo";
+            this.labelMigrateInfo.Size = new System.Drawing.Size(267, 39);
+            this.labelMigrateInfo.TabIndex = 2;
+            this.labelMigrateInfo.Text = "(*Since KeePass 2.47, OTPs can generated by a built-in\r\nfunction. This makes it o" +
+    "bsolete to keep your OTP keys\r\nsaved in KeeOtp(1) format. It is also recommended" +
+    "!)";
+            // 
+            // groupBoxAbout
+            // 
+            this.groupBoxAbout.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxAbout.Controls.Add(this.labelAbout);
+            this.groupBoxAbout.Location = new System.Drawing.Point(12, 146);
+            this.groupBoxAbout.Name = "groupBoxAbout";
+            this.groupBoxAbout.Size = new System.Drawing.Size(303, 96);
+            this.groupBoxAbout.TabIndex = 2;
+            this.groupBoxAbout.TabStop = false;
+            this.groupBoxAbout.Text = "About";
+            // 
+            // labelAbout
+            // 
+            this.labelAbout.AutoSize = true;
+            this.labelAbout.Location = new System.Drawing.Point(63, 16);
+            this.labelAbout.Name = "labelAbout";
+            this.labelAbout.Size = new System.Drawing.Size(176, 65);
+            this.labelAbout.TabIndex = 0;
+            this.labelAbout.Text = "KeeOtp2 by tiuub.\r\nLicense: MIT\r\n\r\nKeeOtp2 is based on KeeOtp(1).\r\nOriginally dev" +
+    "eloped by devinmartin.";
+            this.labelAbout.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // buttonOK
+            // 
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.buttonOK.Location = new System.Drawing.Point(240, 248);
+            this.buttonOK.Name = "buttonOK";
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
+            this.buttonOK.TabIndex = 3;
+            this.buttonOK.Text = "OK";
+            this.buttonOK.UseVisualStyleBackColor = true;
+            // 
+            // buttonCancel
+            // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonCancel.Enabled = false;
+            this.buttonCancel.Location = new System.Drawing.Point(159, 248);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
+            this.buttonCancel.TabIndex = 4;
+            this.buttonCancel.Text = "Cancel";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Visible = false;
+            // 
+            // labelMigrationStatus
+            // 
+            this.labelMigrationStatus.AutoSize = true;
+            this.labelMigrationStatus.Enabled = false;
+            this.labelMigrationStatus.Location = new System.Drawing.Point(18, 253);
+            this.labelMigrationStatus.Name = "labelMigrationStatus";
+            this.labelMigrationStatus.Size = new System.Drawing.Size(89, 13);
+            this.labelMigrationStatus.TabIndex = 5;
+            this.labelMigrationStatus.Text = "Loaded 0 entries!";
+            this.labelMigrationStatus.Visible = false;
+            // 
+            // Settings
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(327, 279);
+            this.Controls.Add(this.labelMigrationStatus);
+            this.Controls.Add(this.buttonCancel);
+            this.Controls.Add(this.buttonOK);
+            this.Controls.Add(this.groupBoxAbout);
+            this.Controls.Add(this.groupBoxSettings);
+            this.Controls.Add(this.pictureBoxBanner);
+            this.Name = "Settings";
+            this.Text = "Settings";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Settings_FormClosing);
+            this.Load += new System.EventHandler(this.Settings_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBanner)).EndInit();
+            this.groupBoxSettings.ResumeLayout(false);
+            this.groupBoxSettings.PerformLayout();
+            this.groupBoxAbout.ResumeLayout(false);
+            this.groupBoxAbout.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.PictureBox pictureBoxBanner;
+        private System.Windows.Forms.GroupBox groupBoxSettings;
+        private System.Windows.Forms.Label labelMigrateInfo;
+        private System.Windows.Forms.Button buttonMigrate;
+        private System.Windows.Forms.Label labelMigrateButton;
+        private System.Windows.Forms.GroupBox groupBoxAbout;
+        private System.Windows.Forms.Label labelAbout;
+        private System.Windows.Forms.Button buttonOK;
+        private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.Label labelMigrationStatus;
+    }
+}
