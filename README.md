@@ -1,5 +1,5 @@
 # KeeOtp2
-KeeOtp2 is a plugin for [KeePass](http://keepass.info). It provides a form to display one time passwords and is fully compatible with the built-in OTP function. (KeePass >= 2.47)
+KeeOtp2 is a plugin for [KeePass](http://keepass.info). It provides a form to display one time passwords and is fully compatible with the built-in OTP function.
 
 [![Latest Release](https://img.shields.io/github/v/release/tiuub/KeeOtp2)](https://github.com/tiuub/KeeOtp2/releases/latest)
 [![GitHub All Releases](https://img.shields.io/github/downloads/tiuub/KeeOtp2/total)](https://github.com/tiuub/KeeOtp2/releases/latest)
