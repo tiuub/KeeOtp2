@@ -22,7 +22,7 @@ Rightclick on a entry and click on **Timed One Time Password**.
 
 This will open the configuration window.
 
-![Configuration Window](Screenshots/screenshot-1.PNG)
+![Configuration Window](Screenshots/screenshot-1.jpg)
 
 Enter the key you have received and press **OK**.
 
@@ -35,7 +35,7 @@ Click on **Tools**, navigate to **KeeOtp2** and press **Settings**.
 
 You can migrate all of your entries to KeeOtp2/Built-In OTP by clicking on **Migrate**.
 
-![Settings](Screenshots/screenshot-2.PNG)
+![Settings](Screenshots/screenshot-2.jpg)
 
 ### Or
 
@@ -43,11 +43,7 @@ Just right click any entry in your database and click on **Timed One Time Passwo
 
 Click on **Edit**. When the configuration window is opened, click on **Migrate to Built-In**.
 
-![Context Menu](Screenshots/screenshot-3.PNG)
-
-This will open another window with additional informations.
-
-![Configuration Window](Screenshots/screenshot-3.PNG)
+![Configuration Window](Screenshots/screenshot-3.jpg)
 
 
 
