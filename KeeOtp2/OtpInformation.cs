@@ -291,7 +291,9 @@ namespace KeeOtp2
                 {
                     this.entry = OtpAuthUtils.migrateToBuiltInOtp(this.Data, this.entry);
                 }
-                this.entry.Touch(true, false);
+                this.entry.Touch(true);
+                this.host.MainWindow.ActiveDatabase.Modified = true;
+                this.host.MainWindow.UpdateUI(false, null, false, null, false, null, true);
             }
             catch
             {

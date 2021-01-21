@@ -29,8 +29,8 @@ namespace KeeOtp2
 
         public static OtpAuthData loadData(PwEntry entry)
         {
-            //try
-            //{
+            try
+            {
                 if (checkKeeOtp1Mode(entry))
                 {
                     OtpAuthData data = loadDataFromKeeOtp1String(entry);
@@ -43,11 +43,11 @@ namespace KeeOtp2
                     return data;
                 }
                 return null;
-            //}
-            //catch
-            //{
-            //    return null;
-            //}
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public static bool checkKeeOtp1Mode(PwEntry entry)

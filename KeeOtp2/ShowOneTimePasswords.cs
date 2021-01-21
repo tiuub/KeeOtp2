@@ -108,9 +108,6 @@ namespace KeeOtp2
             {
                 this.data = OtpAuthUtils.loadData(this.entry);
 
-                // indicate that a change was made, must save
-                host.MainWindow.UpdateUI(false, null, true, host.Database.RootGroup, true, null, true);
-
                 if (this.data != null)
                     this.ShowCode();
                 else

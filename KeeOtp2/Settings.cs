@@ -68,10 +68,11 @@ namespace KeeOtp2
             PwUuid RecycleBinUuid = this.host.Database.RecycleBinUuid;
 
             List<PwEntry> entries = new List<PwEntry>();
-            entries = this.host.Database.RootGroup.GetEntries(true).ToList();
+            entries = this.host.MainWindow.ActiveDatabase.RootGroup.GetEntries(true).ToList();
 
             int count = entries.Count;
             int counter = 0;
+            int succeeded = 0;
 
             labelMigrationStatus.Text = String.Format("Loaded {0} entrie(s)!", count);
 
@@ -91,15 +92,28 @@ namespace KeeOtp2
                             }
                         }
 
-                        OtpAuthData data = OtpAuthUtils.loadDataFromKeeOtp1String(entry);
-                        OtpAuthUtils.purgeLoadedFields(data, entry);
-                        OtpAuthUtils.migrateToBuiltInOtp(data, entry);
+                        OtpAuthData data = OtpAuthUtils.loadData(entry);
+                        if (data != null) {
+                            OtpAuthUtils.purgeLoadedFields(data, entry);
+                            OtpAuthUtils.migrateToBuiltInOtp(data, entry);
+                            entry.Touch(true);
+                            succeeded++;
+                        }
+                        else
+                        {
+                            MessageBox.Show(String.Format("Cant migrate \"{0}\" - \"{1}\"\n(Username: {2})\n\nJust check the format of the \"key\" string.", entry.ParentGroup.Name, entry.Strings.ReadSafe(PwDefs.TitleField), entry.Strings.ReadSafe(PwDefs.UserNameField)), "Migration Error!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
                     }
                 }
                 counter++;
                 labelMigrationStatus.Text = String.Format("Done {0} of {1} entries!", counter, count);
             }
 
+            if (succeeded > 0)
+            {
+                this.host.MainWindow.ActiveDatabase.Modified = true;
+                this.host.MainWindow.UpdateUI(false, null, false, null, false, null, true);
+            }
         }
         private void backgroundWorkerMigrate_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
