@@ -134,7 +134,7 @@
             this.Controls.Add(this.pictureBoxBanner);
             this.Controls.Add(this.buttonEdit);
             this.Controls.Add(this.buttonClose);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "ShowOneTimePasswords";
             this.Text = "Timed Passwords";
             this.Load += new System.EventHandler(this.ShowOneTimePasswords_Load);

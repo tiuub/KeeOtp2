@@ -32,6 +32,7 @@ namespace KeeOtp2
                 "Enter this code in the verification system.");
 
             this.Icon = host.MainWindow.Icon;
+            this.TopMost = host.MainWindow.TopMost;
         }
 
         private void ShowOneTimePasswords_Load(object sender, EventArgs e)

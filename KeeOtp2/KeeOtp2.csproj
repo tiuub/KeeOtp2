@@ -65,12 +65,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncOperation.cs" />
-    <Compile Include="OtpAuthUtils.cs" />
-    <Compile Include="OtpInformation.cs">
+    <Compile Include="Forms\About.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OtpInformation.Designer.cs">
+    <Compile Include="Forms\About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AsyncOperation.cs" />
+    <Compile Include="OtpAuthExceptions.cs" />
+    <Compile Include="OtpAuthUtils.cs" />
+    <Compile Include="Forms\OtpInformation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OtpInformation.Designer.cs">
       <DependentUpon>OtpInformation.cs</DependentUpon>
     </Compile>
     <Compile Include="OtpType.cs" />
@@ -82,23 +89,23 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="OtpSecretEncoding.cs" />
-    <Compile Include="Settings.cs">
+    <Compile Include="Forms\Settings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Settings.Designer.cs">
+    <Compile Include="Forms\Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
-    <Compile Include="ShowOneTimePasswords.cs">
+    <Compile Include="Forms\ShowOneTimePasswords.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ShowOneTimePasswords.Designer.cs">
+    <Compile Include="Forms\ShowOneTimePasswords.Designer.cs">
       <DependentUpon>ShowOneTimePasswords.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Troubleshooting.cs">
+    <Compile Include="Forms\Troubleshooting.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Troubleshooting.Designer.cs">
+    <Compile Include="Forms\Troubleshooting.Designer.cs">
       <DependentUpon>Troubleshooting.cs</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -120,20 +127,23 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="OtpInformation.resx">
+    <EmbeddedResource Include="Forms\About.resx">
+      <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OtpInformation.resx">
       <DependentUpon>OtpInformation.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Settings.resx">
+    <EmbeddedResource Include="Forms\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ShowOneTimePasswords.resx">
+    <EmbeddedResource Include="Forms\ShowOneTimePasswords.resx">
       <DependentUpon>ShowOneTimePasswords.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Troubleshooting.resx">
+    <EmbeddedResource Include="Forms\Troubleshooting.resx">
       <DependentUpon>Troubleshooting.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

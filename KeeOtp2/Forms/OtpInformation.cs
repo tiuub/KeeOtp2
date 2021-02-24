@@ -33,6 +33,8 @@ namespace KeeOtp2
             this.entry = entry;
             this.host = host;
 
+            this.TopMost = host.MainWindow.TopMost;
+
             if (this.Data != null && this.Data.KeeOtp1Mode)
             {
                 buttonMigrate.Visible = true;
@@ -152,11 +154,11 @@ namespace KeeOtp2
 
         private void OtpInformation_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (this.DialogResult == System.Windows.Forms.DialogResult.Cancel)
+            if (this.DialogResult == DialogResult.Cancel)
                 return;
             try
             {
-                int textBoxKeyLength = this.textBoxKey.Text.Length;
+                string secret = textBoxKey.Text.Replace(" ", string.Empty).Replace("-", string.Empty);
                 if (string.IsNullOrEmpty(this.textBoxKey.Text))
                 {
                     MessageBox.Show("A key must be set", "Missing key", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -164,59 +166,23 @@ namespace KeeOtp2
                     return;
                 }
 
-                if (radioButtonBase32.Checked && !Regex.IsMatch(this.textBoxKey.Text, @"^[A-Z2-7=]+$"))
-                {
-                    MessageBox.Show("The key includes illegal characters.\n\nAllowed characters:\nABCDEFGHIJKLMNOPQRSTUVWXYZ234567=\n\nRegex:\n^[A-Z2-7=]+$", "Illegal character found!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    e.Cancel = true;
-                    return;
-                }
-                else if (radioButtonBase64.Checked && !Regex.IsMatch(this.textBoxKey.Text, @"^[a-zA-Z0-9\+/]*={0,2}$"))
-                {
-                    MessageBox.Show("The key includes illegal characters.\n\nAllowed characters:\nabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789+/=\n\nRegex:\n^[a-zA-Z0-9\\+/]*={0,2}$", "Illegal character found!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    e.Cancel = true;
-                    return;
-                }
-                else if (radioButtonHex.Checked && !Regex.IsMatch(this.textBoxKey.Text, @"^[a-fA-F0-9]+$"))
-                {
-                    MessageBox.Show("The key includes illegal characters.\n\nAllowed characters:\nabcdefABCDEF0123456789\n\nRegex:\n^[a-fA-F0-9]+$", "Illegal character found!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    e.Cancel = true;
-                    return;
-                }
-
-                // check Base32 format
-                if (radioButtonBase32.Checked && (textBoxKeyLength % 8 == 2 || textBoxKeyLength % 8 == 4 || textBoxKeyLength % 8 == 5 || textBoxKeyLength % 8 == 7))
-                {
-                    this.textBoxKey.Text += new string('=', 8 - textBoxKeyLength % 8);
-                }
-                else if (radioButtonBase32.Checked && textBoxKeyLength % 8 != 0)
-                {
-                    MessageBox.Show("The given format of your key is illegal. If you want to check the format, please read the RFC 4648.\n\nLink:\nhttps://tools.ietf.org/html/rfc4648", "Illegal Base32 format!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    e.Cancel = true;
-                    return;
-                }
-
-                // check Base64 format
-                if (radioButtonBase64.Checked && (textBoxKeyLength % 4 == 2 || textBoxKeyLength % 4 == 3))
-                {
-                    this.textBoxKey.Text += new string('=', 4 - textBoxKeyLength % 4);
-                }
-                else if (radioButtonBase64.Checked && textBoxKeyLength % 8 != 0)
-                {
-                    MessageBox.Show("The given format of your key is illegal. If you want to check the format, please read the RFC 4648.\n\nLink:\nhttps://tools.ietf.org/html/rfc4648", "Illegal Base64 format!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    e.Cancel = true;
-                    return;
-                }
-
-                // check Hex format
-                if (radioButtonHex.Checked && textBoxKeyLength % 2 == 1)
-                {
-                    MessageBox.Show("The given format of your key is illegal. If you want to check the format, please read the RFC 4648.\n\nLink:\nhttps://tools.ietf.org/html/rfc4648", "Illegal Hex format!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    e.Cancel = true;
-                    return;
-                }
-
                 if (this.Data == null)
                     this.Data = new OtpAuthData();
+                
+                // encoding
+                if (this.radioButtonBase32.Checked)
+                    this.Data.Encoding = OtpSecretEncoding.Base32;
+                else if (this.radioButtonBase64.Checked)
+                    this.Data.Encoding = OtpSecretEncoding.Base64;
+                else if (this.radioButtonHex.Checked)
+                    this.Data.Encoding = OtpSecretEncoding.Hex;
+                else if (this.radioButtonUtf8.Checked)
+                    this.Data.Encoding = OtpSecretEncoding.UTF8;
+
+                secret = OtpAuthUtils.correctPlainSecret(secret, this.Data.Encoding);
+
+                // Validate secret (catch)
+                OtpAuthUtils.validatePlainSecret(secret, this.Data.Encoding);
 
                 int step = 30;
                 if (int.TryParse(this.textBoxStep.Text, out step))
@@ -250,23 +216,9 @@ namespace KeeOtp2
                     this.Data.Size = 6;
                 else if (this.radioButtonEight.Checked)
                     this.Data.Size = 8;
-                else
-                    this.Data.Size = 6; // default
 
                 // step
-                this.Data.Step = Convert.ToInt32(this.textBoxStep.Text);
-
-                // encoding
-                if (this.radioButtonBase32.Checked)
-                    this.Data.Encoding = OtpSecretEncoding.Base32;
-                else if (this.radioButtonBase64.Checked)
-                    this.Data.Encoding = OtpSecretEncoding.Base64;
-                else if (this.radioButtonHex.Checked)
-                    this.Data.Encoding = OtpSecretEncoding.Hex;
-                else if (this.radioButtonUtf8.Checked)
-                    this.Data.Encoding = OtpSecretEncoding.UTF8;
-                else
-                    this.Data.Encoding = OtpSecretEncoding.Base32; // default
+                this.Data.Step = step;
 
                 // hashmode
                 if (this.radioButtonSha1.Checked)
@@ -275,11 +227,8 @@ namespace KeeOtp2
                     this.Data.OtpHashMode = OtpHashMode.Sha256;
                 else if (this.radioButtonSha512.Checked)
                     this.Data.OtpHashMode = OtpHashMode.Sha512;
-                else
-                    this.Data.OtpHashMode = OtpHashMode.Sha1; // default
 
-
-                this.Data.SetPlainSecret(this.textBoxKey.Text.Replace(" ", string.Empty).Replace("-", string.Empty));
+                this.Data.SetPlainSecret(secret);
 
                 this.entry = OtpAuthUtils.purgeLoadedFields(this.Data, this.entry);
 
@@ -295,7 +244,25 @@ namespace KeeOtp2
                 this.host.MainWindow.ActiveDatabase.Modified = true;
                 this.host.MainWindow.UpdateUI(false, null, false, null, false, null, true);
             }
-            catch
+            catch (InvalidBase32FormatException ex)
+            {
+                MessageBox.Show(ex.Message, "Invalid Base32 Format!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                e.Cancel = true;
+                return;
+            }
+            catch (InvalidBase64FormatException ex)
+            {
+                MessageBox.Show(ex.Message, "Invalid Base64 Format!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                e.Cancel = true;
+                return;
+            }
+            catch (InvalidHexFormatException ex)
+            {
+                MessageBox.Show(ex.Message, "Invalid Hex Format!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                e.Cancel = true;
+                return;
+            }
+            catch (Exception)
             {
                 MessageBox.Show("There happened an error. Please check your entered key and your settings!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 e.Cancel = true;

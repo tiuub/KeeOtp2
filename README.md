@@ -1,11 +1,9 @@
 # KeeOtp2
-KeeOtp2 is a plugin for [KeePass](http://keepass.info). It provides a form to display one time passwords. The TOTP secret keys are stored in a normalized format, so this plugin is fully compatible with the built-in OTP function. It also can be used as a GUI for the built-in OTP function. *(The plugin can also migrate saved [KeeOtp(1)](https://github.com/tiuub/KeeOtpMirror) secrets, to the new built-in function.)*
-
-
 [![Latest Release](https://img.shields.io/github/v/release/tiuub/KeeOtp2)](https://github.com/tiuub/KeeOtp2/releases/latest)
 [![GitHub All Releases](https://img.shields.io/github/downloads/tiuub/KeeOtp2/total)](https://github.com/tiuub/KeeOtp2/releases/latest)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5F5QB7744AD5G&source=url)
 
+KeeOtp2 is a plugin for [KeePass](http://keepass.info). It provides a form to display one time passwords. The TOTP secret keys are stored in a normalized format, so this plugin is fully compatible with the built-in OTP function. It also can be used as a GUI for the built-in OTP function. *(The plugin can also migrate saved [KeeOtp(1)](https://github.com/tiuub/KeeOtpMirror) secrets, to the new built-in function.)*
 
 > This plugin is based on [KeeOtp(1)](https://github.com/tiuub/KeeOtpMirror), which was originally developed by [devinmartin](https://bitbucket.org/devinmartin). Since [devinmartin](https://bitbucket.org/devinmartin)s website is no longer available, I have reuploaded the original source code [here](https://github.com/tiuub/KeeOtpMirror).
 
@@ -53,6 +51,18 @@ Click on **Edit**. When the configuration window is opened, click on **Migrate t
 
 You can download the .plgx file [here](https://github.com/tiuub/KeeOtp2/releases/latest).
 
+
+
+## Auto-Type
+
+This plugin supports the built-in [Auto-Type](https://keepass.info/help/base/autotype.html) function.
+
+Placeholder | Usage
+--- | ---
+**{TOTP}** | Have to be used, with KeeOtp(1) save mode *(Deprecated)*
+**{TIMEOTP}** | Can be used with KeeOtp2 and built-in TOTP *(Recommended)*
+
+Still you can use **{TOTP}**, but its rather recommended to use the built-in placeholder **{TIMEOTP}**.
 
 
 ## License

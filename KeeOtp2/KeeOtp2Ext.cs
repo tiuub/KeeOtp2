@@ -19,6 +19,7 @@ namespace KeeOtp2
 
         private ToolStripMenuItem MainMenuToolStripItem;
         private ToolStripMenuItem SettingsToolStripItem;
+        private ToolStripMenuItem AboutToolStripItem;
 
         private const string totpPlaceHolder = "{TOTP}";
 
@@ -32,12 +33,17 @@ namespace KeeOtp2
 
 
             this.SettingsToolStripItem = new ToolStripMenuItem("Settings");
-            this.SettingsToolStripItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Tool];
+            this.SettingsToolStripItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Configuration];
             this.SettingsToolStripItem.Click += settingsToolStripitem_Click;
+
+            this.AboutToolStripItem = new ToolStripMenuItem("About");
+            this.AboutToolStripItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Info];
+            this.AboutToolStripItem.Click += aboutToolStripitem_Click;
 
             this.MainMenuToolStripItem = new ToolStripMenuItem("KeeOtp2");
             this.MainMenuToolStripItem.Image = Resources.clock;
             this.MainMenuToolStripItem.DropDownItems.Add(this.SettingsToolStripItem);
+            this.MainMenuToolStripItem.DropDownItems.Add(this.AboutToolStripItem);
             host.MainWindow.ToolsMenu.DropDownItems.Add(this.MainMenuToolStripItem);
 
             this.otpDialogToolStripItem = new ToolStripMenuItem("Timed One Time Password");
@@ -134,6 +140,12 @@ namespace KeeOtp2
         {
             Settings settings = new Settings(this.host);
             settings.ShowDialog();
+        }
+
+        void aboutToolStripitem_Click(object sender, EventArgs e)
+        {
+            About about = new About(this.host);
+            about.ShowDialog();
         }
 
         private bool GetSelectedSingleEntry(out PwEntry entry)

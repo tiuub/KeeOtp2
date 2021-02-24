@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace KeeOtp2
 {
@@ -82,7 +83,7 @@ namespace KeeOtp2
             if (parameters[encodingParameter] != null)
                 otpData.Encoding = (OtpSecretEncoding)Enum.Parse(typeof(OtpSecretEncoding), parameters[encodingParameter]);
 
-            otpData.SetPlainSecret(parameters[keyParameter].Replace("%3d", "="));
+            otpData.SetPlainSecret(correctPlainSecret(parameters[keyParameter].Replace("%3d", "="), otpData.Encoding));
 
             if (parameters[typeParameter] != null)
                 otpData.Type = (OtpType)Enum.Parse(typeof(OtpType), parameters[typeParameter]);
@@ -113,13 +114,13 @@ namespace KeeOtp2
             if (entry.Strings.Exists(secretBase32Key))
             {
                 otpData.Encoding = OtpSecretEncoding.Base32;
-                otpData.SetPlainSecret(entry.Strings.Get(secretBase32Key).ReadString());
+                otpData.SetPlainSecret(correctPlainSecret(entry.Strings.Get(secretBase32Key).ReadString(), otpData.Encoding));
                 otpData.loadedFields.Add(secretBase32Key);
             }
             else if (entry.Strings.Exists(secretBase64Key))
             {
                 otpData.Encoding = OtpSecretEncoding.Base64;
-                otpData.SetPlainSecret(entry.Strings.Get(secretBase64Key).ReadString());
+                otpData.SetPlainSecret(correctPlainSecret(entry.Strings.Get(secretBase64Key).ReadString(), otpData.Encoding));
                 otpData.loadedFields.Add(secretBase64Key);
             }
             else if (entry.Strings.Exists(secretHexKey))
@@ -179,7 +180,7 @@ namespace KeeOtp2
         {
             NameValueCollection collection = new NameValueCollection();
 
-            collection.Add(keyParameter, data.GetPlainSecret().Replace("=", "%3d"));
+            collection.Add(keyParameter, data.GetPlainSecret());
 
             if (data.Type != OtpType.Totp)
                 collection.Add(typeParameter, data.Type.ToString());
@@ -260,7 +261,7 @@ namespace KeeOtp2
             {
                 if (parameter.Contains("="))
                 {
-                    var pieces = parameter.Split('=');
+                    var pieces = parameter.Split(new[] { '=' }, 2);
                     if (pieces.Length != 2)
                         continue;
 
@@ -283,6 +284,72 @@ namespace KeeOtp2
             }
             else
                 return defaultValue;
+        }
+
+        public static bool validatePlainSecret(string secret, OtpSecretEncoding encoding)
+        {
+            if (encoding == OtpSecretEncoding.Base32)
+            {
+                if (Regex.IsMatch(secret, @"^(?:[A-Z2-7]{8})*(?:[A-Z2-7]{2}={6}|[A-Z2-7]{4}={4}|[A-Z2-7]{5}={3}|[A-Z2-7]{7}=)?$"))
+                {
+                    return true;
+                }
+                else
+                {
+                    throw new InvalidBase32FormatException("Invalid Base32 format!\n\nRequired length: 8 * n (if shorter, fill up with =)\n\nAllowed characters:\nABCDEFGHIJKLMNOPQRSTUVWXYZ234567=\n\nRegex:\n^(?:[A-Z2-7]{8})*(?:[A-Z2-7]{2}={6}|[A-Z2-7]{4}={4}|[A-Z2-7]{5}={3}|[A-Z2-7]{7}=)+$");
+                }
+            }
+            else if (encoding == OtpSecretEncoding.Base64)
+            {
+                if (Regex.IsMatch(secret, @"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"))
+                {
+                    return true;
+                }
+                else
+                {
+                    throw new InvalidBase64FormatException("Invalid Base32 format!\n\nRequired length: 4 * n (if shorter, fill up with =)\n\nAllowed characters:\nabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789=\n\nRegex:\n^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$");
+                }
+            }
+            else if (encoding == OtpSecretEncoding.Hex)
+            {
+                if (Regex.IsMatch(secret, @"^([A-Fa-f0-9]{2})+$"))
+                {
+                    return true;
+                }
+                else
+                {
+                    throw new InvalidHexFormatException("Invalid Hex format!\n\nRequired length: 2 * n\n\nAllowed characters:\nabcdefABCDEF0123456789\n\nRegex:\n^([a-fA-F0-9]{2})+$");
+                }
+            }
+            else if (encoding == OtpSecretEncoding.UTF8)
+            {
+                return true;
+            }
+            throw new InvalidOperationException("No Encoding given!");
+        }
+
+        public static string correctPlainSecret(string secret, OtpSecretEncoding encoding)
+        {
+            secret = secret.Replace("=", "");
+            int secretLength = secret.Length;
+
+            if (encoding == OtpSecretEncoding.Base32)
+            {
+                secret = secret.ToUpper();
+                if (secretLength % 8 == 2 || secretLength % 8 == 4 || secretLength % 8 == 5 || secretLength % 8 == 7)
+                {
+                    secret += new string('=', 8 - secretLength % 8);
+                }
+            }
+            else if (encoding == OtpSecretEncoding.Base64)
+            {
+                if (secretLength % 4 == 2 || secretLength % 4 == 3)
+                {
+                    secret += new string('=', 4 - secretLength % 4);
+                }
+            }
+
+            return secret;
         }
     }
 }
