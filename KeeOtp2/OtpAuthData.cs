@@ -19,10 +19,10 @@ namespace KeeOtp2
         public OtpType Type { get; set; }
         public OtpSecretEncoding Encoding { get; set; }
 
-        public OtpHashMode OtpHashMode { get; set; }
+        public OtpHashMode Algorithm { get; set; }
 
-        public int Step { get; set; }
-        public int Size { get; set; }
+        public int Period { get; set; }
+        public int Digits { get; set; }
 
         public int Counter { get; set; }
 
@@ -34,10 +34,11 @@ namespace KeeOtp2
         {
             this.Type = OtpType.Totp;
             this.Encoding = OtpSecretEncoding.Base32;
-            this.OtpHashMode = OtpHashMode.Sha1;
+            this.Algorithm = OtpHashMode.Sha1;
 
-            this.Step = 30;
-            this.Size = 6;
+            this.Counter = 25;
+            this.Period = 30;
+            this.Digits = 6;
 
             this.KeeOtp1Mode = false;
         }

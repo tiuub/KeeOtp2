@@ -6,6 +6,7 @@ using KeePass.Util;
 using KeePass.Util.Spr;
 using KeePassLib;
 using KeePassLib.Utility;
+using System.Runtime.InteropServices;
 using OtpSharp;
 
 namespace KeeOtp2
@@ -21,15 +22,16 @@ namespace KeeOtp2
         private ToolStripMenuItem SettingsToolStripItem;
         private ToolStripMenuItem AboutToolStripItem;
 
-        private const string totpPlaceHolder = "{TOTP}";
+        private HotKeyProvider hotKeyProvider;
+
+        public const string KeeOtp1PlaceHolder = "{TOTP}"; // Deprecated
+        public const string BuiltInPlaceHolder = "{TIMEOTP}";
 
         public override bool Initialize(IPluginHost host)
         {
             if (host == null)
                 return false;
             this.host = host;
-
-            
 
 
             this.SettingsToolStripItem = new ToolStripMenuItem("Settings");
@@ -58,39 +60,64 @@ namespace KeeOtp2
             host.MainWindow.EntryContextMenu.Opening += entryContextMenu_Opening;
 
             SprEngine.FilterCompile += new EventHandler<SprEventArgs>(SprEngine_FilterCompile);
+            SprEngine.FilterCompilePre += new EventHandler<SprEventArgs>(SprEngine_FilterCompilePre);
 
-            // this adds a hint on the placeholder form under the "plugin provided" section of placeholders
-            SprEngine.FilterPlaceholderHints.Add(totpPlaceHolder);
+            loadConfig();
 
             return true; // Initialization successful
+        }
+
+        public override void Terminate()
+        {
+            if (hotKeyProvider != null)
+                hotKeyProvider.unregisterHotKey();
+
+            // Remove all of our menu items
+            ToolStripItemCollection menu = host.MainWindow.EntryContextMenu.Items;
+            menu.Remove(otpDialogToolStripItem);
+            menu.Remove(otpCopyToolStripItem);
+        }
+
+        // If built-in {TIMEOTP} placeholder is used, but KeeOtp1 Save Mode is used
+        void SprEngine_FilterCompilePre(object sender, SprEventArgs e)
+        {
+            if ((e.Context.Flags & SprCompileFlags.ExtActive) == SprCompileFlags.ExtActive)
+            {
+                if (e.Text.IndexOf(BuiltInPlaceHolder, StringComparison.InvariantCultureIgnoreCase) >= 0)
+                {
+                    PwEntry entry = e.Context.Entry;
+                    if (!OtpAuthUtils.checkBuiltInMode(entry))
+                    {
+                        OtpAuthData data = OtpAuthUtils.loadData(entry);
+                        if (data != null)
+                        {
+                            var totp = new Totp(data.Key, data.Period, data.Algorithm, data.Digits, null);
+                            var text = totp.ComputeTotp().ToString().PadLeft(data.Digits, '0');
+
+                            e.Text = StrUtil.ReplaceCaseInsensitive(e.Text, BuiltInPlaceHolder, text);
+                        }
+                    }
+                }
+            }
         }
 
         void SprEngine_FilterCompile(object sender, SprEventArgs e)
         {
             if ((e.Context.Flags & SprCompileFlags.ExtActive) == SprCompileFlags.ExtActive)
             {
-                if (e.Text.IndexOf(totpPlaceHolder, StringComparison.InvariantCultureIgnoreCase) >= 0)
+                if (e.Text.IndexOf(KeeOtp1PlaceHolder, StringComparison.InvariantCultureIgnoreCase) >= 0)
                 {
-                    OtpAuthData data = OtpAuthUtils.loadData(e.Context.Entry);
+                    PwEntry entry = e.Context.Entry;
+                    OtpAuthData data = OtpAuthUtils.loadData(entry);
                     if (data != null)
                     {
-                        var totp = new Totp(data.Key, step: data.Step, mode: data.OtpHashMode, totpSize: data.Size);
-                        var text = totp.ComputeTotp().ToString().PadLeft(data.Size, '0');
+                        var totp = new Totp(data.Key, data.Period, data.Algorithm, data.Digits, null);
+                        var text = totp.ComputeTotp().ToString().PadLeft(data.Digits, '0');
 
-                        e.Text = StrUtil.ReplaceCaseInsensitive(e.Text, "{TOTP}", text);
+                        e.Text = StrUtil.ReplaceCaseInsensitive(e.Text, KeeOtp1PlaceHolder, text);
                     }
                 }
             }
-        }
-
-        public override void Terminate()
-        {
-            // Remove all of our menu items
-            ToolStripItemCollection menu = host.MainWindow.EntryContextMenu.Items;
-            menu.Remove(otpDialogToolStripItem);
-            menu.Remove(otpCopyToolStripItem);
-
-            SprEngine.FilterPlaceholderHints.Remove(totpPlaceHolder);
         }
 
         private void entryContextMenu_Opening(object sender, CancelEventArgs e)
@@ -127,8 +154,8 @@ namespace KeeOtp2
                 }
                 else
                 {
-                    var totp = new Totp(data.Key, step: data.Step, mode: data.OtpHashMode, totpSize: data.Size);
-                    var text = totp.ComputeTotp().ToString().PadLeft(data.Size, '0');
+                    var totp = new Totp(data.Key, data.Period, data.Algorithm, data.Digits, null);
+                    var text = totp.ComputeTotp().ToString().PadLeft(data.Digits, '0');
 
                     if (ClipboardUtil.CopyAndMinimize(new KeePassLib.Security.ProtectedString(true, text), true, this.host.MainWindow, entry, this.host.Database))
                         this.host.MainWindow.StartClipboardCountdown();
@@ -140,6 +167,9 @@ namespace KeeOtp2
         {
             Settings settings = new Settings(this.host);
             settings.ShowDialog();
+
+            if (settings.DialogResult == DialogResult.OK)
+                loadConfig();
         }
 
         void aboutToolStripitem_Click(object sender, EventArgs e)
@@ -155,12 +185,12 @@ namespace KeeOtp2
             var entries = this.host.MainWindow.GetSelectedEntries();
             if (entries == null || entries.Length == 0)
             {
-                MessageBox.Show("Please select an entry");
+                MessageBox.Show("Please select an entry", "Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             else if (entries.Length > 1)
             {
-                MessageBox.Show("Please select only one entry");
+                MessageBox.Show("Please select only one entry", "Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             else
@@ -168,6 +198,62 @@ namespace KeeOtp2
                 // grab the entry that we care about
                 entry = entries[0];
                 return true;
+            }
+        }
+
+        private void loadConfig()
+        {
+            if (hotKeyProvider == null)
+                hotKeyProvider = new HotKeyProvider(host);
+            hotKeyProvider.unregisterHotKey();
+
+            Keys hotKey = KeeOtp2Config.HotKeyKeys;
+            if (KeeOtp2Config.UseHotKey && hotKey != Keys.None)
+            {
+                hotKeyProvider.registerHotKey(hotKey);
+            }
+        }
+
+        private class HotKeyProvider : KeePass.Forms.MainForm
+        {
+            private static readonly int AutoType = 101;
+            private IPluginHost host;
+
+            private _MethodInfo m_miAutoType = null;
+
+            public HotKeyProvider(IPluginHost host)
+            {
+                this.host = host;
+
+                this.m_miAutoType = host.MainWindow.GetType().GetMethod("ExecuteGlobalAutoType", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic, null, new Type[] { typeof(string) }, null);
+            }
+
+            public void registerHotKey(Keys keys)
+            {
+                HotKeyManager.Initialize(this);
+                HotKeyManager.RegisterHotKey(AutoType, keys);
+            }
+
+            public void unregisterHotKey()
+            {
+                HotKeyManager.UnregisterAll();
+            }
+
+            internal void HandleHotKey(int wParam)
+            {
+                if (wParam == AutoType)
+                    if (m_miAutoType != null)
+                        m_miAutoType.Invoke(this.host.MainWindow, new object[] { KeeOtp2Config.HotKeySequence });
+            }
+
+            protected override void WndProc(ref Message m)
+            {
+                if (m.Msg == 0x0312)
+                {
+                    NotifyUserActivity();
+                    HandleHotKey((int)m.WParam);
+                }
+                base.WndProc(ref m);
             }
         }
 

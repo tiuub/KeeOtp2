@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading;
 using System.Windows.Forms;
 using KeePass.Plugins;
-using OtpSharp;
+using Yort.Ntp;
 
 namespace KeeOtp2
 {
@@ -27,53 +26,39 @@ namespace KeeOtp2
 
         private void buttonPingGoogle_Click(object sender, EventArgs e)
         {
-            // this is kind of an odd flow.
-
-            TimeCorrection timeCorrection = null;
-
-            // set up the asyn operation complete with continuation, catch and finally delegates
-            // the async operation will use the synchronization context to post the continuation,
-            // catch, and finally delegates to run on the UI thread.  Since we are creating this object
-            // on the UI thread it will use the UI synchronization context.
-            AsyncOperation getTimeCorrectionOperation = new AsyncOperation(() => // on background threadpool thread
-            {
-                timeCorrection = Ntp.GetTimeCorrectionFromGoogle();
-            },
-            () => // continuation on UI thread
-            {
-                var offset = timeCorrection.CorrectionFactor;
-
-                var totalSeconds = Math.Abs(offset.TotalSeconds);
-                if (totalSeconds == 0)
-                    MessageBox.Show("Your time is perfect according to Google's servers");
-                else if (totalSeconds <= 5)
-                    MessageBox.Show("Your time is off by five seconds or less from Google's servers.  You should be just fine.");
-                else if (totalSeconds <= 30)
-                    MessageBox.Show(string.Format("Your time is off by {0} seconds from Google's servers.  You are probably OK but correcting couldn't hurt.", totalSeconds));
-                else
-                    MessageBox.Show(string.Format("Your time is off by {0} seconds from Google's servers.  Try correcting the difference and try again.", totalSeconds));
-            },
-            ex => MessageBox.Show(ex.Message, "Error"), // catch on UI thread
-            () => // finally on UI thread
-            {
-                this.buttonPingGoogle.Visible = true;
-                this.progressBarGettingTimeCorrection.Visible = false;
-            });
-
-
+            this.Enabled = false;
             this.buttonPingGoogle.Visible = false;
             this.progressBarGettingTimeCorrection.Visible = true;
 
-            getTimeCorrectionOperation.Run();
+            var client = new NtpClient();
+            client.TimeReceived += Client_TimeReceived;
+            client.BeginRequestTime();
+            
         }
 
         private void buttonTroubleshootingWebsite_Click(object sender, EventArgs e)
         {
             // go to the troubleshooting page
-            var url = "https://bitbucket.org/devinmartin/keeotp/wiki/Troubleshooting";
+            var url = "https://github.com/tiuub/KeeOtp2";
             Process ps = new Process();
             ps.StartInfo = new ProcessStartInfo(url);
             ps.Start();
+        }
+
+        private void Client_TimeReceived(object sender, NtpTimeReceivedEventArgs e)
+        {
+            this.buttonPingGoogle.Visible = true;
+            this.progressBarGettingTimeCorrection.Visible = false;
+            //TimeSpan difference = DateTime.Now.Subtract();
+            int difference = (DateTime.Now.Millisecond - e.CurrentTime.Millisecond);
+
+            if (-5000 < difference && difference < 5000)
+                MessageBox.Show(String.Format("You are {0} milliseconds ({1} seconds) {2}. All fine!", Math.Abs(difference), Math.Round(Math.Abs((float)difference / 1000), 1), (difference < 0 ? "behind" : "before")), "NTP Request", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else if (-30000 < difference && difference < 30000)
+                MessageBox.Show(String.Format("You are {0} milliseconds ({1} seconds) {2}. It may work, but you should check your time settings!", Math.Abs(difference), Math.Round(Math.Abs((float)difference / 1000), 1), (difference < 0 ? "behind" : "before")), "NTP Request", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else
+                MessageBox.Show(String.Format("You are {0} milliseconds ({1} seconds) {2}. Generating TOTPs wont work. You should definitely check your time settings!", Math.Abs(difference), Math.Round(Math.Abs((float)difference / 1000), 1), (difference < 0 ? "behind" : "before")), "NTP Request", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            this.Enabled = true;
         }
     }
 }

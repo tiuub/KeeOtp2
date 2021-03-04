@@ -80,10 +80,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(366, 129);
-            this.Controls.Add(this.progressBarGettingTimeCorrection);
             this.Controls.Add(this.buttonTroubleshootingWebsite);
             this.Controls.Add(this.buttonPingGoogle);
             this.Controls.Add(this.labelHeader);
+            this.Controls.Add(this.progressBarGettingTimeCorrection);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(350, 48);
             this.Name = "Troubleshooting";
             this.Text = "Troubleshooting";

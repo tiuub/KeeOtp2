@@ -25,4 +25,11 @@ namespace KeeOtp2
         public InvalidHexFormatException() { }
         public InvalidHexFormatException(string message) : base(message) { }
     }
+
+    [Serializable]
+    public class InvalidUriFormat : Exception
+    {
+        public InvalidUriFormat() { }
+        public InvalidUriFormat(string message) : base(message) { }
+    }
 }

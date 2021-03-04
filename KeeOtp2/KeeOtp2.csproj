@@ -41,6 +41,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -55,6 +56,11 @@
     <Reference Include="KeePass">
       <HintPath>..\KeePass\KeePass.exe</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="QRCoder, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QRCoder.1.4.1\lib\net40\QRCoder.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -62,6 +68,16 @@
     <Reference Include="System.Xml" />
     <Reference Include="OtpSharp">
       <HintPath>..\packages\OtpSharp.1.0.5.0\lib\net40\OtpSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="Yort.Ntp, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Yort.Ntp.Portable.2.0.0\lib\net40\Yort.Ntp.dll</HintPath>
+    </Reference>
+    <Reference Include="zxing, Version=0.16.6.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZXing.Net.0.16.6\lib\net40\zxing.dll</HintPath>
+    </Reference>
+    <Reference Include="zxing.presentation, Version=0.16.6.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZXing.Net.0.16.6\lib\net40\zxing.presentation.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -71,7 +87,7 @@
     <Compile Include="Forms\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
-    <Compile Include="AsyncOperation.cs" />
+    <Compile Include="KeeOtp2Config.cs" />
     <Compile Include="OtpAuthExceptions.cs" />
     <Compile Include="OtpAuthUtils.cs" />
     <Compile Include="Forms\OtpInformation.cs">
@@ -108,6 +124,12 @@
     <Compile Include="Forms\Troubleshooting.Designer.cs">
       <DependentUpon>Troubleshooting.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ShowQrCode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ShowQrCode.Designer.cs">
+      <DependentUpon>ShowQrCode.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -142,9 +164,13 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ShowOneTimePasswords.resx">
       <DependentUpon>ShowOneTimePasswords.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Troubleshooting.resx">
       <DependentUpon>Troubleshooting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ShowQrCode.resx">
+      <DependentUpon>ShowQrCode.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -154,7 +180,17 @@
   <ItemGroup>
     <Content Include="Resources\lock-key.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Dependencies\**\*">
+      <Link>Dependencies\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
