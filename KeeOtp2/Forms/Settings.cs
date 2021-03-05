@@ -19,7 +19,7 @@ namespace KeeOtp2
         private bool migrateAutoType;
         private MigrateMode migrateMode;
 
-        private enum MigrateMode
+        public enum MigrateMode
         {
             KeeOtp1ToBuiltIn,
             BuiltInToKeeOtp1
@@ -108,13 +108,17 @@ namespace KeeOtp2
             }
         }
 
-        private bool checkEntryMigratable(PwEntry entry, MigrateMode migrateMode)
+        public static bool checkEntryMigratable(PwEntry entry, MigrateMode migrateMode)
         {
-            if (migrateMode == MigrateMode.KeeOtp1ToBuiltIn)
-                return !OtpAuthUtils.checkBuiltInMode(entry);
-            else if (migrateMode == MigrateMode.BuiltInToKeeOtp1)
-                return !OtpAuthUtils.checkKeeOtp1Mode(entry);
-            return false;
+            switch (migrateMode)
+            {
+                case MigrateMode.KeeOtp1ToBuiltIn:
+                    return OtpAuthUtils.checkKeeOtp1Mode(entry);
+                case MigrateMode.BuiltInToKeeOtp1:
+                    return OtpAuthUtils.checkBuiltInMode(entry);
+                default:
+                    return false;
+            }
         }
 
         private void backgroundWorkerMigrate_DoWork(object sender, DoWorkEventArgs e)

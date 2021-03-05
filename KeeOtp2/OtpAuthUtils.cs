@@ -349,7 +349,7 @@ namespace KeeOtp2
 
         public static string correctPlainSecret(string secret, OtpSecretEncoding encoding)
         {
-            secret = secret.Replace("=", "");
+            secret = secret.Replace("=", "").Replace(" ", "");
             int secretLength = secret.Length;
 
             if (encoding == OtpSecretEncoding.Base32)

@@ -10,3 +10,4 @@
 PlgXExclude.txt
 Releases/
 Debug/
+*.user
