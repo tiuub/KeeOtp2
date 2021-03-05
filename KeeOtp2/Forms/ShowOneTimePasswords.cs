@@ -53,8 +53,8 @@ namespace KeeOtp2
             var totp = this.totp;
             if (totp != null)
             {
-                var code = totp.ComputeTotp();
-                var nextCode = totp.ComputeTotp(DateTime.UtcNow.AddSeconds(data.Period));
+                var code = totp.ComputeTotp(OtpTime.getTime());
+                var nextCode = totp.ComputeTotp(OtpTime.getTime().AddSeconds(data.Period));
                 var remaining = totp.RemainingSeconds();
 
                 if (code != lastCode)
@@ -135,7 +135,7 @@ namespace KeeOtp2
 
         private void labelOtp_Click(object sender, EventArgs e)
         {
-            if (ClipboardUtil.CopyAndMinimize(new ProtectedString(true, this.totp.ComputeTotp().ToString().PadLeft(data.Digits, '0')), true, this.host.MainWindow, entry, this.host.Database))
+            if (ClipboardUtil.CopyAndMinimize(new ProtectedString(true, this.totp.ComputeTotp(OtpTime.getTime()).ToString().PadLeft(data.Digits, '0')), true, this.host.MainWindow, entry, this.host.Database))
                 this.host.MainWindow.StartClipboardCountdown();
             this.Close();
         }
@@ -157,7 +157,7 @@ namespace KeeOtp2
 
         private void buttonCopyTotp_Click(object sender, EventArgs e)
         {
-            if (ClipboardUtil.CopyAndMinimize(new ProtectedString(true, this.totp.ComputeTotp().ToString().PadLeft(data.Digits, '0')), true, this.host.MainWindow, entry, this.host.Database))
+            if (ClipboardUtil.CopyAndMinimize(new ProtectedString(true, this.totp.ComputeTotp(OtpTime.getTime()).ToString().PadLeft(data.Digits, '0')), true, this.host.MainWindow, entry, this.host.Database))
                 this.host.MainWindow.StartClipboardCountdown();
             this.Close();
         }

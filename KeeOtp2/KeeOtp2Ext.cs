@@ -86,13 +86,14 @@ namespace KeeOtp2
                 if (e.Text.IndexOf(BuiltInPlaceHolder, StringComparison.InvariantCultureIgnoreCase) >= 0)
                 {
                     PwEntry entry = e.Context.Entry;
-                    if (!OtpAuthUtils.checkBuiltInMode(entry))
+                    if (!OtpAuthUtils.checkBuiltInMode(entry) || 
+                        (OtpAuthUtils.checkEntry(entry) && OtpTime.getOverrideBuiltInTime() && (OtpTime.getTimeType() == OtpTimeType.FixedOffset || OtpTime.getTimeType() == OtpTimeType.CustomNtpServer)))
                     {
                         OtpAuthData data = OtpAuthUtils.loadData(entry);
                         if (data != null)
                         {
                             var totp = new Totp(data.Key, data.Period, data.Algorithm, data.Digits, null);
-                            var text = totp.ComputeTotp().ToString().PadLeft(data.Digits, '0');
+                            var text = totp.ComputeTotp(OtpTime.getTime()).ToString().PadLeft(data.Digits, '0');
 
                             e.Text = StrUtil.ReplaceCaseInsensitive(e.Text, BuiltInPlaceHolder, text);
                         }
@@ -112,7 +113,7 @@ namespace KeeOtp2
                     if (data != null)
                     {
                         var totp = new Totp(data.Key, data.Period, data.Algorithm, data.Digits, null);
-                        var text = totp.ComputeTotp().ToString().PadLeft(data.Digits, '0');
+                        var text = totp.ComputeTotp(OtpTime.getTime()).ToString().PadLeft(data.Digits, '0');
 
                         e.Text = StrUtil.ReplaceCaseInsensitive(e.Text, KeeOtp1PlaceHolder, text);
                     }
@@ -155,7 +156,7 @@ namespace KeeOtp2
                 else
                 {
                     var totp = new Totp(data.Key, data.Period, data.Algorithm, data.Digits, null);
-                    var text = totp.ComputeTotp().ToString().PadLeft(data.Digits, '0');
+                    var text = totp.ComputeTotp(OtpTime.getTime()).ToString().PadLeft(data.Digits, '0');
 
                     if (ClipboardUtil.CopyAndMinimize(new KeePassLib.Security.ProtectedString(true, text), true, this.host.MainWindow, entry, this.host.Database))
                         this.host.MainWindow.StartClipboardCountdown();

@@ -96,6 +96,7 @@
     <Compile Include="Forms\OtpInformation.Designer.cs">
       <DependentUpon>OtpInformation.cs</DependentUpon>
     </Compile>
+    <Compile Include="OtpTime.cs" />
     <Compile Include="OtpType.cs" />
     <Compile Include="KeeOtp2Ext.cs" />
     <Compile Include="OtpAuthData.cs" />
