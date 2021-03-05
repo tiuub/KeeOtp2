@@ -314,11 +314,7 @@ namespace KeeOtp2
         {
             if (MessageBox.Show("Do you want to replace the Auto-Type key {TOTP} with the built-in key {TIMEOTP}?", "Migrate Auto-Type", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                this.entry.AutoType.DefaultSequence = this.entry.AutoType.DefaultSequence.Replace("{TOTP}", "{TIMEOTP}");
-                foreach (KeePassLib.Collections.AutoTypeAssociation ata in this.entry.AutoType.Associations)
-                {
-                    ata.Sequence = ata.Sequence.Replace("{TOTP}", "{TIMEOTP}");
-                }
+                OtpAuthUtils.replacePlaceholder(this.entry, KeeOtp2Ext.KeeOtp1PlaceHolder, KeeOtp2Ext.BuiltInPlaceHolder);
             }
 
             checkboxOldKeeOtp.Checked = false;

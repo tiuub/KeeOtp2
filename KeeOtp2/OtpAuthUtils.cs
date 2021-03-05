@@ -1,4 +1,5 @@
 ﻿using KeePassLib;
+using KeePassLib.Collections;
 using KeePassLib.Security;
 using OtpSharp;
 using System;
@@ -97,6 +98,16 @@ namespace KeeOtp2
                     if (entry.Strings.Exists(field))
                         entry.Strings.Remove(field);
                 }
+            return entry;
+        }
+
+        public static PwEntry replacePlaceholder(PwEntry entry, string oldPlaceholder, string newPlaceholder)
+        {
+            entry.AutoType.DefaultSequence = entry.AutoType.DefaultSequence.Replace(oldPlaceholder, newPlaceholder);
+            foreach (AutoTypeAssociation ata in entry.AutoType.Associations)
+            {
+                ata.Sequence = ata.Sequence.Replace(oldPlaceholder, newPlaceholder);
+            }
             return entry;
         }
 

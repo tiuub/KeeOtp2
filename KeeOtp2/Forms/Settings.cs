@@ -132,6 +132,16 @@ namespace KeeOtp2
             int counter = 0;
             int succeeded = 0;
 
+            string oldPlaceholder = string.Empty;
+            string newPlaceholder = string.Empty;
+
+            if (this.migrateAutoType && migrateModePlaceholder.ContainsKey(migrateMode))
+            {
+                List<string> placeholder = migrateModePlaceholder[migrateMode];
+                oldPlaceholder = placeholder.ElementAt(0);
+                newPlaceholder = placeholder.ElementAt(1);
+            }
+
             labelMigrationStatus.Text = String.Format("Loaded {0} entrie(s)!", count);
             
             foreach (PwEntry entry in entries)
@@ -140,30 +150,33 @@ namespace KeeOtp2
                 {
                     if (checkEntryMigratable(entry, migrateMode))
                     {
-                        if (this.migrateAutoType && migrateModePlaceholder.ContainsKey(migrateMode))
-                        {
-                            List<string> placeholder = migrateModePlaceholder[migrateMode];
-                            entry.AutoType.DefaultSequence = entry.AutoType.DefaultSequence.Replace(placeholder.ElementAt(0), placeholder.ElementAt(1));
-                            foreach (AutoTypeAssociation ata in entry.AutoType.Associations)
-                            {
-                                ata.Sequence = ata.Sequence.Replace(placeholder.ElementAt(0), placeholder.ElementAt(1));
-                            }
-                        }
-
                         OtpAuthData data = OtpAuthUtils.loadData(entry);
                         if (data != null) {
                             entry.CreateBackup(this.host.Database);
-                            if (migrateMode == MigrateMode.KeeOtp1ToBuiltIn)
+                            switch (migrateMode)
                             {
-                                OtpAuthUtils.migrateToBuiltInOtp(data, entry);
-                                if (removeAfterMigration && OtpAuthUtils.loadDataFromBuiltInOtp(entry) != null)
-                                    OtpAuthUtils.purgeLoadedFields(data, entry);
-                            }
-                            else if (migrateMode == MigrateMode.BuiltInToKeeOtp1)
-                            {
-                                OtpAuthUtils.migrateToKeeOtp1String(data, entry);
-                                if (removeAfterMigration && OtpAuthUtils.loadDataFromKeeOtp1String(entry) != null)
-                                    OtpAuthUtils.purgeLoadedFields(data, entry);
+                                case MigrateMode.KeeOtp1ToBuiltIn:
+                                    OtpAuthUtils.migrateToBuiltInOtp(data, entry);
+                                    if (OtpAuthUtils.loadDataFromKeeOtp1String(entry) != null)
+                                    {
+                                        if (removeAfterMigration)
+                                            OtpAuthUtils.purgeLoadedFields(data, entry);
+                                        if (migrateAutoType && oldPlaceholder != string.Empty && newPlaceholder != string.Empty)
+                                            OtpAuthUtils.replacePlaceholder(entry, oldPlaceholder, newPlaceholder);
+                                    }
+                                    break;
+                                case MigrateMode.BuiltInToKeeOtp1:
+                                    OtpAuthUtils.migrateToKeeOtp1String(data, entry);
+                                    if (OtpAuthUtils.loadDataFromKeeOtp1String(entry) != null)
+                                    {
+                                        if (removeAfterMigration)
+                                            OtpAuthUtils.purgeLoadedFields(data, entry);
+                                        if (migrateAutoType && oldPlaceholder != string.Empty && newPlaceholder != string.Empty)
+                                            OtpAuthUtils.replacePlaceholder(entry, oldPlaceholder, newPlaceholder);
+                                    }
+                                    break;
+                                default:
+                                    break;
                             }
                                 
                             entry.Touch(true);
@@ -171,7 +184,11 @@ namespace KeeOtp2
                         }
                         else
                         {
-                            MessageBox.Show(String.Format("Cant migrate \"{0}\" - \"{1}\"\n(Username: {2})\n\nJust check the format of the \"key\" string.", entry.ParentGroup.Name, entry.Strings.ReadSafe(PwDefs.TitleField), entry.Strings.ReadSafe(PwDefs.UserNameField)), "Migration Error!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            this.Invoke((Action)(() => 
+                            {
+                                if (MessageBox.Show(String.Format("Cant load \"{0}\" - \"{1}\"\n(Username: {2})\n\nPlease check the format of the entry.\n\nOK\t- Continue to next entry.\nCancel\t- Cancels the whole migration proccess\n\nDone {3} of {4} entries!", entry.ParentGroup.Name, entry.Strings.ReadSafe(PwDefs.TitleField), entry.Strings.ReadSafe(PwDefs.UserNameField), counter, count), "Migration Error!", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
+                                    backgroundWorkerMigrate.CancelAsync();
+                            }));
                         }
                     }
                 }
