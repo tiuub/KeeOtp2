@@ -45,16 +45,16 @@
             this.labelGlobalHotkey = new System.Windows.Forms.Label();
             this.checkBoxUseHotkey = new System.Windows.Forms.CheckBox();
             this.groupBoxTime = new System.Windows.Forms.GroupBox();
-            this.radioButtonSystemTime = new System.Windows.Forms.RadioButton();
-            this.radioButtonFixedTimeOffset = new System.Windows.Forms.RadioButton();
-            this.radioButtonCustomNtpServer = new System.Windows.Forms.RadioButton();
-            this.textBoxCustomNTPServerAddress = new System.Windows.Forms.TextBox();
-            this.timerClock = new System.Windows.Forms.Timer(this.components);
-            this.numericUpDownFixedTimeOffset = new System.Windows.Forms.NumericUpDown();
-            this.labelTime = new System.Windows.Forms.Label();
-            this.buttonCustomNTPServerOK = new System.Windows.Forms.Button();
-            this.checkBoxOverrideBuiltInTime = new System.Windows.Forms.CheckBox();
             this.labelOverrideBuiltInTime = new System.Windows.Forms.Label();
+            this.checkBoxOverrideBuiltInTime = new System.Windows.Forms.CheckBox();
+            this.buttonCustomNTPServerOK = new System.Windows.Forms.Button();
+            this.labelTime = new System.Windows.Forms.Label();
+            this.numericUpDownFixedTimeOffset = new System.Windows.Forms.NumericUpDown();
+            this.textBoxCustomNTPServerAddress = new System.Windows.Forms.TextBox();
+            this.radioButtonCustomNtpServer = new System.Windows.Forms.RadioButton();
+            this.radioButtonFixedTimeOffset = new System.Windows.Forms.RadioButton();
+            this.radioButtonSystemTime = new System.Windows.Forms.RadioButton();
+            this.timerClock = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBanner)).BeginInit();
             this.groupBoxMigration.SuspendLayout();
             this.groupBoxHotkey.SuspendLayout();
@@ -242,53 +242,45 @@
             this.groupBoxTime.TabStop = false;
             this.groupBoxTime.Text = "Global Time";
             // 
-            // radioButtonSystemTime
+            // labelOverrideBuiltInTime
             // 
-            this.radioButtonSystemTime.AutoSize = true;
-            this.radioButtonSystemTime.Location = new System.Drawing.Point(9, 19);
-            this.radioButtonSystemTime.Name = "radioButtonSystemTime";
-            this.radioButtonSystemTime.Size = new System.Drawing.Size(113, 17);
-            this.radioButtonSystemTime.TabIndex = 0;
-            this.radioButtonSystemTime.TabStop = true;
-            this.radioButtonSystemTime.Text = "Use time of system";
-            this.radioButtonSystemTime.UseVisualStyleBackColor = true;
-            this.radioButtonSystemTime.CheckedChanged += new System.EventHandler(this.radioButtonsTime_CheckedChanged);
+            this.labelOverrideBuiltInTime.AutoSize = true;
+            this.labelOverrideBuiltInTime.Location = new System.Drawing.Point(6, 97);
+            this.labelOverrideBuiltInTime.Name = "labelOverrideBuiltInTime";
+            this.labelOverrideBuiltInTime.Size = new System.Drawing.Size(109, 13);
+            this.labelOverrideBuiltInTime.TabIndex = 11;
+            this.labelOverrideBuiltInTime.Text = "Override built-in time*:";
             // 
-            // radioButtonFixedTimeOffset
+            // checkBoxOverrideBuiltInTime
             // 
-            this.radioButtonFixedTimeOffset.AutoSize = true;
-            this.radioButtonFixedTimeOffset.Location = new System.Drawing.Point(9, 44);
-            this.radioButtonFixedTimeOffset.Name = "radioButtonFixedTimeOffset";
-            this.radioButtonFixedTimeOffset.Size = new System.Drawing.Size(130, 17);
-            this.radioButtonFixedTimeOffset.TabIndex = 1;
-            this.radioButtonFixedTimeOffset.TabStop = true;
-            this.radioButtonFixedTimeOffset.Text = "Fixed time offset (sec.)";
-            this.radioButtonFixedTimeOffset.UseVisualStyleBackColor = true;
-            this.radioButtonFixedTimeOffset.CheckedChanged += new System.EventHandler(this.radioButtonsTime_CheckedChanged);
+            this.checkBoxOverrideBuiltInTime.AutoSize = true;
+            this.checkBoxOverrideBuiltInTime.Location = new System.Drawing.Point(147, 96);
+            this.checkBoxOverrideBuiltInTime.Name = "checkBoxOverrideBuiltInTime";
+            this.checkBoxOverrideBuiltInTime.Size = new System.Drawing.Size(121, 17);
+            this.checkBoxOverrideBuiltInTime.TabIndex = 9;
+            this.checkBoxOverrideBuiltInTime.Text = "Override built-in time";
+            this.checkBoxOverrideBuiltInTime.UseVisualStyleBackColor = true;
             // 
-            // radioButtonCustomNtpServer
+            // buttonCustomNTPServerOK
             // 
-            this.radioButtonCustomNtpServer.AutoSize = true;
-            this.radioButtonCustomNtpServer.Location = new System.Drawing.Point(9, 71);
-            this.radioButtonCustomNtpServer.Name = "radioButtonCustomNtpServer";
-            this.radioButtonCustomNtpServer.Size = new System.Drawing.Size(117, 17);
-            this.radioButtonCustomNtpServer.TabIndex = 2;
-            this.radioButtonCustomNtpServer.TabStop = true;
-            this.radioButtonCustomNtpServer.Text = "Custom NTP server";
-            this.radioButtonCustomNtpServer.UseVisualStyleBackColor = true;
-            this.radioButtonCustomNtpServer.CheckedChanged += new System.EventHandler(this.radioButtonsTime_CheckedChanged);
+            this.buttonCustomNTPServerOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCustomNTPServerOK.Location = new System.Drawing.Point(267, 68);
+            this.buttonCustomNTPServerOK.Name = "buttonCustomNTPServerOK";
+            this.buttonCustomNTPServerOK.Size = new System.Drawing.Size(30, 23);
+            this.buttonCustomNTPServerOK.TabIndex = 9;
+            this.buttonCustomNTPServerOK.Text = "OK";
+            this.buttonCustomNTPServerOK.UseVisualStyleBackColor = true;
+            this.buttonCustomNTPServerOK.Click += new System.EventHandler(this.buttonCustomNTPServerOK_Click);
             // 
-            // textBoxCustomNTPServerAddress
+            // labelTime
             // 
-            this.textBoxCustomNTPServerAddress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxCustomNTPServerAddress.Location = new System.Drawing.Point(147, 70);
-            this.textBoxCustomNTPServerAddress.Name = "textBoxCustomNTPServerAddress";
-            this.textBoxCustomNTPServerAddress.Size = new System.Drawing.Size(114, 20);
-            this.textBoxCustomNTPServerAddress.TabIndex = 3;
-            // 
-            // timerClock
-            // 
-            this.timerClock.Tick += new System.EventHandler(this.timerClock_Tick);
+            this.labelTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelTime.AutoSize = true;
+            this.labelTime.Location = new System.Drawing.Point(178, 21);
+            this.labelTime.Name = "labelTime";
+            this.labelTime.Size = new System.Drawing.Size(119, 13);
+            this.labelTime.TabIndex = 10;
+            this.labelTime.Text = "Preview (Utc): 00:00:00";
             // 
             // numericUpDownFixedTimeOffset
             // 
@@ -308,45 +300,53 @@
             this.numericUpDownFixedTimeOffset.Size = new System.Drawing.Size(150, 20);
             this.numericUpDownFixedTimeOffset.TabIndex = 9;
             // 
-            // labelTime
+            // textBoxCustomNTPServerAddress
             // 
-            this.labelTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelTime.AutoSize = true;
-            this.labelTime.Location = new System.Drawing.Point(178, 21);
-            this.labelTime.Name = "labelTime";
-            this.labelTime.Size = new System.Drawing.Size(119, 13);
-            this.labelTime.TabIndex = 10;
-            this.labelTime.Text = "Preview (Utc): 00:00:00";
+            this.textBoxCustomNTPServerAddress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCustomNTPServerAddress.Location = new System.Drawing.Point(147, 70);
+            this.textBoxCustomNTPServerAddress.Name = "textBoxCustomNTPServerAddress";
+            this.textBoxCustomNTPServerAddress.Size = new System.Drawing.Size(114, 20);
+            this.textBoxCustomNTPServerAddress.TabIndex = 3;
             // 
-            // buttonCustomNTPServerOK
+            // radioButtonCustomNtpServer
             // 
-            this.buttonCustomNTPServerOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCustomNTPServerOK.Location = new System.Drawing.Point(267, 68);
-            this.buttonCustomNTPServerOK.Name = "buttonCustomNTPServerOK";
-            this.buttonCustomNTPServerOK.Size = new System.Drawing.Size(30, 23);
-            this.buttonCustomNTPServerOK.TabIndex = 9;
-            this.buttonCustomNTPServerOK.Text = "OK";
-            this.buttonCustomNTPServerOK.UseVisualStyleBackColor = true;
-            this.buttonCustomNTPServerOK.Click += new System.EventHandler(this.buttonCustomNTPServerOK_Click);
+            this.radioButtonCustomNtpServer.AutoSize = true;
+            this.radioButtonCustomNtpServer.Location = new System.Drawing.Point(9, 71);
+            this.radioButtonCustomNtpServer.Name = "radioButtonCustomNtpServer";
+            this.radioButtonCustomNtpServer.Size = new System.Drawing.Size(117, 17);
+            this.radioButtonCustomNtpServer.TabIndex = 2;
+            this.radioButtonCustomNtpServer.TabStop = true;
+            this.radioButtonCustomNtpServer.Text = "Custom NTP server";
+            this.radioButtonCustomNtpServer.UseVisualStyleBackColor = true;
+            this.radioButtonCustomNtpServer.CheckedChanged += new System.EventHandler(this.radioButtonsTime_CheckedChanged);
             // 
-            // checkBoxOverrideBuiltInTime
+            // radioButtonFixedTimeOffset
             // 
-            this.checkBoxOverrideBuiltInTime.AutoSize = true;
-            this.checkBoxOverrideBuiltInTime.Location = new System.Drawing.Point(147, 96);
-            this.checkBoxOverrideBuiltInTime.Name = "checkBoxOverrideBuiltInTime";
-            this.checkBoxOverrideBuiltInTime.Size = new System.Drawing.Size(121, 17);
-            this.checkBoxOverrideBuiltInTime.TabIndex = 9;
-            this.checkBoxOverrideBuiltInTime.Text = "Override built-in time";
-            this.checkBoxOverrideBuiltInTime.UseVisualStyleBackColor = true;
+            this.radioButtonFixedTimeOffset.AutoSize = true;
+            this.radioButtonFixedTimeOffset.Location = new System.Drawing.Point(9, 44);
+            this.radioButtonFixedTimeOffset.Name = "radioButtonFixedTimeOffset";
+            this.radioButtonFixedTimeOffset.Size = new System.Drawing.Size(130, 17);
+            this.radioButtonFixedTimeOffset.TabIndex = 1;
+            this.radioButtonFixedTimeOffset.TabStop = true;
+            this.radioButtonFixedTimeOffset.Text = "Fixed time offset (sec.)";
+            this.radioButtonFixedTimeOffset.UseVisualStyleBackColor = true;
+            this.radioButtonFixedTimeOffset.CheckedChanged += new System.EventHandler(this.radioButtonsTime_CheckedChanged);
             // 
-            // labelOverrideBuiltInTime
+            // radioButtonSystemTime
             // 
-            this.labelOverrideBuiltInTime.AutoSize = true;
-            this.labelOverrideBuiltInTime.Location = new System.Drawing.Point(6, 97);
-            this.labelOverrideBuiltInTime.Name = "labelOverrideBuiltInTime";
-            this.labelOverrideBuiltInTime.Size = new System.Drawing.Size(109, 13);
-            this.labelOverrideBuiltInTime.TabIndex = 11;
-            this.labelOverrideBuiltInTime.Text = "Override built-in time*:";
+            this.radioButtonSystemTime.AutoSize = true;
+            this.radioButtonSystemTime.Location = new System.Drawing.Point(9, 19);
+            this.radioButtonSystemTime.Name = "radioButtonSystemTime";
+            this.radioButtonSystemTime.Size = new System.Drawing.Size(113, 17);
+            this.radioButtonSystemTime.TabIndex = 0;
+            this.radioButtonSystemTime.TabStop = true;
+            this.radioButtonSystemTime.Text = "Use time of system";
+            this.radioButtonSystemTime.UseVisualStyleBackColor = true;
+            this.radioButtonSystemTime.CheckedChanged += new System.EventHandler(this.radioButtonsTime_CheckedChanged);
+            // 
+            // timerClock
+            // 
+            this.timerClock.Tick += new System.EventHandler(this.timerClock_Tick);
             // 
             // Settings
             // 

@@ -1,4 +1,5 @@
-﻿using KeePass.Plugins;
+﻿using KeeOtp2.Properties;
+using KeePass.Plugins;
 using System;
 using System.Drawing;
 using System.Reflection;
@@ -79,6 +80,12 @@ namespace KeeOtp2
             lvi.SubItems.Add("micjahn");
             lvi.SubItems.Add("Apache 2.0");
             lvi.Tag = Resources.ZXingNetLICENSE;
+            clv_Dependencies.Items.Add(lvi);
+
+            lvi = new ListViewItem("Microsoft.Xaml");
+            lvi.SubItems.Add("karelz & bmarshall");
+            lvi.SubItems.Add("None");
+            lvi.Tag = null;
             clv_Dependencies.Items.Add(lvi);
         }
 

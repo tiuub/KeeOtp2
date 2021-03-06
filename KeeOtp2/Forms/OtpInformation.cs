@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using KeeOtp2.Properties;
 using KeePass.Plugins;
-using KeePassLib.Security;
 using OtpSharp;
 using ZXing;
 
@@ -62,6 +61,208 @@ namespace KeeOtp2
         {
             loadData();
         }
+
+        private void OtpInformation_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (this.DialogResult == DialogResult.Cancel)
+                return;
+            try
+            {
+                List<string> loadedFields = this.Data.loadedFields;
+                if (textBoxKey.Text.StartsWith("otpauth://"))
+                {
+                    this.Data = OtpAuthUtils.uriToOtpAuthData(new Uri(textBoxKey.Text));
+                }
+                else
+                {
+                    string secret = textBoxKey.Text.Replace(" ", string.Empty).Replace("-", string.Empty);
+                    if (string.IsNullOrEmpty(this.textBoxKey.Text))
+                    {
+                        MessageBox.Show("A key must be set", "Missing key", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        e.Cancel = true;
+                        return;
+                    }
+
+                    
+                    this.Data = new OtpAuthData();
+
+                    // encoding
+                    if (this.radioButtonBase32.Checked)
+                        this.Data.Encoding = OtpSecretEncoding.Base32;
+                    else if (this.radioButtonBase64.Checked)
+                        this.Data.Encoding = OtpSecretEncoding.Base64;
+                    else if (this.radioButtonHex.Checked)
+                        this.Data.Encoding = OtpSecretEncoding.Hex;
+                    else if (this.radioButtonUtf8.Checked)
+                        this.Data.Encoding = OtpSecretEncoding.UTF8;
+
+                    secret = OtpAuthUtils.correctPlainSecret(secret, this.Data.Encoding);
+
+                    // Validate secret (catch)
+                    OtpAuthUtils.validatePlainSecret(secret, this.Data.Encoding);
+
+                    int step = 30;
+                    if (int.TryParse(this.textBoxStep.Text, out step))
+                    {
+                        if (step != 30)
+                        {
+                            if (step <= 0)
+                            {
+                                this.textBoxStep.Text = "30";
+                                MessageBox.Show("The time step must be a non-zero positive integer. The standard value is 30.", "Invalid time step", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                e.Cancel = true;
+                                return;
+                            }
+                            else if (MessageBox.Show("You have selected a non-standard time step. You should only proceed if you were specifically told to use this time step size.\nDefault Value: 30\n\nDo you wish to proceed?", "Non-standard time step size", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.No)
+                            {
+                                e.Cancel = true;
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        this.textBoxStep.Text = "30";
+                        MessageBox.Show("The time step must be a non-zero positive integer. The standard value is 30.", "Invalid time step", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        e.Cancel = true;
+                        return;
+                    }
+
+                    // size
+                    if (this.radioButtonSix.Checked)
+                        this.Data.Digits = 6;
+                    else if (this.radioButtonEight.Checked)
+                        this.Data.Digits = 8;
+
+                    // step
+                    this.Data.Period = step;
+
+                    // hashmode
+                    if (this.radioButtonSha1.Checked)
+                        this.Data.Algorithm = OtpHashMode.Sha1;
+                    else if (this.radioButtonSha256.Checked)
+                        this.Data.Algorithm = OtpHashMode.Sha256;
+                    else if (this.radioButtonSha512.Checked)
+                        this.Data.Algorithm = OtpHashMode.Sha512;
+
+                    this.Data.SetPlainSecret(secret);
+                }
+                this.Data.loadedFields = loadedFields;
+
+                this.entry.CreateBackup(this.host.Database);
+
+                if (checkboxOldKeeOtp.Checked)
+                {
+                    OtpAuthUtils.migrateToKeeOtp1String(this.Data, this.entry);
+                    if (OtpAuthUtils.loadDataFromKeeOtp1String(this.entry) != null)
+                        OtpAuthUtils.purgeLoadedFields(this.Data, this.entry);
+                }
+                else
+                {
+                    OtpAuthUtils.migrateToBuiltInOtp(this.Data, this.entry);
+                    if (OtpAuthUtils.loadDataFromBuiltInOtp(this.entry) != null)
+                        OtpAuthUtils.purgeLoadedFields(this.Data, this.entry);
+                }
+                
+
+                this.entry.Touch(true);
+                this.host.MainWindow.ActiveDatabase.Modified = true;
+                this.host.MainWindow.UpdateUI(false, null, false, null, false, null, true);
+            }
+            catch (InvalidBase32FormatException ex)
+            {
+                MessageBox.Show(ex.Message, "Invalid Base32 Format!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                e.Cancel = true;
+                return;
+            }
+            catch (InvalidBase64FormatException ex)
+            {
+                MessageBox.Show(ex.Message, "Invalid Base64 Format!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                e.Cancel = true;
+                return;
+            }
+            catch (InvalidHexFormatException ex)
+            {
+                MessageBox.Show(ex.Message, "Invalid Hex Format!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                e.Cancel = true;
+                return;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("There happened an error. Please check your entered key and your settings!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                e.Cancel = true;
+                return;
+            }
+        }
+
+        private void checkBoxCustomSettings_CheckedChanged(object sender, EventArgs e)
+        {
+            SetCustomSettingsState(this.fullyLoaded);
+        }
+
+        private void llbl_LoadUri_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            llbl_LoadUri.Visible = false;
+            llbl_LoadUri.Enabled = false;
+            try
+            {
+                OtpAuthData data = OtpAuthUtils.uriToOtpAuthData(new Uri(textBoxKey.Text));
+                if (data != null)
+                {
+                    this.Data = data;
+                    loadData();
+                }
+                else
+                    MessageBox.Show("The give Uri does not contain a secret.\n\nA secret is required!", "Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (InvalidBase32FormatException ex)
+            {
+                MessageBox.Show("The secret encoding is invalid. Uri strings only allow Base32 encoding. Please validate the secret!\n\nError Message:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (InvalidUriFormat ex)
+            {
+                MessageBox.Show("The Uri you have entered is invalid. The Uri string have to be started with 'otpauth://'.\n\nError Message:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("There happend an error! Please try again.\n\nError Message:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void textBoxKey_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+                this.DialogResult = DialogResult.OK;
+        }
+
+        private void textBoxKey_TextChanged(object sender, EventArgs e)
+        {
+            if (textBoxKey.Text.StartsWith("otpauth://"))
+            {
+                llbl_LoadUri.Visible = true;
+                llbl_LoadUri.Enabled = true;
+            }
+        }
+
+        private void buttonMigrate_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Do you want to replace the Auto-Type key {TOTP} with the built-in key {TIMEOTP}?", "Migrate Auto-Type", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                OtpAuthUtils.replacePlaceholder(this.entry, KeeOtp2Ext.KeeOtp1PlaceHolder, KeeOtp2Ext.BuiltInPlaceHolder);
+            }
+
+            checkboxOldKeeOtp.Checked = false;
+            this.DialogResult = DialogResult.OK;
+        }
+
+        private void buttonScanQRCode_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Ensure that the QRCode is somewhere visible on the screen.\nThe plugin will look for any QRCode on the screen.\n\nPress 'OK' to start the scan!", "Scan QRCode", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
+            {
+                scanQRCode();
+            }
+        }
+
 
         private void loadData()
         {
@@ -160,138 +361,6 @@ namespace KeeOtp2
             this.fullyLoaded = true;
         }
 
-        private void OtpInformation_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (this.DialogResult == DialogResult.Cancel)
-                return;
-            try
-            {
-                if (textBoxKey.Text.StartsWith("otpauth://"))
-                {
-                    this.Data = OtpAuthUtils.uriToOtpAuthData(new Uri(textBoxKey.Text));
-                }
-                else
-                {
-                    string secret = textBoxKey.Text.Replace(" ", string.Empty).Replace("-", string.Empty);
-                    if (string.IsNullOrEmpty(this.textBoxKey.Text))
-                    {
-                        MessageBox.Show("A key must be set", "Missing key", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        e.Cancel = true;
-                        return;
-                    }
-
-                    
-                    this.Data = new OtpAuthData();
-
-                    // encoding
-                    if (this.radioButtonBase32.Checked)
-                        this.Data.Encoding = OtpSecretEncoding.Base32;
-                    else if (this.radioButtonBase64.Checked)
-                        this.Data.Encoding = OtpSecretEncoding.Base64;
-                    else if (this.radioButtonHex.Checked)
-                        this.Data.Encoding = OtpSecretEncoding.Hex;
-                    else if (this.radioButtonUtf8.Checked)
-                        this.Data.Encoding = OtpSecretEncoding.UTF8;
-
-                    secret = OtpAuthUtils.correctPlainSecret(secret, this.Data.Encoding);
-
-                    // Validate secret (catch)
-                    OtpAuthUtils.validatePlainSecret(secret, this.Data.Encoding);
-
-                    int step = 30;
-                    if (int.TryParse(this.textBoxStep.Text, out step))
-                    {
-                        if (step != 30)
-                        {
-                            if (step <= 0)
-                            {
-                                this.textBoxStep.Text = "30";
-                                MessageBox.Show("The time step must be a non-zero positive integer. The standard value is 30.", "Invalid time step", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                e.Cancel = true;
-                                return;
-                            }
-                            else if (MessageBox.Show("You have selected a non-standard time step. You should only proceed if you were specifically told to use this time step size.\nDefault Value: 30\n\nDo you wish to proceed?", "Non-standard time step size", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.No)
-                            {
-                                e.Cancel = true;
-                                return;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        this.textBoxStep.Text = "30";
-                        MessageBox.Show("The time step must be a non-zero positive integer. The standard value is 30.", "Invalid time step", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        e.Cancel = true;
-                        return;
-                    }
-
-                    // size
-                    if (this.radioButtonSix.Checked)
-                        this.Data.Digits = 6;
-                    else if (this.radioButtonEight.Checked)
-                        this.Data.Digits = 8;
-
-                    // step
-                    this.Data.Period = step;
-
-                    // hashmode
-                    if (this.radioButtonSha1.Checked)
-                        this.Data.Algorithm = OtpHashMode.Sha1;
-                    else if (this.radioButtonSha256.Checked)
-                        this.Data.Algorithm = OtpHashMode.Sha256;
-                    else if (this.radioButtonSha512.Checked)
-                        this.Data.Algorithm = OtpHashMode.Sha512;
-
-                    this.Data.SetPlainSecret(secret);
-                }
-
-                this.entry.CreateBackup(this.host.Database);
-
-                if (checkboxOldKeeOtp.Checked)
-                {
-                    OtpAuthUtils.migrateToKeeOtp1String(this.Data, this.entry);
-                }
-                else
-                {
-                    OtpAuthUtils.migrateToBuiltInOtp(this.Data, this.entry);
-                }
-                if (OtpAuthUtils.loadData(this.entry) != null)
-                    OtpAuthUtils.purgeLoadedFields(this.Data, this.entry);
-
-                this.entry.Touch(true);
-                this.host.MainWindow.ActiveDatabase.Modified = true;
-                this.host.MainWindow.UpdateUI(false, null, false, null, false, null, true);
-            }
-            catch (InvalidBase32FormatException ex)
-            {
-                MessageBox.Show(ex.Message, "Invalid Base32 Format!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                e.Cancel = true;
-                return;
-            }
-            catch (InvalidBase64FormatException ex)
-            {
-                MessageBox.Show(ex.Message, "Invalid Base64 Format!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                e.Cancel = true;
-                return;
-            }
-            catch (InvalidHexFormatException ex)
-            {
-                MessageBox.Show(ex.Message, "Invalid Hex Format!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                e.Cancel = true;
-                return;
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("There happened an error. Please check your entered key and your settings!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                e.Cancel = true;
-                return;
-            }
-        }
-
-        private void checkBoxCustomSettings_CheckedChanged(object sender, EventArgs e)
-        {
-            SetCustomSettingsState(this.fullyLoaded);
-        }
 
         private void SetCustomSettingsState(bool showWarning)
         {
@@ -303,75 +372,13 @@ namespace KeeOtp2
                 this.radioButtonUtf8.Enabled =
                 this.radioButtonSix.Enabled =
                 this.radioButtonEight.Enabled =
-                this.textBoxStep.Enabled = 
-                this.radioButtonSha1.Enabled = 
-                this.radioButtonSha256.Enabled = 
-                this.radioButtonSha512.Enabled = 
+                this.textBoxStep.Enabled =
+                this.radioButtonSha1.Enabled =
+                this.radioButtonSha256.Enabled =
+                this.radioButtonSha512.Enabled =
                 this.checkboxOldKeeOtp.Enabled = useCustom;
         }
 
-        private void buttonMigrate_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Do you want to replace the Auto-Type key {TOTP} with the built-in key {TIMEOTP}?", "Migrate Auto-Type", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                OtpAuthUtils.replacePlaceholder(this.entry, KeeOtp2Ext.KeeOtp1PlaceHolder, KeeOtp2Ext.BuiltInPlaceHolder);
-            }
-
-            checkboxOldKeeOtp.Checked = false;
-            this.DialogResult = DialogResult.OK;
-        }
-
-        private void textBoxKey_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyData == Keys.Enter)
-                this.DialogResult = DialogResult.OK;
-        }
-
-        private void textBoxKey_TextChanged(object sender, EventArgs e)
-        {
-            if (textBoxKey.Text.StartsWith("otpauth://"))
-            {
-                llbl_LoadUri.Visible = true;
-                llbl_LoadUri.Enabled = true;
-            }
-        }
-
-        private void llbl_LoadUri_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            llbl_LoadUri.Visible = false;
-            llbl_LoadUri.Enabled = false;
-            try
-            {
-                OtpAuthData data = OtpAuthUtils.uriToOtpAuthData(new Uri(textBoxKey.Text));
-                if (data != null)
-                {
-                    this.Data = data;
-                    loadData();
-                }
-                else
-                    MessageBox.Show("The give Uri does not contain a secret.\n\nA secret is required!", "Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            catch (InvalidBase32FormatException ex)
-            {
-                MessageBox.Show("The secret encoding is invalid. Uri strings only allow Base32 encoding. Please validate the secret!\n\nError Message:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (InvalidUriFormat ex)
-            {
-                MessageBox.Show("The Uri you have entered is invalid. The Uri string have to be started with 'otpauth://'.\n\nError Message:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("There happend an error! Please try again.\n\nError Message:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void buttonScanQRCode_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Ensure that the QRCode is somewhere visible on the screen.\nThe plugin will look for any QRCode on the screen.\n\nPress 'OK' to start the scan!", "Scan QRCode", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
-            {
-                scanQRCode();
-            }
-        }
 
         private void scanQRCode()
         {

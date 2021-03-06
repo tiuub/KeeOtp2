@@ -1,75 +1,61 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{4C1BB6F8-D2CD-49C2-9053-21705681356C}</ProjectGuid>
+    <ProjectGuid>{6239EC51-8EA1-4AEC-883F-086663F24D40}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>KeeOtp2</RootNamespace>
     <AssemblyName>KeeOtp2</AssemblyName>
-    <SignAssembly>True</SignAssembly>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>4.0</OldToolsVersion>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>True</DebugSymbols>
+    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>False</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>True</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="KeePass">
       <HintPath>..\KeePass\KeePass.exe</HintPath>
     </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
+    <Reference Include="OtpSharp, Version=1.0.6.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OtpSharp.1.0.6.1\lib\net40\OtpSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Xaml.4.0.0.1\lib\PresentationCore.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Xaml.4.0.0.1\lib\PresentationFramework.dll</HintPath>
+    </Reference>
     <Reference Include="QRCoder, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\QRCoder.1.4.1\lib\net40\QRCoder.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="OtpSharp">
-      <HintPath>..\packages\OtpSharp.1.0.5.0\lib\net40\OtpSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="WindowsBase" />
     <Reference Include="Yort.Ntp, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Yort.Ntp.Portable.2.0.0\lib\net40\Yort.Ntp.dll</HintPath>
     </Reference>
@@ -84,70 +70,53 @@
     <Compile Include="Forms\About.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\About.Designer.cs">
+    <Compile Include="Forms\About.designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
-    <Compile Include="KeeOtp2Config.cs" />
-    <Compile Include="OtpAuthExceptions.cs" />
-    <Compile Include="OtpAuthUtils.cs" />
     <Compile Include="Forms\OtpInformation.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\OtpInformation.Designer.cs">
+    <Compile Include="Forms\OtpInformation.designer.cs">
       <DependentUpon>OtpInformation.cs</DependentUpon>
     </Compile>
-    <Compile Include="OtpTime.cs" />
-    <Compile Include="OtpType.cs" />
-    <Compile Include="KeeOtp2Ext.cs" />
-    <Compile Include="OtpAuthData.cs" />
-    <Compile Include="Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="OtpSecretEncoding.cs" />
     <Compile Include="Forms\Settings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Settings.Designer.cs">
+    <Compile Include="Forms\Settings.designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ShowOneTimePasswords.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ShowOneTimePasswords.Designer.cs">
+    <Compile Include="Forms\ShowOneTimePasswords.designer.cs">
       <DependentUpon>ShowOneTimePasswords.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Forms\Troubleshooting.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Troubleshooting.Designer.cs">
-      <DependentUpon>Troubleshooting.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ShowQrCode.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ShowQrCode.Designer.cs">
+    <Compile Include="Forms\ShowQrCode.designer.cs">
       <DependentUpon>ShowQrCode.cs</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
+    <Compile Include="Forms\Troubleshooting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Troubleshooting.designer.cs">
+      <DependentUpon>Troubleshooting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeeOtp2Config.cs" />
+    <Compile Include="KeeOtp2Ext.cs" />
+    <Compile Include="OtpAuthData.cs" />
+    <Compile Include="OtpAuthExceptions.cs" />
+    <Compile Include="OtpAuthUtils.cs" />
+    <Compile Include="OtpSecretEncoding.cs" />
+    <Compile Include="OtpTime.cs" />
+    <Compile Include="OtpType.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\About.resx">
@@ -156,30 +125,29 @@
     <EmbeddedResource Include="Forms\OtpInformation.resx">
       <DependentUpon>OtpInformation.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ShowOneTimePasswords.resx">
       <DependentUpon>ShowOneTimePasswords.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Troubleshooting.resx">
-      <DependentUpon>Troubleshooting.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ShowQrCode.resx">
       <DependentUpon>ShowQrCode.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Troubleshooting.resx">
+      <DependentUpon>Troubleshooting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\clock.png" />
     <None Include="packages.config" />
+    <None Include="Resources\clock.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\lock-key.png" />
+    <None Include="Resources\lock-key.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Dependencies\**\*">
@@ -187,16 +155,5 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

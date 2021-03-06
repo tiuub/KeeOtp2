@@ -16,6 +16,7 @@ namespace KeeOtp2
             this.Icon = host.MainWindow.Icon;
 
             this.host = host;
+            this.TopMost = host.MainWindow.TopMost;
         }
 
         private void Troubleshooting_Load(object sender, EventArgs e)
@@ -27,7 +28,7 @@ namespace KeeOtp2
         private void buttonPingGoogle_Click(object sender, EventArgs e)
         {
             this.Enabled = false;
-            this.buttonPingGoogle.Visible = false;
+            this.buttonPingNTPServer.Visible = false;
             this.progressBarGettingTimeCorrection.Visible = true;
 
             var client = new NtpClient();
@@ -38,26 +39,25 @@ namespace KeeOtp2
 
         private void buttonTroubleshootingWebsite_Click(object sender, EventArgs e)
         {
-            // go to the troubleshooting page
-            var url = "https://github.com/tiuub/KeeOtp2";
-            Process ps = new Process();
-            ps.StartInfo = new ProcessStartInfo(url);
-            ps.Start();
+            Process.Start("https://github.com/tiuub/KeeOtp2");
         }
 
         private void Client_TimeReceived(object sender, NtpTimeReceivedEventArgs e)
         {
-            this.buttonPingGoogle.Visible = true;
+            this.buttonPingNTPServer.Visible = true;
             this.progressBarGettingTimeCorrection.Visible = false;
-            //TimeSpan difference = DateTime.Now.Subtract();
-            int difference = (DateTime.Now.Millisecond - e.CurrentTime.Millisecond);
+            TimeSpan timeDifference = OtpTime.getTime().Subtract(e.CurrentTime);
 
-            if (-5000 < difference && difference < 5000)
-                MessageBox.Show(String.Format("You are {0} milliseconds ({1} seconds) {2}. All fine!", Math.Abs(difference), Math.Round(Math.Abs((float)difference / 1000), 1), (difference < 0 ? "behind" : "before")), "NTP Request", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            else if (-30000 < difference && difference < 30000)
-                MessageBox.Show(String.Format("You are {0} milliseconds ({1} seconds) {2}. It may work, but you should check your time settings!", Math.Abs(difference), Math.Round(Math.Abs((float)difference / 1000), 1), (difference < 0 ? "behind" : "before")), "NTP Request", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            else
-                MessageBox.Show(String.Format("You are {0} milliseconds ({1} seconds) {2}. Generating TOTPs wont work. You should definitely check your time settings!", Math.Abs(difference), Math.Round(Math.Abs((float)difference / 1000), 1), (difference < 0 ? "behind" : "before")), "NTP Request", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            this.Invoke((Action)(() =>
+            {
+                if (-5000 < timeDifference.TotalMilliseconds && timeDifference.TotalMilliseconds < 5000)
+                    MessageBox.Show(String.Format("You are {0} milliseconds ({1} seconds) {2}. All fine!", Math.Round(Math.Abs(timeDifference.TotalMilliseconds)), Math.Round(Math.Abs((float)timeDifference.TotalMilliseconds / 1000), 1), (timeDifference.TotalMilliseconds < 0 ? "behind" : "before")), "NTP Request", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                else if (-30000 < timeDifference.TotalMilliseconds && timeDifference.TotalMilliseconds < 30000)
+                    MessageBox.Show(String.Format("You are {0} milliseconds ({1} seconds) {2}. It may work, but you should check your time settings!", Math.Round(Math.Abs(timeDifference.TotalMilliseconds)), Math.Round(Math.Abs((float)timeDifference.TotalMilliseconds / 1000), 1), (timeDifference.TotalMilliseconds < 0 ? "behind" : "before")), "NTP Request", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                else
+                    MessageBox.Show(String.Format("You are {0} milliseconds ({1} seconds) {2}. Generating TOTPs wont work. You should definitely check your time settings!", Math.Round(Math.Abs(timeDifference.TotalMilliseconds)), Math.Round(Math.Abs((float)timeDifference.TotalMilliseconds / 1000), 1), (timeDifference.TotalMilliseconds < 0 ? "behind" : "before")), "NTP Request", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+            }));
             this.Enabled = true;
         }
     }

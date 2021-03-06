@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
+using System.Windows.Forms;
 using Yort.Ntp;
 
 namespace KeeOtp2
@@ -95,7 +92,7 @@ namespace KeeOtp2
 
         private static void NtpClient_ErrorOccurred(object sender, NtpNetworkErrorEventArgs e)
         {
-            MessageBox.Show("Polling the NTP Server failed. Please confirm your entered address!\n\nError message:\n" + e.Exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show("Polling the NTP Server failed. Please confirm your entered address!\n\nError message:\n" + e.Exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private static void NtpClient_TimeReceived(object sender, NtpTimeReceivedEventArgs e)

@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.labelHeader = new System.Windows.Forms.Label();
-            this.buttonPingGoogle = new System.Windows.Forms.Button();
+            this.buttonPingNTPServer = new System.Windows.Forms.Button();
             this.buttonTroubleshootingWebsite = new System.Windows.Forms.Button();
             this.progressBarGettingTimeCorrection = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
@@ -46,15 +46,15 @@
             this.labelHeader.Text = "There are many things that can cause an incorrect code.  We\'ll go through the mos" +
     "t common things here.";
             // 
-            // buttonPingGoogle
+            // buttonPingNTPServer
             // 
-            this.buttonPingGoogle.Location = new System.Drawing.Point(16, 55);
-            this.buttonPingGoogle.Name = "buttonPingGoogle";
-            this.buttonPingGoogle.Size = new System.Drawing.Size(338, 23);
-            this.buttonPingGoogle.TabIndex = 1;
-            this.buttonPingGoogle.Text = "Ping Google for current time";
-            this.buttonPingGoogle.UseVisualStyleBackColor = true;
-            this.buttonPingGoogle.Click += new System.EventHandler(this.buttonPingGoogle_Click);
+            this.buttonPingNTPServer.Location = new System.Drawing.Point(16, 55);
+            this.buttonPingNTPServer.Name = "buttonPingNTPServer";
+            this.buttonPingNTPServer.Size = new System.Drawing.Size(338, 23);
+            this.buttonPingNTPServer.TabIndex = 1;
+            this.buttonPingNTPServer.Text = "Ping NTP server for current time";
+            this.buttonPingNTPServer.UseVisualStyleBackColor = true;
+            this.buttonPingNTPServer.Click += new System.EventHandler(this.buttonPingGoogle_Click);
             // 
             // buttonTroubleshootingWebsite
             // 
@@ -81,7 +81,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(366, 129);
             this.Controls.Add(this.buttonTroubleshootingWebsite);
-            this.Controls.Add(this.buttonPingGoogle);
+            this.Controls.Add(this.buttonPingNTPServer);
             this.Controls.Add(this.labelHeader);
             this.Controls.Add(this.progressBarGettingTimeCorrection);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -98,7 +98,7 @@
         #endregion
 
         private System.Windows.Forms.Label labelHeader;
-        private System.Windows.Forms.Button buttonPingGoogle;
+        private System.Windows.Forms.Button buttonPingNTPServer;
         private System.Windows.Forms.Button buttonTroubleshootingWebsite;
         private System.Windows.Forms.ProgressBar progressBarGettingTimeCorrection;
     }

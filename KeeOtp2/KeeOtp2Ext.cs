@@ -8,6 +8,7 @@ using KeePassLib;
 using KeePassLib.Utility;
 using System.Runtime.InteropServices;
 using OtpSharp;
+using KeeOtp2.Properties;
 
 namespace KeeOtp2
 {
@@ -213,9 +214,12 @@ namespace KeeOtp2
             {
                 hotKeyProvider.registerHotKey(hotKey);
             }
+
+            if (OtpTime.getTimeType() == OtpTimeType.CustomNtpServer)
+                OtpTime.pollCustomNtpServer();
         }
 
-        private class HotKeyProvider : KeePass.Forms.MainForm
+        private class HotKeyProvider : Form
         {
             private static readonly int AutoType = 101;
             private IPluginHost host;
@@ -251,7 +255,6 @@ namespace KeeOtp2
             {
                 if (m.Msg == 0x0312)
                 {
-                    NotifyUserActivity();
                     HandleHotKey((int)m.WParam);
                 }
                 base.WndProc(ref m);

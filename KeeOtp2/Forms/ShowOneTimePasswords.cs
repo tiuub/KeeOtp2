@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using KeeOtp2.Properties;
 using KeePass.Plugins;
 using KeePass.Util;
 using KeePassLib.Security;
@@ -12,7 +13,7 @@ namespace KeeOtp2
         private readonly KeePassLib.PwEntry entry;
         private readonly IPluginHost host ;
         private Totp totp;
-        private int lastCode;
+        private string lastCode;
         private int lastRemainingTime;
 
         OtpAuthData data;
@@ -53,8 +54,8 @@ namespace KeeOtp2
             var totp = this.totp;
             if (totp != null)
             {
-                var code = totp.ComputeTotp(OtpTime.getTime());
-                var nextCode = totp.ComputeTotp(OtpTime.getTime().AddSeconds(data.Period));
+                string code = totp.ComputeTotp(OtpTime.getTime());
+                string nextCode = totp.ComputeTotp(OtpTime.getTime().AddSeconds(data.Period));
                 var remaining = totp.RemainingSeconds();
 
                 if (code != lastCode)
@@ -95,7 +96,7 @@ namespace KeeOtp2
 
         private void ShowCode()
         {
-            this.lastCode = 0;
+            this.lastCode = "";
             this.lastRemainingTime = 0;
 
             this.totp = new Totp(data.Key, data.Period, data.Algorithm, data.Digits, null);

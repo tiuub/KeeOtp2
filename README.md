@@ -82,6 +82,20 @@ Still you can use **{TOTP}**, but its rather recommended to use the built-in pla
 
 
 
+## Global Time
+
+You can configure your specific time for generating TOTPs. Therefore you have three options in the *Settings* form.
+
+![Settings](Screenshots/screenshot-2.jpg)
+
+*Use time of system* - This will basically use the time of your system*
+
+*Fixed time offset (sec.)* - This will set a fixed time offset to your systemtime. (For example if you know, your system is running 5 seconds behind or 50 seconds forward.)
+
+*Custom NTP server* - This will poll the given NTP server to get the current and correct time.
+ 
+
+
 ## License
 
 [![GitHub](https://img.shields.io/github/license/tiuub/KeeOtp2)](https://github.com/tiuub/KeeOtp2/blob/master/LICENSE)
@@ -89,10 +103,16 @@ Still you can use **{TOTP}**, but its rather recommended to use the built-in pla
 ### Dependencies
 
 **KeeOtp(1)** ([source](https://github.com/tiuub/KeeOtpMirror)/[archive](http://web.archive.org/web/20200621144226/https://bitbucket.org/devinmartin/keeotp/wiki/Home)) by [devinmartin](https://bitbucket.org/devinmartin) - License: [MIT](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/KeeOtp/LICENSE)
+
 **OtpSharp** ([source](https://bitbucket.org/devinmartin/otp-sharp/wiki/Home)/[archive](http://web.archive.org/web/20200805171740/https://bitbucket.org/devinmartin/otp-sharp/wiki/Home) or [NuGet](https://www.nuget.org/packages/OtpSharp/)) by [devinmartin](https://bitbucket.org/devinmartin) - License: [MIT](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/OtpSharp/LICENSE)
+
 **QRCoder** ([source](https://github.com/codebude/QRCoder/) or [NuGet](https://www.nuget.org/packages/QRCoder/)) by [codebude](https://github.com/codebude) - License: [MIT](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/QRCoder/LICENSE)
+
 **Yort.Ntp.Portable** ([source](https://github.com/Yortw/Yort.Ntp) or [NuGet](https://www.nuget.org/packages/Yort.Ntp.Portable/)) by [Yortw](https://github.com/Yortw) - License: [MIT](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/Yort.Ntp.Portable/LICENSE)
+
 **ZXing.Net** ([source](https://github.com/micjahn/ZXing.Net/) or [NuGet](https://www.nuget.org/packages/ZXing.Net/)) by [micjahn](https://github.com/micjahn/) - License: [Apache 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/ZXing.Net/LICENSE)
+
+**Microsoft.Xaml** ([NuGet](https://packages.nuget.org/packages/Microsoft.Xaml/)) by [karelz](https://packages.nuget.org/profiles/karelz) and [bmarshall](https://packages.nuget.org/profiles/bmarshall) - License: Not given
 
 
 ### Icons

@@ -116,7 +116,7 @@
             truncates a number down to the specified number of digits
             </summary>
         </member>
-        <member name="M:OtpSharp.Otp.Verify(System.Int64,System.Int32,System.Int64@,OtpSharp.VerificationWindow)">
+        <member name="M:OtpSharp.Otp.Verify(System.Int64,System.String,System.Int64@,OtpSharp.VerificationWindow)">
             <summary>
             Verify an OTP value
             </summary>
@@ -497,7 +497,7 @@
             </remarks>
             <returns>a TOTP value</returns>
         </member>
-        <member name="M:OtpSharp.Totp.VerifyTotp(System.Int32,System.Int64@,OtpSharp.VerificationWindow)">
+        <member name="M:OtpSharp.Totp.VerifyTotp(System.String,System.Int64@,OtpSharp.VerificationWindow)">
             <summary>
             Verify a value that has been provided with the calculated value.
             </summary>
@@ -513,7 +513,7 @@
             <param name="window">The window of steps to verify</param>
             <returns>True if there is a match.</returns>
         </member>
-        <member name="M:OtpSharp.Totp.VerifyTotp(System.DateTime,System.Int32,System.Int64@,OtpSharp.VerificationWindow)">
+        <member name="M:OtpSharp.Totp.VerifyTotp(System.DateTime,System.String,System.Int64@,OtpSharp.VerificationWindow)">
             <summary>
             Verify a value that has been provided with the calculated value
             </summary>

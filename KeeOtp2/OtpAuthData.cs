@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Web;
-using KeePassLib;
-using KeePassLib.Security;
 using OtpSharp;
 
 namespace KeeOtp2

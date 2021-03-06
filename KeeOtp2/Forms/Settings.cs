@@ -1,4 +1,5 @@
-﻿using KeePass.Forms;
+﻿using KeeOtp2.Properties;
+using KeePass.Forms;
 using KeePass.Plugins;
 using KeePassLib;
 using KeePassLib.Collections;
@@ -143,6 +144,7 @@ namespace KeeOtp2
                 case OtpTimeType.CustomNtpServer:
                     radioButtonCustomNtpServer.Checked = true;
                     textBoxCustomNTPServerAddress.Enabled = true;
+                    OtpTime.pollCustomNtpServer();
                     break;
                 default:
                     radioButtonSystemTime.Checked = true;
@@ -212,6 +214,8 @@ namespace KeeOtp2
         private void textBoxHotKeySequence_Click(object sender, EventArgs e)
         {
             AutoTypeConfig autoTypeConfig = new AutoTypeConfig();
+            if (textBoxHotKeySequence.Text != KeeOtp2Ext.BuiltInPlaceHolder)
+                autoTypeConfig.DefaultSequence = textBoxHotKeySequence.Text;
             EditAutoTypeItemForm eatf = new EditAutoTypeItemForm();
             eatf.InitEx(autoTypeConfig, -1, true, KeeOtp2Ext.BuiltInPlaceHolder, null);
             eatf.ShowDialog();
