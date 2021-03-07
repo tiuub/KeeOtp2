@@ -15,7 +15,7 @@ KeeOtp2 is a plugin for [KeePass](http://keepass.info). It provides a form to di
  - Download the latest release [here](https://github.com/tiuub/KeeOtp2/releases/latest)
  - Copy the KeeOtp2.plgx in the KeePass plugins directory and restart the application.
 
-### Alternative Installation
+### Alternative Installation (Coming soon)
 
 - Using [chocolatey](https://chocolatey.org/) in Powershell with `choco install keepass-plugin-keeotp2`
 
@@ -106,8 +106,6 @@ You can configure your specific time for generating TOTPs. Therefore you have th
 
 **OtpSharp** ([source](https://bitbucket.org/devinmartin/otp-sharp/wiki/Home)/[archive](http://web.archive.org/web/20200805171740/https://bitbucket.org/devinmartin/otp-sharp/wiki/Home) or [NuGet](https://www.nuget.org/packages/OtpSharp/)) by [devinmartin](https://bitbucket.org/devinmartin) - License: [MIT](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/OtpSharp/LICENSE)
 
-**QRCoder** ([source](https://github.com/codebude/QRCoder/) or [NuGet](https://www.nuget.org/packages/QRCoder/)) by [codebude](https://github.com/codebude) - License: [MIT](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/QRCoder/LICENSE)
-
 **Yort.Ntp.Portable** ([source](https://github.com/Yortw/Yort.Ntp) or [NuGet](https://www.nuget.org/packages/Yort.Ntp.Portable/)) by [Yortw](https://github.com/Yortw) - License: [MIT](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/Yort.Ntp.Portable/LICENSE)
 
 **ZXing.Net** ([source](https://github.com/micjahn/ZXing.Net/) or [NuGet](https://www.nuget.org/packages/ZXing.Net/)) by [micjahn](https://github.com/micjahn/) - License: [Apache 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/ZXing.Net/LICENSE)
@@ -117,6 +115,6 @@ You can configure your specific time for generating TOTPs. Therefore you have th
 
 ### Icons
 
-The icons used in this plugin are from the Oxygen icon set and are used under the Creative Commons Attribution-NonCommercial-NoDerivs 2.5 Generic (CC BY-NC-ND 2.5) license.
+**Material design icons** ([source](https://github.com/google/material-design-icons)/[direct](https://material.io/resources/icons)) by [Google](https://about.google) - License: [Apache License Version 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/MaterialDesignIcons/LICENSE)
 
-The author's website is located here: http://www.oxygen-icons.org
+Icons used: [info](https://material.io/resources/icons/?icon=info&style=baseline), [lock](https://material.io/resources/icons/?icon=lock&style=baseline), [qr_code](https://material.io/resources/icons/?icon=qr_code&style=baseline), [schedule](https://material.io/resources/icons/?icon=schedule&style=baseline), [settings](https://material.io/resources/icons/?icon=settings&style=baseline)

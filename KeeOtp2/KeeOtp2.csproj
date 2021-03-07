@@ -37,15 +37,6 @@
     <Reference Include="OtpSharp, Version=1.0.6.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\OtpSharp.1.0.6.1\lib\net40\OtpSharp.dll</HintPath>
     </Reference>
-    <Reference Include="PresentationCore, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Xaml.4.0.0.1\lib\PresentationCore.dll</HintPath>
-    </Reference>
-    <Reference Include="PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Xaml.4.0.0.1\lib\PresentationFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="QRCoder, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QRCoder.1.4.1\lib\net40\QRCoder.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -144,16 +135,31 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Resources\clock.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\lock-key.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Dependencies\**\*">
       <Link>Dependencies\%(RecursiveDir)/%(FileName)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\clock_black.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\clock_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\info_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LICENSE" />
+    <None Include="Resources\lock_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\settings_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\qr_white.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

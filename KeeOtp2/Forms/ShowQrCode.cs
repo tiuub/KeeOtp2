@@ -3,7 +3,8 @@ using KeePass.Plugins;
 using KeePass.Util;
 using KeePassLib;
 using KeePassLib.Security;
-using QRCoder;
+using ZXing;
+using ZXing.Common;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -25,7 +26,7 @@ namespace KeeOtp2
             pictureBoxBanner.Image = KeePass.UI.BannerFactory.CreateBanner(pictureBoxBanner.Width,
                 pictureBoxBanner.Height,
                 KeePass.UI.BannerStyle.Default,
-                Resources.clock.GetThumbnailImage(32, 32, null, IntPtr.Zero),
+                Resources.qr_white,
                 "Show QR Code",
                 "Set up your TOTP on other devices.");
 
@@ -42,12 +43,15 @@ namespace KeeOtp2
             buttonReload.Visible = false;
             formTimeout = QRCODETIMEOUT;
 
-            PayloadGenerator.Url url = new PayloadGenerator.Url(this.uri.AbsoluteUri);
+            EncodingOptions options = new EncodingOptions();
+            options.Width = pictureBoxQrCode.Width;
+            options.Height = pictureBoxQrCode.Height;
 
-            QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q);
-            QRCode qrCode = new QRCode(qrCodeData);
-            pictureBoxQrCode.Image = qrCode.GetGraphic(40);
+            IBarcodeWriter writer = new BarcodeWriter();
+            writer.Format = BarcodeFormat.QR_CODE;
+            writer.Options = options;
+            var result = writer.Write(this.uri.AbsoluteUri);
+            pictureBoxQrCode.Image = new Bitmap(result);
 
             timerFormTimeout.Start();
         }

@@ -47,7 +47,7 @@ namespace KeeOtp2
             pictureBoxBanner.Image = KeePass.UI.BannerFactory.CreateBanner(pictureBoxBanner.Width,
                 pictureBoxBanner.Height,
                 KeePass.UI.BannerStyle.Default,
-                Resources.clock.GetThumbnailImage(32, 32, null, IntPtr.Zero),
+                Resources.settings_white,
                 "Settings",
                 "Configure the KeeOtp2 plugin.");
 

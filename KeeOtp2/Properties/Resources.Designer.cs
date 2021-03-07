@@ -63,9 +63,29 @@ namespace KeeOtp2.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap clock {
+        internal static System.Drawing.Bitmap clock_black {
             get {
-                object obj = ResourceManager.GetObject("clock", resourceCulture);
+                object obj = ResourceManager.GetObject("clock_black", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap clock_white {
+            get {
+                object obj = ResourceManager.GetObject("clock_white", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap info_white {
+            get {
+                object obj = ResourceManager.GetObject("info_white", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -91,10 +111,32 @@ namespace KeeOtp2.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap lock_key {
+        internal static System.Drawing.Bitmap lock_white {
             get {
-                object obj = ResourceManager.GetObject("lock_key", resourceCulture);
+                object obj = ResourceManager.GetObject("lock_white", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 
+        ///                                 Apache License
+        ///                           Version 2.0, January 2004
+        ///                        http://www.apache.org/licenses/
+        ///
+        ///   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+        ///
+        ///   1. Definitions.
+        ///
+        ///      &quot;License&quot; shall mean the terms and conditions for use, reproduction,
+        ///      and distribution as defined by Sections 1 through 9 of this document.
+        ///
+        ///      &quot;Licensor&quot; shall mean the copyright owner or entity authorized by
+        ///      the copyright owner that  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string MaterialDesignIconsLICENSE {
+            get {
+                return ResourceManager.GetString("MaterialDesignIconsLICENSE", resourceCulture);
             }
         }
         
@@ -117,22 +159,22 @@ namespace KeeOtp2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The MIT License (MIT)
-        ///
-        ///Copyright (c) 2013-2018 Raffael Herrmann
-        ///
-        ///Permission is hereby granted, free of charge, to any person obtaining a copy of
-        ///this software and associated documentation files (the &quot;Software&quot;), to deal in
-        ///the Software without restriction, including without limitation the rights to
-        ///use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-        ///the Software, and to permit persons to whom the Software is furnished to do so,
-        ///subject to the following conditions:
-        ///
-        ///Th [rest of string was truncated]&quot;;.
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static string QRCoderLICENSE {
+        internal static System.Drawing.Bitmap qr_white {
             get {
-                return ResourceManager.GetString("QRCoderLICENSE", resourceCulture);
+                object obj = ResourceManager.GetObject("qr_white", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap settings_white {
+            get {
+                object obj = ResourceManager.GetObject("settings_white", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

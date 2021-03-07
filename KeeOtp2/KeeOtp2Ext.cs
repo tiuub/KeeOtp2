@@ -44,17 +44,18 @@ namespace KeeOtp2
             this.AboutToolStripItem.Click += aboutToolStripitem_Click;
 
             this.MainMenuToolStripItem = new ToolStripMenuItem("KeeOtp2");
-            this.MainMenuToolStripItem.Image = Resources.clock;
+            this.MainMenuToolStripItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
             this.MainMenuToolStripItem.DropDownItems.Add(this.SettingsToolStripItem);
             this.MainMenuToolStripItem.DropDownItems.Add(this.AboutToolStripItem);
             host.MainWindow.ToolsMenu.DropDownItems.Add(this.MainMenuToolStripItem);
 
             this.otpDialogToolStripItem = new ToolStripMenuItem("Timed One Time Password");
-            this.otpDialogToolStripItem.Image = Resources.clock;
+            this.otpDialogToolStripItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
             this.otpDialogToolStripItem.Click += otpDialogToolStripItem_Click;
             host.MainWindow.EntryContextMenu.Items.Insert(11, this.otpDialogToolStripItem);
 
             this.otpCopyToolStripItem = new ToolStripMenuItem("Copy TOTP");
+            this.otpCopyToolStripItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
             this.otpCopyToolStripItem.ShortcutKeys = Keys.T | Keys.Control;
             this.otpCopyToolStripItem.Click += otpCopyToolStripItem_Click;
             host.MainWindow.EntryContextMenu.Items.Insert(2, this.otpCopyToolStripItem);

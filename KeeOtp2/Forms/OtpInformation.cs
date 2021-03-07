@@ -24,7 +24,7 @@ namespace KeeOtp2
             pictureBoxBanner.Image = KeePass.UI.BannerFactory.CreateBanner(pictureBoxBanner.Width,
                 pictureBoxBanner.Height,
                 KeePass.UI.BannerStyle.Default,
-                Resources.lock_key.GetThumbnailImage(32, 32, null, IntPtr.Zero),
+                Resources.lock_white,
                 "Configuration",
                 "Set up the key for generating one time passwords");
 
@@ -68,7 +68,9 @@ namespace KeeOtp2
                 return;
             try
             {
-                List<string> loadedFields = this.Data.loadedFields;
+                List<string> loadedFields = null;
+                if (this.Data != null)
+                    loadedFields = this.Data.loadedFields;
                 if (textBoxKey.Text.StartsWith("otpauth://"))
                 {
                     this.Data = OtpAuthUtils.uriToOtpAuthData(new Uri(textBoxKey.Text));
@@ -187,9 +189,9 @@ namespace KeeOtp2
                 e.Cancel = true;
                 return;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("There happened an error. Please check your entered key and your settings!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("There happened an error. Please check your entered key and your settings!\n\nError message:\n" + ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 e.Cancel = true;
                 return;
             }

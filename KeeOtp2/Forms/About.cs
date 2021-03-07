@@ -21,7 +21,7 @@ namespace KeeOtp2
             pictureBoxBanner.Image = KeePass.UI.BannerFactory.CreateBanner(pictureBoxBanner.Width,
                 pictureBoxBanner.Height,
                 KeePass.UI.BannerStyle.Default,
-                Resources.clock.GetThumbnailImage(32, 32, null, IntPtr.Zero),
+                Resources.info_white,
                 "About",
                 "KeeOtp2 Plugin.");
 
@@ -64,12 +64,6 @@ namespace KeeOtp2
             lvi.Tag = Resources.OtpSharpLICENSE;
             clv_Dependencies.Items.Add(lvi);
 
-            lvi = new ListViewItem("QRCoder");
-            lvi.SubItems.Add("codebude");
-            lvi.SubItems.Add("MIT");
-            lvi.Tag = Resources.QRCoderLICENSE;
-            clv_Dependencies.Items.Add(lvi);
-
             lvi = new ListViewItem("Yort.Ntp.Portable");
             lvi.SubItems.Add("Yortw");
             lvi.SubItems.Add("MIT");
@@ -86,6 +80,12 @@ namespace KeeOtp2
             lvi.SubItems.Add("karelz & bmarshall");
             lvi.SubItems.Add("None");
             lvi.Tag = null;
+            clv_Dependencies.Items.Add(lvi);
+
+            lvi = new ListViewItem("Material Icons");
+            lvi.SubItems.Add("Google");
+            lvi.SubItems.Add("Apache License Version 2.0");
+            lvi.Tag = Resources.MaterialDesignIconsLICENSE;
             clv_Dependencies.Items.Add(lvi);
         }
 
@@ -123,7 +123,7 @@ namespace KeeOtp2
                     showLicense(lvi.Text, lvi.Tag.ToString());
                 }
                 else
-                    MessageBox.Show("Cant load license of {0}.\n\nJust try to open the GitHub Repository and scroll down, until Dependencies. There are all licenses!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(String.Format("Cant load license of {0}.\n\nJust try to open the GitHub Repository and scroll down, until Dependencies. There are all licenses!", lvi.Text), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
