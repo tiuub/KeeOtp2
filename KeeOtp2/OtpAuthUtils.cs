@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace KeeOtp2
@@ -446,6 +447,40 @@ namespace KeeOtp2
             }
             else
                 throw new InvalidUriFormat("Given Uri does not start with 'otpauth://'!");
+        }
+
+        public static string getTotp(OtpAuthData data)
+        {
+           return getTotp(data, DateTime.UtcNow);
+        }
+
+        public static string getTotp(OtpAuthData data, DateTime time)
+        {
+            try
+            {
+                var totp = new Totp(data.Key, data.Period, data.Algorithm, data.Digits, null);
+                return totp.ComputeTotp(time);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static bool CheckInternetConnection()
+        {
+            try
+            {
+                using (var client = new WebClient())
+                using (var stream = client.OpenRead("http://www.google.com"))
+                {
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

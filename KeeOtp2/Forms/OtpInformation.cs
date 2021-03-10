@@ -74,6 +74,11 @@ namespace KeeOtp2
                 if (textBoxKey.Text.StartsWith("otpauth://"))
                 {
                     this.Data = OtpAuthUtils.uriToOtpAuthData(new Uri(textBoxKey.Text));
+                    if (this.Data == null)
+                    {
+                        MessageBox.Show("The give Uri does not contain a secret.\n\nA secret is required!", "Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
                 }
                 else
                 {
@@ -153,17 +158,16 @@ namespace KeeOtp2
 
                 this.entry.CreateBackup(this.host.Database);
 
+                if (this.Data.loadedFields != null && !string.IsNullOrEmpty(OtpAuthUtils.getTotp(this.Data)))
+                    OtpAuthUtils.purgeLoadedFields(this.Data, this.entry);
+
                 if (checkboxOldKeeOtp.Checked)
                 {
                     OtpAuthUtils.migrateToKeeOtp1String(this.Data, this.entry);
-                    if (OtpAuthUtils.loadDataFromKeeOtp1String(this.entry) != null)
-                        OtpAuthUtils.purgeLoadedFields(this.Data, this.entry);
                 }
                 else
                 {
                     OtpAuthUtils.migrateToBuiltInOtp(this.Data, this.entry);
-                    if (OtpAuthUtils.loadDataFromBuiltInOtp(this.entry) != null)
-                        OtpAuthUtils.purgeLoadedFields(this.Data, this.entry);
                 }
                 
 

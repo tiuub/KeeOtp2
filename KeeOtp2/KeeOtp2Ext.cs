@@ -2,13 +2,12 @@ using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using KeePass.Plugins;
-using KeePass.Util;
+ using KeePass.Util;
 using KeePass.Util.Spr;
 using KeePassLib;
 using KeePassLib.Utility;
 using System.Runtime.InteropServices;
 using OtpSharp;
-using KeeOtp2.Properties;
 
 namespace KeeOtp2
 {
@@ -94,8 +93,7 @@ namespace KeeOtp2
                         OtpAuthData data = OtpAuthUtils.loadData(entry);
                         if (data != null)
                         {
-                            var totp = new Totp(data.Key, data.Period, data.Algorithm, data.Digits, null);
-                            var text = totp.ComputeTotp(OtpTime.getTime()).ToString().PadLeft(data.Digits, '0');
+                            var text = OtpAuthUtils.getTotp(data, OtpTime.getTime());
 
                             e.Text = StrUtil.ReplaceCaseInsensitive(e.Text, BuiltInPlaceHolder, text);
                         }
@@ -114,8 +112,7 @@ namespace KeeOtp2
                     OtpAuthData data = OtpAuthUtils.loadData(entry);
                     if (data != null)
                     {
-                        var totp = new Totp(data.Key, data.Period, data.Algorithm, data.Digits, null);
-                        var text = totp.ComputeTotp(OtpTime.getTime()).ToString().PadLeft(data.Digits, '0');
+                        var text = OtpAuthUtils.getTotp(data, OtpTime.getTime());
 
                         e.Text = StrUtil.ReplaceCaseInsensitive(e.Text, KeeOtp1PlaceHolder, text);
                     }
@@ -157,8 +154,7 @@ namespace KeeOtp2
                 }
                 else
                 {
-                    var totp = new Totp(data.Key, data.Period, data.Algorithm, data.Digits, null);
-                    var text = totp.ComputeTotp(OtpTime.getTime()).ToString().PadLeft(data.Digits, '0');
+                    var text = OtpAuthUtils.getTotp(data, OtpTime.getTime());
 
                     if (ClipboardUtil.CopyAndMinimize(new KeePassLib.Security.ProtectedString(true, text), true, this.host.MainWindow, entry, this.host.Database))
                         this.host.MainWindow.StartClipboardCountdown();
@@ -222,7 +218,7 @@ namespace KeeOtp2
 
         private class HotKeyProvider : Form
         {
-            private static readonly int AutoType = 101;
+            private static readonly int AutoTypeId = 10001;
             private IPluginHost host;
 
             private _MethodInfo m_miAutoType = null;
@@ -230,24 +226,24 @@ namespace KeeOtp2
             public HotKeyProvider(IPluginHost host)
             {
                 this.host = host;
-
                 this.m_miAutoType = host.MainWindow.GetType().GetMethod("ExecuteGlobalAutoType", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic, null, new Type[] { typeof(string) }, null);
             }
 
             public void registerHotKey(Keys keys)
             {
                 HotKeyManager.Initialize(this);
-                HotKeyManager.RegisterHotKey(AutoType, keys);
+                HotKeyManager.RegisterHotKey(AutoTypeId, keys);
             }
 
             public void unregisterHotKey()
             {
-                HotKeyManager.UnregisterAll();
+                HotKeyManager.Initialize(this);
+                HotKeyManager.UnregisterHotKey(AutoTypeId);
             }
 
             internal void HandleHotKey(int wParam)
             {
-                if (wParam == AutoType)
+                if (wParam == AutoTypeId)
                     if (m_miAutoType != null)
                         m_miAutoType.Invoke(this.host.MainWindow, new object[] { KeeOtp2Config.HotKeySequence });
             }

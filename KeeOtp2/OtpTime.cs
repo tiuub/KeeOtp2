@@ -14,9 +14,14 @@ namespace KeeOtp2
     public static class OtpTime
     {
         private const long TIME_DELTA_VALID_SECONDS = 3600;
+        private const int CUSTOM_NTP_SERVER_MAX_RETRIES = 3;
+        private const int CUSTOM_NTP_SERVER_RETRY_DELAY = 40000;
 
         private static long timeDelta = 0;
         private static DateTime timeDeltaValidUntil;
+
+        private static Timer retryTimer;
+        private static int retryCounter = 0;
 
         public static OtpTimeType getTimeType()
         {
@@ -84,15 +89,45 @@ namespace KeeOtp2
 
         public static void pollCustomNtpServer(string serverAddress)
         {
-            NtpClient ntpClient = new NtpClient(serverAddress);
-            ntpClient.TimeReceived += NtpClient_TimeReceived;
-            ntpClient.ErrorOccurred += NtpClient_ErrorOccurred;
-            ntpClient.BeginRequestTime();
+            if (retryTimer == null || !retryTimer.Enabled)
+            {
+                NtpClient ntpClient = new NtpClient(serverAddress);
+                ntpClient.TimeReceived += NtpClient_TimeReceived;
+                ntpClient.ErrorOccurred += NtpClient_ErrorOccurred;
+                ntpClient.BeginRequestTime();
+            }
+        }
+
+        private static void retryPollCustomNtpServer(int delay)
+        {
+            if (retryCounter <= CUSTOM_NTP_SERVER_MAX_RETRIES)
+            {
+                retryTimer = new Timer();
+                retryTimer.Interval = delay;
+                retryTimer.Tick += (o, e) =>
+                {
+                    retryTimer.Dispose();
+                    retryCounter++;
+                    pollCustomNtpServer();
+                    
+                };
+                retryTimer.Start();
+            }
+            else
+            {
+                retryCounter = 0;
+                timeDeltaValidUntil = DateTime.UtcNow.AddMinutes(20);
+                MessageBox.Show("Cant reach the server. Please check your internet!\n\nYour global time was set to the last known from the ntp server or the time of your system!\n\nIf your connection is back up, go to Tools -> KeeOtp2 -> Settings -> Global Time -> Custom NTP server -> Press OK.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private static void NtpClient_ErrorOccurred(object sender, NtpNetworkErrorEventArgs e)
         {
-            MessageBox.Show("Polling the NTP Server failed. Please confirm your entered address!\n\nError message:\n" + e.Exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (!OtpAuthUtils.CheckInternetConnection())
+                retryPollCustomNtpServer(CUSTOM_NTP_SERVER_RETRY_DELAY);
+            else
+                MessageBox.Show("Polling the NTP Server failed. Please confirm your entered address!\n\nError message:\n" + e.Exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
         }
 
         private static void NtpClient_TimeReceived(object sender, NtpTimeReceivedEventArgs e)
@@ -100,6 +135,7 @@ namespace KeeOtp2
             TimeSpan timeDifference = e.CurrentTime.Subtract(DateTime.UtcNow);
             timeDelta = (int)Math.Round(timeDifference.TotalSeconds);
             timeDeltaValidUntil = DateTime.UtcNow.AddSeconds(TIME_DELTA_VALID_SECONDS);
+            retryCounter = 0;
         }
     }
 }
