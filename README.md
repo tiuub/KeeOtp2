@@ -15,7 +15,7 @@ KeeOtp2 is a plugin for [KeePass](http://keepass.info). It provides a form to di
  - Download the latest release [here](https://github.com/tiuub/KeeOtp2/releases/latest)
  - Copy the KeeOtp2.plgx in the KeePass plugins directory and restart the application.
 
-### Alternative Installation (Coming soon)
+### Alternative Installation
 
 - Using [chocolatey](https://chocolatey.org/) in Powershell with `choco install keepass-plugin-keeotp2`
 
