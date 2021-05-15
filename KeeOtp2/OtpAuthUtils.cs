@@ -52,9 +52,20 @@ namespace KeeOtp2
             {
                 if (checkKeeOtp1Mode(entry))
                 {
-                    OtpAuthData data = loadDataFromKeeOtp1String(entry);
-                    data.KeeOtp1Mode = true;
-                    return data;
+                    Uri uri = new Uri(entry.Strings.Get(StringDictionaryKey).ReadString());
+                    System.Windows.Forms.MessageBox.Show(uri.ToString());
+                    if (validateUri(uri))
+                    {
+                        OtpAuthData data = uriToOtpAuthData(uri);
+                        data.KeeOtp1Mode = true;
+                        return data;
+                    }
+                    else
+                    {
+                        OtpAuthData data = loadDataFromKeeOtp1String(entry);
+                        data.KeeOtp1Mode = true;
+                        return data;
+                    }
                 }
                 else if (entry.Strings.GetKeys().Any(x => x.StartsWith(builtInOtpPrefix)))
                 {
@@ -405,6 +416,20 @@ namespace KeeOtp2
             uriBuilder.Query = String.Join("&", parameters.ToArray()); 
 
             return uriBuilder.Uri;
+        }
+
+        public static bool validateUri(Uri uri)
+        {
+            try
+            {
+                if (uriToOtpAuthData(uri) != null)
+                    return true;
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public static OtpAuthData uriToOtpAuthData(Uri uri)
