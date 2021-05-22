@@ -1,3 +1,5 @@
 # Yort.Ntp.Portable
 
-**Yort.Ntp.Portable** ([source](https://github.com/Yortw/Yort.Ntp) or [NuGet](https://www.nuget.org/packages/Yort.Ntp.Portable/)) by [Yortw](https://github.com/Yortw) - License: [MIT](https://github.com/Yortw/Yort.Ntp/blob/master/LICENSE.md)
+Dependencie | Source | NuGet | Author | License
+--- | --- | --- | --- | ---
+**Yort.Ntp.Portable** | [source](https://github.com/Yortw/Yort.Ntp) | [NuGet](https://www.nuget.org/packages/Yort.Ntp.Portable/) | [Yortw](https://github.com/Yortw) | [MIT](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/Yort.Ntp.Portable/LICENSE)

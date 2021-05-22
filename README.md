@@ -25,7 +25,7 @@ KeeOtp2 is a plugin for [KeePass](http://keepass.info). It provides a form to di
 
 ### Configure TOTP
 
-Rightclick on a entry and click on **Timed One Time Password**.
+Rightclick on a entry, click on **KeeOtp2** and press **Configure TOTP**.
 
 This will open the configuration window.
 
@@ -33,34 +33,29 @@ This will open the configuration window.
 
 Enter the key you have received and press **OK**.
 
-The TOTP should now be visible.
+Now you can see the TOTP by rightclicking an entry, hovering on **KeeOtp2** and clicking **Show TOTP**.
 
 
-### Migrate from KeeOtp1 to KeeOtp2/Built-In OTP
+
+## Migrate from KeeOtp1 to KeeOtp2/Built-In OTP
 
 Click on **Tools**, navigate to **KeeOtp2** and press **Settings**.
 
-You can migrate all of your entries to KeeOtp2/Built-In OTP by clicking on **Migrate**.
+There you can migrate all of your entries to KeeOtp2/Built-In OTP by selecting your target format and clicking on **OK**.
 
 ![Settings](Screenshots/screenshot-2.jpg)
 
-### Or
+
+### Another way to migrate
 
 Just right click any entry in your database and click on **Timed One Time Password**.
 
-Click on **Edit**. When the configuration window is opened, click on **Migrate to Built-In**.
-
-![Configuration Window](Screenshots/screenshot-3.jpg)
-
-
-
-## Download
-
-You can download the .plgx file [here](https://github.com/tiuub/KeeOtp2/releases/latest).
+Rightclick on an entry, hover **KeeOtp2** and click **Configure TOTP**. When the configuration window is opened, click on **Migrate to Built-In** (blue label) in the upper half.
 
 
 
 ## Auto-Type
+
 
 ### HotKey
 Default HotKey: **CTRL + ALT + T**
@@ -68,6 +63,7 @@ Default HotKey: **CTRL + ALT + T**
 You can set a global hotkey to auto-type your TOTP.
 Therefore you have to click on **Tools**, navigate to **KeeOtp2** and press **Settings**.
 There you can activate or disable the global hotkey and set your own key combination.
+
 
 ### Placeholder
 
@@ -88,33 +84,69 @@ You can configure your specific time for generating TOTPs. Therefore you have th
 
 ![Settings](Screenshots/screenshot-2.jpg)
 
-*Use time of system* - This will basically use the time of your system*
+Setting | Description
+--- | ---
+**Use time of system** | This will basically use the time of your system
+**Fixed time offset (sec.)** | This will set a fixed time offset to your systemtime. (For example if you know, your system is running 5 seconds behind or 50 seconds forward.)
+**Custom NTP server** | This will poll the given NTP server to get the current and correct time.
 
-*Fixed time offset (sec.)* - This will set a fixed time offset to your systemtime. (For example if you know, your system is running 5 seconds behind or 50 seconds forward.)
 
-*Custom NTP server* - This will poll the given NTP server to get the current and correct time.
- 
+
+## Sharing OTP Configuration
+
+You can either share your OTP configuration with an uri string (otpauth://...) or with an QR code.
+
+Therefore you have to rightclick the target entry, hover on **KeeOtp2**, click on **Show TOTP** and click on **Show QR**.
+
+Then you can scan the shown QR code or click on **Copy URI** to copy the uri string to your clipboard.
+
+
+
+## Troubleshooting
+
+Sometimes the generation of TOTPs will fail. The most common failure is a wrong system time.
+
+The best way to prove this, is by manually checking your system time or let the plugin prove it for you.
+Therefore you have to rightclick an configured entry, hover on **KeeOtp2**, click on **Show TOTP** and if the window opens up, click on **Incorrect?**. 
+Then you can press on **Ping NTP server**.
+
+If the ping result is over 5 seconds, you should change your time settings. You can do this on system side or inside the plugin.
+Therefore you can check out the section [Global Time](#global-time) to set a fixed time offset or a custom NTP server.
+
+
+
+## Download
+
+You can download the .plgx file [here](https://github.com/tiuub/KeeOtp2/releases/latest).
+
 
 
 ## License
 
 [![GitHub](https://img.shields.io/github/license/tiuub/KeeOtp2)](https://github.com/tiuub/KeeOtp2/blob/master/LICENSE)
 
-### Dependencies
 
-**KeeOtp(1)** ([source](https://github.com/tiuub/KeeOtpMirror)/[archive](http://web.archive.org/web/20200621144226/https://bitbucket.org/devinmartin/keeotp/wiki/Home)) by [devinmartin](https://bitbucket.org/devinmartin) - License: [MIT](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/KeeOtp/LICENSE)
 
-**OtpSharp** ([source](https://bitbucket.org/devinmartin/otp-sharp/wiki/Home)/[archive](http://web.archive.org/web/20200805171740/https://bitbucket.org/devinmartin/otp-sharp/wiki/Home) or [NuGet](https://www.nuget.org/packages/OtpSharp/)) by [devinmartin](https://bitbucket.org/devinmartin) - License: [MIT](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/OtpSharp/LICENSE)
+## Dependencies
 
-**Yort.Ntp.Portable** ([source](https://github.com/Yortw/Yort.Ntp) or [NuGet](https://www.nuget.org/packages/Yort.Ntp.Portable/)) by [Yortw](https://github.com/Yortw) - License: [MIT](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/Yort.Ntp.Portable/LICENSE)
-
-**ZXing.Net** ([source](https://github.com/micjahn/ZXing.Net/) or [NuGet](https://www.nuget.org/packages/ZXing.Net/)) by [micjahn](https://github.com/micjahn/) - License: [Apache 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/ZXing.Net/LICENSE)
-
-**Microsoft.Xaml** ([NuGet](https://packages.nuget.org/packages/Microsoft.Xaml/)) by [karelz](https://packages.nuget.org/profiles/karelz) and [bmarshall](https://packages.nuget.org/profiles/bmarshall) - License: Not given
+Dependencie | Source | NuGet | Author | License
+--- | --- | --- | --- | ---
+**KeeOtp(1)** | [source](https://github.com/tiuub/KeeOtpMirror)/[archive](http://web.archive.org/web/20200621144226/https://bitbucket.org/devinmartin/keeotp/wiki/Home) | - | [devinmartin](https://bitbucket.org/devinmartin) | [MIT](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/KeeOtp/LICENSE)
+**OtpSharp** | [source](https://bitbucket.org/devinmartin/otp-sharp/wiki/Home)/[archive](http://web.archive.org/web/20200805171740/https://bitbucket.org/devinmartin/otp-sharp/wiki/Home) | [NuGet](https://www.nuget.org/packages/OtpSharp/) | [devinmartin](https://bitbucket.org/devinmartin) | [MIT](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/OtpSharp/LICENSE)
+**Yort.Ntp.Portable** | [source](https://github.com/Yortw/Yort.Ntp) | [NuGet](https://www.nuget.org/packages/Yort.Ntp.Portable/) | [Yortw](https://github.com/Yortw) | [MIT](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/Yort.Ntp.Portable/LICENSE)
+**ZXing.Net** | [source](https://github.com/micjahn/ZXing.Net/) | [NuGet](https://www.nuget.org/packages/ZXing.Net/) | [micjahn](https://github.com/micjahn/) | [Apache 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/ZXing.Net/LICENSE)
+**Microsoft.Xaml** | - | [NuGet](https://packages.nuget.org/packages/Microsoft.Xaml/) | [karelz](https://packages.nuget.org/profiles/karelz)/[bmarshall](https://packages.nuget.org/profiles/bmarshall) | Not given
+**NHotkey** | [source](https://github.com/thomaslevesque/NHotkey) | [NuGet](https://www.nuget.org/packages/NHotkey/) | [thomaslevesque](https://github.com/thomaslevesque) | [Apache 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/NHotkey/LICENSE)
+**NHotkey.WindowsForms** | [source](https://github.com/thomaslevesque/NHotkey) | [NuGet](https://www.nuget.org/packages/NHotkey.WindowsForms/) | [thomaslevesque](https://github.com/thomaslevesque) | [Apache 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/NHotkey.WindowsForms/LICENSE)
 
 
 ### Icons
 
-**Material design icons** ([source](https://github.com/google/material-design-icons)/[direct](https://material.io/resources/icons)) by [Google](https://about.google) - License: [Apache License Version 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/MaterialDesignIcons/LICENSE)
-
-Icons used: [info](https://material.io/resources/icons/?icon=info&style=baseline), [lock](https://material.io/resources/icons/?icon=lock&style=baseline), [qr_code](https://material.io/resources/icons/?icon=qr_code&style=baseline), [schedule](https://material.io/resources/icons/?icon=schedule&style=baseline), [settings](https://material.io/resources/icons/?icon=settings&style=baseline)
+Icon | Source | Brand | Author | License
+--- | --- | --- | --- | ---
+**info** | [Google Fonts](https://material.io/resources/icons/?icon=info&style=baseline) | **Material design icons** | [Google](https://about.google) | [Apache License Version 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/MaterialDesignIcons/LICENSE)
+**lock** | [Google Fonts](https://material.io/resources/icons/?icon=lock&style=baseline) | **Material design icons** | [Google](https://about.google) | [Apache License Version 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/MaterialDesignIcons/LICENSE)
+**qr_code** | [Google Fonts](https://material.io/resources/icons/?icon=qr_code&style=baseline) | **Material design icons** | [Google](https://about.google) | [Apache License Version 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/MaterialDesignIcons/LICENSE)
+**schedule** | [Google Fonts](https://material.io/resources/icons/?icon=schedule&style=baseline) | **Material design icons** | [Google](https://about.google) | [Apache License Version 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/MaterialDesignIcons/LICENSE)
+**settings** | [Google Fonts](https://material.io/resources/icons/?icon=settings&style=baseline) | **Material design icons** | [Google](https://about.google) | [Apache License Version 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/MaterialDesignIcons/LICENSE)
+**help** | [Google Fonts](https://material.io/resources/icons/?icon=help&style=baseline) | **Material design icons** | [Google](https://about.google) | [Apache License Version 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/MaterialDesignIcons/LICENSE)

@@ -33,8 +33,8 @@
             this.labelAbout = new System.Windows.Forms.Label();
             this.labelDisclaimer = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.llbl_Donate = new System.Windows.Forms.LinkLabel();
-            this.llbl_GitHubRepository = new System.Windows.Forms.LinkLabel();
+            this.linkLabelDonate = new System.Windows.Forms.LinkLabel();
+            this.linkLabelGitHubRepository = new System.Windows.Forms.LinkLabel();
             this.groupBoxDependencies = new System.Windows.Forms.GroupBox();
             this.clv_Dependencies = new KeePass.UI.CustomListViewEx();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBanner)).BeginInit();
@@ -98,29 +98,29 @@
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             // 
-            // llbl_Donate
+            // linkLabelDonate
             // 
-            this.llbl_Donate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.llbl_Donate.AutoSize = true;
-            this.llbl_Donate.Location = new System.Drawing.Point(192, 318);
-            this.llbl_Donate.Name = "llbl_Donate";
-            this.llbl_Donate.Size = new System.Drawing.Size(42, 13);
-            this.llbl_Donate.TabIndex = 7;
-            this.llbl_Donate.TabStop = true;
-            this.llbl_Donate.Text = "Donate";
-            this.llbl_Donate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llbl_Donate_LinkClicked);
+            this.linkLabelDonate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabelDonate.AutoSize = true;
+            this.linkLabelDonate.Location = new System.Drawing.Point(192, 318);
+            this.linkLabelDonate.Name = "linkLabelDonate";
+            this.linkLabelDonate.Size = new System.Drawing.Size(42, 13);
+            this.linkLabelDonate.TabIndex = 7;
+            this.linkLabelDonate.TabStop = true;
+            this.linkLabelDonate.Text = "Donate";
+            this.linkLabelDonate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelDonate_LinkClicked);
             // 
-            // llbl_GitHubRepository
+            // linkLabelGitHubRepository
             // 
-            this.llbl_GitHubRepository.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.llbl_GitHubRepository.AutoSize = true;
-            this.llbl_GitHubRepository.Location = new System.Drawing.Point(12, 318);
-            this.llbl_GitHubRepository.Name = "llbl_GitHubRepository";
-            this.llbl_GitHubRepository.Size = new System.Drawing.Size(93, 13);
-            this.llbl_GitHubRepository.TabIndex = 8;
-            this.llbl_GitHubRepository.TabStop = true;
-            this.llbl_GitHubRepository.Text = "GitHub Repository";
-            this.llbl_GitHubRepository.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llbl_GitHubRepository_LinkClicked);
+            this.linkLabelGitHubRepository.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabelGitHubRepository.AutoSize = true;
+            this.linkLabelGitHubRepository.Location = new System.Drawing.Point(12, 318);
+            this.linkLabelGitHubRepository.Name = "linkLabelGitHubRepository";
+            this.linkLabelGitHubRepository.Size = new System.Drawing.Size(93, 13);
+            this.linkLabelGitHubRepository.TabIndex = 8;
+            this.linkLabelGitHubRepository.TabStop = true;
+            this.linkLabelGitHubRepository.Text = "GitHub Repository";
+            this.linkLabelGitHubRepository.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelGitHubRepository_LinkClicked);
             // 
             // groupBoxDependencies
             // 
@@ -161,8 +161,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(327, 348);
             this.Controls.Add(this.groupBoxDependencies);
-            this.Controls.Add(this.llbl_GitHubRepository);
-            this.Controls.Add(this.llbl_Donate);
+            this.Controls.Add(this.linkLabelGitHubRepository);
+            this.Controls.Add(this.linkLabelDonate);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.groupBoxAbout);
             this.Controls.Add(this.pictureBoxBanner);
@@ -187,9 +187,9 @@
         private System.Windows.Forms.GroupBox groupBoxAbout;
         private System.Windows.Forms.Label labelAbout;
         private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.LinkLabel llbl_Donate;
+        private System.Windows.Forms.LinkLabel linkLabelDonate;
         private System.Windows.Forms.Label labelDisclaimer;
-        private System.Windows.Forms.LinkLabel llbl_GitHubRepository;
+        private System.Windows.Forms.LinkLabel linkLabelGitHubRepository;
         private System.Windows.Forms.GroupBox groupBoxDependencies;
         private KeePass.UI.CustomListViewEx clv_Dependencies;
     }

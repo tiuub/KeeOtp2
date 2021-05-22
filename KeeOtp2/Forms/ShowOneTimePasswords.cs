@@ -27,8 +27,8 @@ namespace KeeOtp2
                 pictureBoxBanner.Height,
                 KeePass.UI.BannerStyle.Default,
                 Resources.clock_white,
-                "Timed Passwords",
-                "Enter this code in the verification system.");
+                KeeOtp2Statics.ShowOtp,
+                KeeOtp2Statics.ShowOtpSubline);
 
             this.Icon = host.MainWindow.Icon;
             this.TopMost = host.MainWindow.TopMost;
@@ -36,10 +36,17 @@ namespace KeeOtp2
             this.host = host;
             this.entry = entry;
 
+            groupboxTotp.Text = KeeOtp2Statics.TOTP;
+            linkLabelIncorrect.Text = KeeOtp2Statics.ShowOtpIncorrect;
+            buttonShowQR.Text = KeeOtp2Statics.ShowOtpShowQr + KeeOtp2Statics.InformationChar;
+            buttonEdit.Text = KeeOtp2Statics.Edit;
+            buttonCopyTotp.Text = KeeOtp2Statics.Copy;
+            buttonClose.Text = KeeOtp2Statics.Close;
+
             ToolTip toolTip = new ToolTip();
-            toolTip.ToolTipTitle = "Show QR Code";
+            toolTip.ToolTipTitle = KeeOtp2Statics.ShowOtp;
             toolTip.IsBalloon = true;
-            toolTip.SetToolTip(buttonShowQR, "Through this QR Cdoe you can configure this OTP on other devices. You can scan this QR Code with Google Authenticator for example.");
+            toolTip.SetToolTip(buttonShowQR, KeeOtp2Statics.ToolTipShowQrCode);
         }
 
         private void ShowOneTimePasswords_Load(object sender, EventArgs e)
@@ -66,13 +73,19 @@ namespace KeeOtp2
                 if (remaining != lastRemainingTime)
                 {
                     lastRemainingTime = remaining;
-                    this.groupboxTotp.Text = String.Format("TOTP - Time remaining: {0} - Next code: {1}", remaining.ToString().PadLeft(2, '0'), nextCode.ToString().PadLeft(this.data.Digits, '0'));
+                    this.groupboxTotp.Text = String.Format(KeeOtp2Statics.ShowOtpNextRemaining, remaining.ToString().PadLeft(2, '0'), nextCode.ToString().PadLeft(this.data.Digits, '0'));
                 }
             }
             else
             {
-                MessageBox.Show("Please add a one time password field");
-                this.Close();
+                if (MessageBox.Show(KeeOtp2Statics.MessageBoxOtpNotConfigured, KeeOtp2Statics.ShowOtp, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    AddEdit();
+                }
+                else
+                {
+                    this.Close();
+                }
             }
         }
 
@@ -106,7 +119,7 @@ namespace KeeOtp2
         private void AddEdit()
         {
             this.timerUpdateTotp.Enabled = false;
-            this.groupboxTotp.Text = "TOTP";
+            this.groupboxTotp.Text = KeeOtp2Statics.TOTP;
             this.labelOtp.Text = "000000";
             this.totp = null;
 
@@ -151,7 +164,7 @@ namespace KeeOtp2
             }
             else
             {
-                MessageBox.Show("QRCodes can only be used with Base32 secret encoding.\n\nYour encoding: " + this.data.Encoding.ToString(), "Failure", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(String.Format(KeeOtp2Statics.MessageBoxShowQrWrongEncoding, this.data.Encoding.ToString()), KeeOtp2Statics.ShowOtpShowQr, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             
         }

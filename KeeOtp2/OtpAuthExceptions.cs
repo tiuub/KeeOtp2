@@ -29,4 +29,11 @@ namespace KeeOtp2
         public InvalidUriFormat() { }
         public InvalidUriFormat(string message) : base(message) { }
     }
+
+    [Serializable]
+    public class InvalidOtpConfiguration : Exception
+    {
+        public InvalidOtpConfiguration() { }
+        public InvalidOtpConfiguration(string message) : base(message) { }
+    }
 }

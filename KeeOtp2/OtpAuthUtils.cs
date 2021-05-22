@@ -52,20 +52,9 @@ namespace KeeOtp2
             {
                 if (checkKeeOtp1Mode(entry))
                 {
-                    Uri uri = new Uri(entry.Strings.Get(StringDictionaryKey).ReadString());
-                    System.Windows.Forms.MessageBox.Show(uri.ToString());
-                    if (validateUri(uri))
-                    {
-                        OtpAuthData data = uriToOtpAuthData(uri);
-                        data.KeeOtp1Mode = true;
-                        return data;
-                    }
-                    else
-                    {
-                        OtpAuthData data = loadDataFromKeeOtp1String(entry);
-                        data.KeeOtp1Mode = true;
-                        return data;
-                    }
+                    OtpAuthData data = loadDataFromKeeOtp1String(entry);
+                    data.KeeOtp1Mode = true;
+                    return data;
                 }
                 else if (entry.Strings.GetKeys().Any(x => x.StartsWith(builtInOtpPrefix)))
                 {
@@ -125,34 +114,43 @@ namespace KeeOtp2
 
         public static OtpAuthData loadDataFromKeeOtp1String(PwEntry entry)
         {
-            NameValueCollection parameters = ParseQueryString(entry.Strings.Get(StringDictionaryKey).ReadString());
+            if (checkUriString(entry.Strings.Get(StringDictionaryKey).ReadString()))
+            {
+                OtpAuthData data = uriToOtpAuthData(new Uri(entry.Strings.Get(StringDictionaryKey).ReadString()));
+                data.loadedFields = new List<string>() { StringDictionaryKey };
+                return data;
+            }
+            else
+            {
+                NameValueCollection parameters = ParseQueryString(entry.Strings.Get(StringDictionaryKey).ReadString());
 
-            if (parameters[KeeOtp1KeyParameter] == null)
-                throw new ArgumentException("Must have a key in the data");
+                if (parameters[KeeOtp1KeyParameter] == null)
+                    throw new ArgumentException("Must have a key in the data");
 
-            OtpAuthData otpData = new OtpAuthData();
+                OtpAuthData otpData = new OtpAuthData();
 
-            otpData.loadedFields = new List<string>() { StringDictionaryKey };
+                otpData.loadedFields = new List<string>() { StringDictionaryKey };
 
-            if (parameters[KeeOtp1EncodingParameter] != null)
-                otpData.Encoding = (OtpSecretEncoding)Enum.Parse(typeof(OtpSecretEncoding), parameters[KeeOtp1EncodingParameter], true);
+                if (parameters[KeeOtp1EncodingParameter] != null)
+                    otpData.Encoding = (OtpSecretEncoding)Enum.Parse(typeof(OtpSecretEncoding), parameters[KeeOtp1EncodingParameter], true);
 
-            otpData.SetPlainSecret(correctPlainSecret(parameters[KeeOtp1KeyParameter].Replace("%3d", "="), otpData.Encoding));
+                otpData.SetPlainSecret(correctPlainSecret(parameters[KeeOtp1KeyParameter].Replace("%3d", "="), otpData.Encoding));
 
-            if (parameters[KeeOtp1TypeParameter] != null)
-                otpData.Type = (OtpType)Enum.Parse(typeof(OtpType), parameters[KeeOtp1TypeParameter], true);
+                if (parameters[KeeOtp1TypeParameter] != null)
+                    otpData.Type = (OtpType)Enum.Parse(typeof(OtpType), parameters[KeeOtp1TypeParameter], true);
 
-            if (parameters[KeeOtp1OtpHashModeParameter] != null)
-                otpData.Algorithm = (OtpHashMode)Enum.Parse(typeof(OtpHashMode), parameters[KeeOtp1OtpHashModeParameter], true);
+                if (parameters[KeeOtp1OtpHashModeParameter] != null)
+                    otpData.Algorithm = (OtpHashMode)Enum.Parse(typeof(OtpHashMode), parameters[KeeOtp1OtpHashModeParameter], true);
 
-            if (otpData.Type == OtpType.Totp)
-                otpData.Period = GetIntOrDefault(parameters, KeeOtp1StepParameter, 30);
-            else if (otpData.Type == OtpType.Hotp)
-                otpData.Counter = GetIntOrDefault(parameters, KeeOtp1CounterParameter, 0);
+                if (otpData.Type == OtpType.Totp)
+                    otpData.Period = GetIntOrDefault(parameters, KeeOtp1StepParameter, 30);
+                else if (otpData.Type == OtpType.Hotp)
+                    otpData.Counter = GetIntOrDefault(parameters, KeeOtp1CounterParameter, 0);
 
-            otpData.Digits = GetIntOrDefault(parameters, KeeOtp1SizeParameter, 6);
+                otpData.Digits = GetIntOrDefault(parameters, KeeOtp1SizeParameter, 6);
 
-            return otpData;
+                return otpData;
+            }
         }
 
         public static OtpAuthData loadDataFromBuiltInOtp(PwEntry entry)
@@ -418,11 +416,11 @@ namespace KeeOtp2
             return uriBuilder.Uri;
         }
 
-        public static bool validateUri(Uri uri)
+        public static bool checkUriString(String uriString)
         {
             try
             {
-                if (uriToOtpAuthData(uri) != null)
+                if (uriToOtpAuthData(new Uri(uriString)) != null)
                     return true;
                 return false;
             }
@@ -468,23 +466,27 @@ namespace KeeOtp2
                     return data;
                 }
                 else
-                    return null;
+                    throw new InvalidUriFormat("The Uri does not contain a secret. A secret is required!");
             }
             else
                 throw new InvalidUriFormat("Given Uri does not start with 'otpauth://'!");
         }
 
-        public static string getTotp(OtpAuthData data)
+        public static Totp getTotp(OtpAuthData data)
         {
-           return getTotp(data, DateTime.UtcNow);
+            return new Totp(data.Key, data.Period, data.Algorithm, data.Digits, null);
         }
 
-        public static string getTotp(OtpAuthData data, DateTime time)
+        public static string getTotpString(OtpAuthData data)
+        {
+           return getTotpString(data, DateTime.UtcNow);
+        }
+
+        public static string getTotpString(OtpAuthData data, DateTime time)
         {
             try
             {
-                var totp = new Totp(data.Key, data.Period, data.Algorithm, data.Digits, null);
-                return totp.ComputeTotp(time);
+                return getTotp(data).ComputeTotp(time);
             }
             catch
             {

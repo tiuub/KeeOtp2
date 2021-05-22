@@ -22,13 +22,18 @@ namespace KeeOtp2
                 pictureBoxBanner.Height,
                 KeePass.UI.BannerStyle.Default,
                 Resources.info_white,
-                "About",
-                "KeeOtp2 Plugin.");
+                KeeOtp2Statics.About,
+                KeeOtp2Statics.AboutSubline);
 
             this.Icon = host.MainWindow.Icon;
 
             this.host = host;
             this.TopMost = host.MainWindow.TopMost;
+
+            groupBoxDependencies.Text = KeeOtp2Statics.Dependencies;
+            linkLabelGitHubRepository.Text = KeeOtp2Statics.GitHubRepository;
+            linkLabelDonate.Text = KeeOtp2Statics.Doante;
+            buttonOK.Text = KeeOtp2Statics.OK;
         }
 
         private void About_Load(object sender, EventArgs e)
@@ -36,10 +41,11 @@ namespace KeeOtp2
             this.Left = this.host.MainWindow.Left + 20;
             this.Top = this.host.MainWindow.Top + 20;
 
+            groupBoxAbout.Text = KeeOtp2Statics.About;
+
             Assembly assembly = Assembly.GetExecutingAssembly();
             System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
-
-            labelAbout.Text = new StringBuilder(labelAbout.Text).Replace("{VERSION}", fvi.FileVersion).ToString();
+            labelAbout.Text = String.Format(KeeOtp2Statics.AboutDisclaimer, fvi.FileVersion);
 
             loadDependencies();
         }
@@ -48,9 +54,9 @@ namespace KeeOtp2
         {
             clv_Dependencies.Clear();
 
-            clv_Dependencies.Columns.Add("Package", 100);
-            clv_Dependencies.Columns.Add("Author", 80);
-            clv_Dependencies.Columns.Add("License", 80);
+            clv_Dependencies.Columns.Add(KeeOtp2Statics.Dependencie, 100);
+            clv_Dependencies.Columns.Add(KeeOtp2Statics.Author, 80);
+            clv_Dependencies.Columns.Add(KeeOtp2Statics.License, 80);
 
             ListViewItem lvi = new ListViewItem("KeeOtp(1)");
             lvi.SubItems.Add("devinmartin");
@@ -82,6 +88,18 @@ namespace KeeOtp2
             lvi.Tag = null;
             clv_Dependencies.Items.Add(lvi);
 
+            lvi = new ListViewItem("NHotkey");
+            lvi.SubItems.Add("thomaslevesque");
+            lvi.SubItems.Add("Apache 2.0");
+            lvi.Tag = Resources.NHotkeyLICENSE;
+            clv_Dependencies.Items.Add(lvi);
+
+            lvi = new ListViewItem("NHotkey.WindowsForms");
+            lvi.SubItems.Add("thomaslevesque");
+            lvi.SubItems.Add("Apache 2.0");
+            lvi.Tag = Resources.NHotkeyWindowsFormsLICENSE;
+            clv_Dependencies.Items.Add(lvi);
+
             lvi = new ListViewItem("Material Icons");
             lvi.SubItems.Add("Google");
             lvi.SubItems.Add("Apache License Version 2.0");
@@ -89,16 +107,16 @@ namespace KeeOtp2
             clv_Dependencies.Items.Add(lvi);
         }
 
-        private void llbl_Donate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void linkLabelGitHubRepository_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5F5QB7744AD5G&source=url");
-            llbl_Donate.LinkVisited = true;
+            System.Diagnostics.Process.Start(KeeOtp2Statics.RepositoryLicenseLink);
+            linkLabelGitHubRepository.LinkVisited = true;
         }
 
-        private void llbl_GitHubRepository_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void linkLabelDonate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/tiuub/KeeOtp2");
-            llbl_GitHubRepository.LinkVisited = true;
+            System.Diagnostics.Process.Start(KeeOtp2Statics.DonateLink);
+            linkLabelDonate.LinkVisited = true;
         }
 
         private void clv_Dependencies_Click(object sender, EventArgs e)
@@ -110,8 +128,8 @@ namespace KeeOtp2
 
             if (columnindex < 2)
             {
-                if (MessageBox.Show("The GitHub Repository will now be opened.\nYou can open the ReadMe and scroll down, until you see Dependencies. There you will find references to the source code, the author and the license of the dependencies.\n\nDo you want to continue?", "Dependencies", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                    System.Diagnostics.Process.Start("https://github.com/tiuub/KeeOtp2");
+                if (MessageBox.Show(KeeOtp2Statics.AboutMessageBoxOpenRepository, KeeOtp2Statics.Dependencies, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    System.Diagnostics.Process.Start(KeeOtp2Statics.RepositoryLicenseLink);
 
             }
             else
@@ -120,21 +138,21 @@ namespace KeeOtp2
                     hideLicense();
                 if (lvi.Tag != null)
                 {
-                    showLicense(lvi.Text, lvi.Tag.ToString());
+                    showLicense(lvi.Text, lvi.SubItems[1].Text, lvi.Tag.ToString());
                 }
                 else
-                    MessageBox.Show(String.Format("Cant load license of {0}.\n\nJust try to open the GitHub Repository and scroll down, until Dependencies. There are all licenses!", lvi.Text), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(String.Format(KeeOtp2Statics.AboutMessageBoxCantLoadLicense, lvi.Text), KeeOtp2Statics.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void showLicense(string dependencie, string license)
+        private void showLicense(string dependencie, string author, string license)
         {
             groupBoxDependencies.Anchor -= AnchorStyles.Bottom;
             int groupBoxLicenseHeight = 101;
             this.Height = this.Height + groupBoxLicenseHeight + groupBoxDependencies.Margin.All * 2;
 
             groupBoxLicense = new GroupBox();
-            groupBoxLicense.Text = "License - " + dependencie;
+            groupBoxLicense.Text = String.Format("{0} - {1} by {2}", KeeOtp2Statics.License, dependencie, author);
             groupBoxLicense.Left = groupBoxDependencies.Left;
             groupBoxLicense.Top = groupBoxDependencies.Bottom + groupBoxDependencies.Margin.All * 2;
             groupBoxLicense.Width = groupBoxDependencies.Width;

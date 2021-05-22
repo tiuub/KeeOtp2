@@ -14,8 +14,8 @@ namespace KeeOtp2
     public static class OtpTime
     {
         private const long TIME_DELTA_VALID_SECONDS = 3600;
-        private const int CUSTOM_NTP_SERVER_MAX_RETRIES = 3;
-        private const int CUSTOM_NTP_SERVER_RETRY_DELAY = 40000;
+        private const int CUSTOM_NTP_SERVER_MAX_RETRIES = 5;
+        private const int CUSTOM_NTP_SERVER_RETRY_DELAY = 20000;
 
         private static long timeDelta = 0;
         private static DateTime timeDeltaValidUntil;

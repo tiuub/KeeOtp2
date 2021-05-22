@@ -28,10 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.textBoxKey = new System.Windows.Forms.TextBox();
             this.textBoxStep = new System.Windows.Forms.TextBox();
             this.radioButtonSix = new System.Windows.Forms.RadioButton();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelStep = new System.Windows.Forms.Label();
             this.radioButtonEight = new System.Windows.Forms.RadioButton();
             this.buttonOk = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -50,18 +51,17 @@
             this.groupboxSize = new System.Windows.Forms.GroupBox();
             this.groupboxInfo = new System.Windows.Forms.GroupBox();
             this.checkboxOldKeeOtp = new System.Windows.Forms.CheckBox();
-            this.buttonMigrate = new System.Windows.Forms.Button();
-            this.pictureBoxMigrateQuestionmark = new System.Windows.Forms.PictureBox();
-            this.llbl_LoadUri = new System.Windows.Forms.LinkLabel();
-            this.buttonScanQRCode = new System.Windows.Forms.Button();
+            this.linkLabelLoadUriScanQR = new System.Windows.Forms.LinkLabel();
             this.groupBoxKey = new System.Windows.Forms.GroupBox();
+            this.timerUpdateTotp = new System.Windows.Forms.Timer(this.components);
+            this.linkLabelMigrate = new System.Windows.Forms.LinkLabel();
+            this.labelStatus = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBanner)).BeginInit();
             this.groupboxHashAlgorithm.SuspendLayout();
             this.groupboxTimeStep.SuspendLayout();
             this.groupboxEncoding.SuspendLayout();
             this.groupboxSize.SuspendLayout();
             this.groupboxInfo.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMigrateQuestionmark)).BeginInit();
             this.groupBoxKey.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -93,14 +93,14 @@
             this.radioButtonSix.Text = "6 Digits";
             this.radioButtonSix.UseVisualStyleBackColor = true;
             // 
-            // label2
+            // labelStep
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 16);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(106, 13);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Time Step (Seconds)";
+            this.labelStep.AutoSize = true;
+            this.labelStep.Location = new System.Drawing.Point(6, 16);
+            this.labelStep.Name = "labelStep";
+            this.labelStep.Size = new System.Drawing.Size(106, 13);
+            this.labelStep.TabIndex = 4;
+            this.labelStep.Text = "Time Step (Seconds)";
             // 
             // radioButtonEight
             // 
@@ -181,9 +181,9 @@
             this.checkBoxCustomSettings.AutoSize = true;
             this.checkBoxCustomSettings.Location = new System.Drawing.Point(21, 120);
             this.checkBoxCustomSettings.Name = "checkBoxCustomSettings";
-            this.checkBoxCustomSettings.Size = new System.Drawing.Size(124, 17);
+            this.checkBoxCustomSettings.Size = new System.Drawing.Size(128, 17);
             this.checkBoxCustomSettings.TabIndex = 13;
-            this.checkBoxCustomSettings.Text = "Use Custom Settings";
+            this.checkBoxCustomSettings.Text = "Use Custom Settings*";
             this.checkBoxCustomSettings.UseVisualStyleBackColor = true;
             this.checkBoxCustomSettings.CheckedChanged += new System.EventHandler(this.checkBoxCustomSettings_CheckedChanged);
             // 
@@ -235,7 +235,7 @@
             // groupboxTimeStep
             // 
             this.groupboxTimeStep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupboxTimeStep.Controls.Add(this.label2);
+            this.groupboxTimeStep.Controls.Add(this.labelStep);
             this.groupboxTimeStep.Controls.Add(this.textBoxStep);
             this.groupboxTimeStep.Location = new System.Drawing.Point(15, 143);
             this.groupboxTimeStep.Name = "groupboxTimeStep";
@@ -296,62 +296,27 @@
             this.checkboxOldKeeOtp.AutoSize = true;
             this.checkboxOldKeeOtp.Location = new System.Drawing.Point(6, 15);
             this.checkboxOldKeeOtp.Name = "checkboxOldKeeOtp";
-            this.checkboxOldKeeOtp.Size = new System.Drawing.Size(156, 17);
+            this.checkboxOldKeeOtp.Size = new System.Drawing.Size(160, 17);
             this.checkboxOldKeeOtp.TabIndex = 0;
-            this.checkboxOldKeeOtp.Text = "Use old KeeOtp save mode";
+            this.checkboxOldKeeOtp.Text = "Use old KeeOtp save mode*";
             this.checkboxOldKeeOtp.UseVisualStyleBackColor = true;
             // 
-            // buttonMigrate
+            // linkLabelLoadUriScanQR
             // 
-            this.buttonMigrate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonMigrate.Location = new System.Drawing.Point(15, 312);
-            this.buttonMigrate.Name = "buttonMigrate";
-            this.buttonMigrate.Size = new System.Drawing.Size(97, 23);
-            this.buttonMigrate.TabIndex = 18;
-            this.buttonMigrate.Text = "Migrate to Built-In";
-            this.buttonMigrate.UseVisualStyleBackColor = true;
-            this.buttonMigrate.Visible = false;
-            this.buttonMigrate.Click += new System.EventHandler(this.buttonMigrate_Click);
-            // 
-            // pictureBoxMigrateQuestionmark
-            // 
-            this.pictureBoxMigrateQuestionmark.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.pictureBoxMigrateQuestionmark.Location = new System.Drawing.Point(118, 312);
-            this.pictureBoxMigrateQuestionmark.Name = "pictureBoxMigrateQuestionmark";
-            this.pictureBoxMigrateQuestionmark.Size = new System.Drawing.Size(23, 23);
-            this.pictureBoxMigrateQuestionmark.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBoxMigrateQuestionmark.TabIndex = 19;
-            this.pictureBoxMigrateQuestionmark.TabStop = false;
-            this.pictureBoxMigrateQuestionmark.Visible = false;
-            // 
-            // llbl_LoadUri
-            // 
-            this.llbl_LoadUri.AutoSize = true;
-            this.llbl_LoadUri.Enabled = false;
-            this.llbl_LoadUri.Location = new System.Drawing.Point(292, 0);
-            this.llbl_LoadUri.Name = "llbl_LoadUri";
-            this.llbl_LoadUri.Size = new System.Drawing.Size(47, 13);
-            this.llbl_LoadUri.TabIndex = 20;
-            this.llbl_LoadUri.TabStop = true;
-            this.llbl_LoadUri.Text = "Load Uri";
-            this.llbl_LoadUri.Visible = false;
-            this.llbl_LoadUri.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llbl_LoadUri_LinkClicked);
-            // 
-            // buttonScanQRCode
-            // 
-            this.buttonScanQRCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonScanQRCode.Location = new System.Drawing.Point(15, 312);
-            this.buttonScanQRCode.Name = "buttonScanQRCode";
-            this.buttonScanQRCode.Size = new System.Drawing.Size(97, 23);
-            this.buttonScanQRCode.TabIndex = 21;
-            this.buttonScanQRCode.Text = "Scan QR Code";
-            this.buttonScanQRCode.UseVisualStyleBackColor = true;
-            this.buttonScanQRCode.Click += new System.EventHandler(this.buttonScanQRCode_Click);
+            this.linkLabelLoadUriScanQR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabelLoadUriScanQR.Location = new System.Drawing.Point(259, 0);
+            this.linkLabelLoadUriScanQR.Name = "linkLabelLoadUriScanQR";
+            this.linkLabelLoadUriScanQR.Size = new System.Drawing.Size(80, 13);
+            this.linkLabelLoadUriScanQR.TabIndex = 20;
+            this.linkLabelLoadUriScanQR.TabStop = true;
+            this.linkLabelLoadUriScanQR.Text = "Scan QR Code";
+            this.linkLabelLoadUriScanQR.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.linkLabelLoadUriScanQR.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelLoadUriScanQR_LinkClicked);
             // 
             // groupBoxKey
             // 
             this.groupBoxKey.Controls.Add(this.textBoxKey);
-            this.groupBoxKey.Controls.Add(this.llbl_LoadUri);
+            this.groupBoxKey.Controls.Add(this.linkLabelLoadUriScanQR);
             this.groupBoxKey.Location = new System.Drawing.Point(15, 64);
             this.groupBoxKey.Name = "groupBoxKey";
             this.groupBoxKey.Size = new System.Drawing.Size(342, 49);
@@ -359,15 +324,43 @@
             this.groupBoxKey.TabStop = false;
             this.groupBoxKey.Text = "Key or Uri (otpauth://):";
             // 
+            // timerUpdateTotp
+            // 
+            this.timerUpdateTotp.Interval = 1000;
+            this.timerUpdateTotp.Tick += new System.EventHandler(this.timerUpdateTotp_Tick);
+            // 
+            // linkLabelMigrate
+            // 
+            this.linkLabelMigrate.AutoSize = true;
+            this.linkLabelMigrate.Enabled = false;
+            this.linkLabelMigrate.Location = new System.Drawing.Point(263, 121);
+            this.linkLabelMigrate.Name = "linkLabelMigrate";
+            this.linkLabelMigrate.Size = new System.Drawing.Size(91, 13);
+            this.linkLabelMigrate.TabIndex = 23;
+            this.linkLabelMigrate.TabStop = true;
+            this.linkLabelMigrate.Text = "Migrate to built-in*";
+            this.linkLabelMigrate.Visible = false;
+            this.linkLabelMigrate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelMigrate_LinkClicked);
+            // 
+            // labelStatus
+            // 
+            this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelStatus.AutoSize = true;
+            this.labelStatus.Enabled = false;
+            this.labelStatus.Location = new System.Drawing.Point(12, 317);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(141, 13);
+            this.labelStatus.TabIndex = 24;
+            this.labelStatus.Text = "(*Hover for more information)";
+            // 
             // OtpInformation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(374, 350);
+            this.Controls.Add(this.labelStatus);
+            this.Controls.Add(this.linkLabelMigrate);
             this.Controls.Add(this.groupBoxKey);
-            this.Controls.Add(this.buttonScanQRCode);
-            this.Controls.Add(this.pictureBoxMigrateQuestionmark);
-            this.Controls.Add(this.buttonMigrate);
             this.Controls.Add(this.groupboxInfo);
             this.Controls.Add(this.groupboxSize);
             this.Controls.Add(this.groupboxEncoding);
@@ -395,7 +388,6 @@
             this.groupboxSize.PerformLayout();
             this.groupboxInfo.ResumeLayout(false);
             this.groupboxInfo.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMigrateQuestionmark)).EndInit();
             this.groupBoxKey.ResumeLayout(false);
             this.groupBoxKey.PerformLayout();
             this.ResumeLayout(false);
@@ -408,7 +400,7 @@
         private System.Windows.Forms.TextBox textBoxKey;
         private System.Windows.Forms.TextBox textBoxStep;
         private System.Windows.Forms.RadioButton radioButtonSix;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelStep;
         private System.Windows.Forms.RadioButton radioButtonEight;
         private System.Windows.Forms.Button buttonOk;
         private System.Windows.Forms.Button buttonCancel;
@@ -427,10 +419,10 @@
         private System.Windows.Forms.GroupBox groupboxInfo;
         private System.Windows.Forms.RadioButton radioButtonUtf8;
         private System.Windows.Forms.CheckBox checkboxOldKeeOtp;
-        private System.Windows.Forms.Button buttonMigrate;
-        private System.Windows.Forms.PictureBox pictureBoxMigrateQuestionmark;
-        private System.Windows.Forms.LinkLabel llbl_LoadUri;
-        private System.Windows.Forms.Button buttonScanQRCode;
+        private System.Windows.Forms.LinkLabel linkLabelLoadUriScanQR;
         private System.Windows.Forms.GroupBox groupBoxKey;
+        private System.Windows.Forms.Timer timerUpdateTotp;
+        private System.Windows.Forms.LinkLabel linkLabelMigrate;
+        private System.Windows.Forms.Label labelStatus;
     }
 }

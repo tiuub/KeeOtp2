@@ -36,7 +36,7 @@
             this.labelMigrateButton = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.labelMigrationStatus = new System.Windows.Forms.Label();
+            this.labelStatus = new System.Windows.Forms.Label();
             this.groupBoxHotkey = new System.Windows.Forms.GroupBox();
             this.textBoxHotKeySequence = new System.Windows.Forms.TextBox();
             this.labelHotKeySequence = new System.Windows.Forms.Label();
@@ -118,7 +118,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(240, 341);
+            this.buttonOK.Location = new System.Drawing.Point(159, 341);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 3;
@@ -129,24 +129,23 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(159, 341);
+            this.buttonCancel.Location = new System.Drawing.Point(240, 341);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 4;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
-            // labelMigrationStatus
+            // labelStatus
             // 
-            this.labelMigrationStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelMigrationStatus.AutoSize = true;
-            this.labelMigrationStatus.Enabled = false;
-            this.labelMigrationStatus.Location = new System.Drawing.Point(9, 346);
-            this.labelMigrationStatus.Name = "labelMigrationStatus";
-            this.labelMigrationStatus.Size = new System.Drawing.Size(89, 13);
-            this.labelMigrationStatus.TabIndex = 5;
-            this.labelMigrationStatus.Text = "Loaded 0 entries!";
-            this.labelMigrationStatus.Visible = false;
+            this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelStatus.AutoSize = true;
+            this.labelStatus.Enabled = false;
+            this.labelStatus.Location = new System.Drawing.Point(9, 346);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(141, 13);
+            this.labelStatus.TabIndex = 5;
+            this.labelStatus.Text = "(*Hover for more information)";
             // 
             // groupBoxHotkey
             // 
@@ -355,7 +354,7 @@
             this.ClientSize = new System.Drawing.Size(327, 372);
             this.Controls.Add(this.groupBoxTime);
             this.Controls.Add(this.groupBoxHotkey);
-            this.Controls.Add(this.labelMigrationStatus);
+            this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.groupBoxMigration);
@@ -388,7 +387,7 @@
         private System.Windows.Forms.Label labelMigrateButton;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.Label labelMigrationStatus;
+        private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.GroupBox groupBoxHotkey;
         private System.Windows.Forms.Label labelUseHotKey;
         private KeePass.UI.HotKeyControlEx hotKeyControlExGlobalHotkey;

@@ -33,9 +33,9 @@
             this.groupBoxQRCode = new System.Windows.Forms.GroupBox();
             this.pictureBoxQrCode = new System.Windows.Forms.PictureBox();
             this.buttonOk = new System.Windows.Forms.Button();
-            this.buttonCopyUri = new System.Windows.Forms.Button();
+            this.buttonCopyUriReload = new System.Windows.Forms.Button();
             this.timerFormTimeout = new System.Windows.Forms.Timer(this.components);
-            this.buttonReload = new System.Windows.Forms.Button();
+            this.labelStatus = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBanner)).BeginInit();
             this.groupBoxQRCode.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxQrCode)).BeginInit();
@@ -86,41 +86,40 @@
             this.buttonOk.Text = "Close";
             this.buttonOk.UseVisualStyleBackColor = true;
             // 
-            // buttonCopyUri
+            // buttonCopyUriReload
             // 
-            this.buttonCopyUri.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonCopyUri.Location = new System.Drawing.Point(12, 395);
-            this.buttonCopyUri.Name = "buttonCopyUri";
-            this.buttonCopyUri.Size = new System.Drawing.Size(75, 23);
-            this.buttonCopyUri.TabIndex = 16;
-            this.buttonCopyUri.Text = "Copy URI";
-            this.buttonCopyUri.UseVisualStyleBackColor = true;
-            this.buttonCopyUri.Click += new System.EventHandler(this.buttonCopyUri_Click);
+            this.buttonCopyUriReload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonCopyUriReload.Location = new System.Drawing.Point(168, 395);
+            this.buttonCopyUriReload.Name = "buttonCopyUriReload";
+            this.buttonCopyUriReload.Size = new System.Drawing.Size(75, 23);
+            this.buttonCopyUriReload.TabIndex = 16;
+            this.buttonCopyUriReload.Text = "Copy URI";
+            this.buttonCopyUriReload.UseVisualStyleBackColor = true;
+            this.buttonCopyUriReload.Click += new System.EventHandler(this.buttonCopyUriReload_Click);
             // 
             // timerFormTimeout
             // 
             this.timerFormTimeout.Interval = 1000;
             this.timerFormTimeout.Tick += new System.EventHandler(this.timerFormTimeout_Tick);
             // 
-            // buttonReload
+            // labelStatus
             // 
-            this.buttonReload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonReload.Location = new System.Drawing.Point(93, 395);
-            this.buttonReload.Name = "buttonReload";
-            this.buttonReload.Size = new System.Drawing.Size(75, 23);
-            this.buttonReload.TabIndex = 17;
-            this.buttonReload.Text = "Reload";
-            this.buttonReload.UseVisualStyleBackColor = true;
-            this.buttonReload.Visible = false;
-            this.buttonReload.Click += new System.EventHandler(this.buttonReload_Click);
+            this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelStatus.AutoSize = true;
+            this.labelStatus.Enabled = false;
+            this.labelStatus.Location = new System.Drawing.Point(15, 400);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(141, 13);
+            this.labelStatus.TabIndex = 18;
+            this.labelStatus.Text = "(*Hover for more information)";
             // 
             // ShowQrCode
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(336, 426);
-            this.Controls.Add(this.buttonReload);
-            this.Controls.Add(this.buttonCopyUri);
+            this.Controls.Add(this.labelStatus);
+            this.Controls.Add(this.buttonCopyUriReload);
             this.Controls.Add(this.buttonOk);
             this.Controls.Add(this.groupBoxQRCode);
             this.Controls.Add(this.pictureBoxBanner);
@@ -134,6 +133,7 @@
             this.groupBoxQRCode.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxQrCode)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -142,9 +142,9 @@
         private System.Windows.Forms.PictureBox pictureBoxBanner;
         private System.Windows.Forms.GroupBox groupBoxQRCode;
         private System.Windows.Forms.Button buttonOk;
-        private System.Windows.Forms.Button buttonCopyUri;
+        private System.Windows.Forms.Button buttonCopyUriReload;
         private System.Windows.Forms.PictureBox pictureBoxQrCode;
         private System.Windows.Forms.Timer timerFormTimeout;
-        private System.Windows.Forms.Button buttonReload;
+        private System.Windows.Forms.Label labelStatus;
     }
 }

@@ -34,6 +34,12 @@
     <Reference Include="KeePass">
       <HintPath>..\KeePass\KeePass.exe</HintPath>
     </Reference>
+    <Reference Include="NHotkey, Version=2.0.0.0, Culture=neutral, PublicKeyToken=a76ffb086700b11c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NHotkey.2.1.0\lib\net40\NHotkey.dll</HintPath>
+    </Reference>
+    <Reference Include="NHotkey.WindowsForms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=a76ffb086700b11c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NHotkey.WindowsForms.2.1.0\lib\net40\NHotkey.WindowsForms.dll</HintPath>
+    </Reference>
     <Reference Include="OtpSharp, Version=1.0.6.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\OtpSharp.1.0.6.1\lib\net40\OtpSharp.dll</HintPath>
     </Reference>
@@ -96,6 +102,7 @@
     </Compile>
     <Compile Include="KeeOtp2Config.cs" />
     <Compile Include="KeeOtp2Ext.cs" />
+    <Compile Include="KeeOtp2Statics.cs" />
     <Compile Include="OtpAuthData.cs" />
     <Compile Include="OtpAuthExceptions.cs" />
     <Compile Include="OtpAuthUtils.cs" />
@@ -152,7 +159,6 @@
     <None Include="Resources\info_white.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\LICENSE" />
     <None Include="Resources\lock_white.png" />
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +166,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\qr_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\help_white.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

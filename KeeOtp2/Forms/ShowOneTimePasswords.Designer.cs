@@ -70,8 +70,8 @@
             // 
             // buttonEdit
             // 
-            this.buttonEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonEdit.Location = new System.Drawing.Point(207, 170);
+            this.buttonEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonEdit.Location = new System.Drawing.Point(93, 170);
             this.buttonEdit.Name = "buttonEdit";
             this.buttonEdit.Size = new System.Drawing.Size(75, 23);
             this.buttonEdit.TabIndex = 5;
@@ -118,8 +118,8 @@
             // 
             // buttonCopyTotp
             // 
-            this.buttonCopyTotp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonCopyTotp.Location = new System.Drawing.Point(93, 170);
+            this.buttonCopyTotp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCopyTotp.Location = new System.Drawing.Point(207, 170);
             this.buttonCopyTotp.Name = "buttonCopyTotp";
             this.buttonCopyTotp.Size = new System.Drawing.Size(75, 23);
             this.buttonCopyTotp.TabIndex = 9;

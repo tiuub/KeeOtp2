@@ -83,6 +83,16 @@ namespace KeeOtp2.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap help_white {
+            get {
+                object obj = ResourceManager.GetObject("help_white", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap info_white {
             get {
                 object obj = ResourceManager.GetObject("info_white", resourceCulture);
@@ -137,6 +147,52 @@ namespace KeeOtp2.Properties {
         internal static string MaterialDesignIconsLICENSE {
             get {
                 return ResourceManager.GetString("MaterialDesignIconsLICENSE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apache License
+        ///                           Version 2.0, January 2004
+        ///                        http://www.apache.org/licenses/
+        ///
+        ///   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+        ///
+        ///   1. Definitions.
+        ///
+        ///      &quot;License&quot; shall mean the terms and conditions for use, reproduction,
+        ///      and distribution as defined by Sections 1 through 9 of this document.
+        ///
+        ///      &quot;Licensor&quot; shall mean the copyright owner or entity authorized by
+        ///      the copyright owner that is granting the License.
+        ///
+        ///      &quot; [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string NHotkeyLICENSE {
+            get {
+                return ResourceManager.GetString("NHotkeyLICENSE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apache License
+        ///                           Version 2.0, January 2004
+        ///                        http://www.apache.org/licenses/
+        ///
+        ///   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+        ///
+        ///   1. Definitions.
+        ///
+        ///      &quot;License&quot; shall mean the terms and conditions for use, reproduction,
+        ///      and distribution as defined by Sections 1 through 9 of this document.
+        ///
+        ///      &quot;Licensor&quot; shall mean the copyright owner or entity authorized by
+        ///      the copyright owner that is granting the License.
+        ///
+        ///      &quot; [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string NHotkeyWindowsFormsLICENSE {
+            get {
+                return ResourceManager.GetString("NHotkeyWindowsFormsLICENSE", resourceCulture);
             }
         }
         

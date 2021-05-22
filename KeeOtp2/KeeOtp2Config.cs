@@ -1,11 +1,36 @@
 ﻿using KeePass;
 using System;
 using System.Windows.Forms;
+using NHotkey.WindowsForms;
 
 namespace KeeOtp2
 {
     internal static class KeeOtp2Config
     {
+        private const String HOTKEY_NAME = "HotKeyAutoType";
+
+        internal static EventHandler<NHotkey.HotkeyEventArgs> handler { get; set; }
+
+        public static void loadConfig()
+        {
+            registerHotKey();
+            if (OtpTime.getTimeType() == OtpTimeType.CustomNtpServer)
+                OtpTime.pollCustomNtpServer();
+        }
+
+        public static void registerHotKey()
+        {
+            if (handler != null)
+                HotkeyManager.Current.AddOrReplace(HOTKEY_NAME, KeeOtp2Config.HotKeyKeys, handler);
+        }
+
+        public static void unregisterHotKey()
+        {
+            HotkeyManager.Current.Remove(HOTKEY_NAME);
+        }
+
+
+
         private const String PATH_PLUGINNAME = "KeeOtp2";
 
         private const String PATH_USE_HOTKEY = PATH_PLUGINNAME + ".UseHotKey";

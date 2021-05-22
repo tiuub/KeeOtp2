@@ -13,11 +13,15 @@ namespace KeeOtp2
 {
     public partial class ShowQrCode : Form
     {
-        const int QRCODETIMEOUT = 180;
+        const int SHARINGTIMEOUT = 180;
+        private bool sharingExpired = false;
 
         IPluginHost host;
         PwEntry entry;
         Uri uri;
+
+        private ToolTip copyUriToolTip;
+        private ToolTip reloadToolTip;
 
         public ShowQrCode(Uri uri, PwEntry entry, IPluginHost host)
         {
@@ -27,8 +31,8 @@ namespace KeeOtp2
                 pictureBoxBanner.Height,
                 KeePass.UI.BannerStyle.Default,
                 Resources.qr_white,
-                "Show QR Code",
-                "Set up your TOTP on other devices.");
+                KeeOtp2Statics.ShowQr,
+                KeeOtp2Statics.ShowQrSubline);
 
             this.Icon = host.MainWindow.Icon;
             this.TopMost = host.MainWindow.TopMost;
@@ -36,12 +40,34 @@ namespace KeeOtp2
             this.uri = uri;
             this.entry = entry;
             this.host = host;
+
+            groupBoxQRCode.Text = KeeOtp2Statics.ShowQrDisclamer;
+            buttonOk.Text = KeeOtp2Statics.OK;
+
+
+            copyUriToolTip = new ToolTip();
+            copyUriToolTip.ToolTipTitle = KeeOtp2Statics.ShowQrCopyUri;
+            copyUriToolTip.IsBalloon = true;
+
+            string toolTipCopyUri = String.Format(KeeOtp2Statics.ToolTipShowQrCodeCopyUri, this.uri.AbsoluteUri);
+            copyUriToolTip.SetToolTip(buttonCopyUriReload, toolTipCopyUri);
+
+            reloadToolTip = new ToolTip();
+            reloadToolTip.ToolTipTitle = KeeOtp2Statics.ShowQr;
+            reloadToolTip.IsBalloon = true;
+
+            string toolTipReload = KeeOtp2Statics.ToolTipShowQrCodeReload;
+            reloadToolTip.SetToolTip(buttonCopyUriReload, toolTipReload);
         }
 
         private void showQrCodeImage()
         {
-            buttonReload.Visible = false;
-            formTimeout = QRCODETIMEOUT;
+            sharingExpired = false;
+            buttonCopyUriReload.Text = KeeOtp2Statics.ShowQrCopyUri + KeeOtp2Statics.InformationChar;
+            reloadToolTip.Active = false;
+            copyUriToolTip.Active = true;
+
+            formTimeout = SHARINGTIMEOUT;
 
             EncodingOptions options = new EncodingOptions();
             options.Width = pictureBoxQrCode.Width;
@@ -64,23 +90,25 @@ namespace KeeOtp2
             showQrCodeImage();
         }
 
-        private void buttonCopyUri_Click(object sender, EventArgs e)
+        private void buttonCopyUriReload_Click(object sender, EventArgs e)
         {
-            if (ClipboardUtil.CopyAndMinimize(new ProtectedString(true, this.uri.AbsoluteUri), true, this.host.MainWindow, this.entry, this.host.Database))
-                this.host.MainWindow.StartClipboardCountdown();
-            
-            this.Close();
+            if (sharingExpired)
+            {
+                showQrCodeImage();
+            }
+            else
+            {
+                if (ClipboardUtil.CopyAndMinimize(new ProtectedString(true, this.uri.AbsoluteUri), true, this.host.MainWindow, this.entry, this.host.Database))
+                    this.host.MainWindow.StartClipboardCountdown();
+
+                this.Close();
+            }
         }
 
-        private void buttonReload_Click(object sender, EventArgs e)
-        {
-            showQrCodeImage();
-        }
-
-        private int formTimeout = QRCODETIMEOUT;
+        private int formTimeout = SHARINGTIMEOUT;
         private void timerFormTimeout_Tick(object sender, EventArgs e)
         {
-            this.Text = String.Format("QR Code - Timeout in {0} seconds.", formTimeout);
+            this.Text = String.Format(KeeOtp2Statics.ShowQrTimeout, formTimeout);
 
             if (formTimeout < 1)
             {
@@ -93,10 +121,13 @@ namespace KeeOtp2
                 using (Font font = new Font("Arial", 14))
                 {
                     Graphics graphics = Graphics.FromImage(bitmap);
-                    graphics.DrawString(String.Format("Due to security reasons,\r\nthe QR Code was removed\r\nafter {0} seconds.\r\n\r\nPress Reload,\r\nto show it again!", QRCODETIMEOUT), font, Brushes.Black, rectangle, sf);
+                    graphics.DrawString(String.Format(KeeOtp2Statics.ShowQrExpired, SHARINGTIMEOUT), font, Brushes.Black, rectangle, sf);
                     pictureBoxQrCode.Image = bitmap;
                 }
-                buttonReload.Visible = true;
+                sharingExpired = true;
+                buttonCopyUriReload.Text = KeeOtp2Statics.Reload + KeeOtp2Statics.InformationChar;
+                copyUriToolTip.Active = false;
+                reloadToolTip.Active = true;
             }
             formTimeout--;
         }

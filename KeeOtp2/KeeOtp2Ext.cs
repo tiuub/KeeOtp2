@@ -7,7 +7,7 @@ using KeePass.Util.Spr;
 using KeePassLib;
 using KeePassLib.Utility;
 using System.Runtime.InteropServices;
-using OtpSharp;
+using NHotkey;
 
 namespace KeeOtp2
 {
@@ -15,14 +15,14 @@ namespace KeeOtp2
     {
         private IPluginHost host = null;
 
+        private ToolStripMenuItem otpMenuToolStripItem;
+        private ToolStripMenuItem otpConfigureToolStripItem;
         private ToolStripMenuItem otpDialogToolStripItem;
         private ToolStripMenuItem otpCopyToolStripItem;
 
         private ToolStripMenuItem MainMenuToolStripItem;
         private ToolStripMenuItem SettingsToolStripItem;
         private ToolStripMenuItem AboutToolStripItem;
-
-        private HotKeyProvider hotKeyProvider;
 
         public const string KeeOtp1PlaceHolder = "{TOTP}"; // Deprecated
         public const string BuiltInPlaceHolder = "{TIMEOTP}";
@@ -34,49 +34,61 @@ namespace KeeOtp2
             this.host = host;
 
 
-            this.SettingsToolStripItem = new ToolStripMenuItem("Settings");
+            this.SettingsToolStripItem = new ToolStripMenuItem(KeeOtp2Statics.Settings);
             this.SettingsToolStripItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Configuration];
             this.SettingsToolStripItem.Click += settingsToolStripitem_Click;
 
-            this.AboutToolStripItem = new ToolStripMenuItem("About");
+            this.AboutToolStripItem = new ToolStripMenuItem(KeeOtp2Statics.About);
             this.AboutToolStripItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Info];
             this.AboutToolStripItem.Click += aboutToolStripitem_Click;
 
-            this.MainMenuToolStripItem = new ToolStripMenuItem("KeeOtp2");
+            this.MainMenuToolStripItem = new ToolStripMenuItem(KeeOtp2Statics.PluginName);
             this.MainMenuToolStripItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
             this.MainMenuToolStripItem.DropDownItems.Add(this.SettingsToolStripItem);
             this.MainMenuToolStripItem.DropDownItems.Add(this.AboutToolStripItem);
             host.MainWindow.ToolsMenu.DropDownItems.Add(this.MainMenuToolStripItem);
 
-            this.otpDialogToolStripItem = new ToolStripMenuItem("Timed One Time Password");
+            this.otpConfigureToolStripItem = new ToolStripMenuItem(KeeOtp2Statics.ToolStripMenuConfigure);
+            this.otpConfigureToolStripItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
+            this.otpConfigureToolStripItem.Click += otpConfigureToolStripItem_Click;
+
+            this.otpDialogToolStripItem = new ToolStripMenuItem(KeeOtp2Statics.ToolStripMenuShowOtp);
             this.otpDialogToolStripItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
             this.otpDialogToolStripItem.Click += otpDialogToolStripItem_Click;
-            host.MainWindow.EntryContextMenu.Items.Insert(11, this.otpDialogToolStripItem);
 
-            this.otpCopyToolStripItem = new ToolStripMenuItem("Copy TOTP");
+            this.otpCopyToolStripItem = new ToolStripMenuItem(KeeOtp2Statics.ToolStripMenuCopyOtp);
             this.otpCopyToolStripItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
-            this.otpCopyToolStripItem.ShortcutKeys = Keys.T | Keys.Control;
-            this.otpCopyToolStripItem.Click += otpCopyToolStripItem_Click;
-            host.MainWindow.EntryContextMenu.Items.Insert(2, this.otpCopyToolStripItem);
+            this.otpCopyToolStripItem.Click += otpCopyToolStripItem_Click;            
+
+            this.otpMenuToolStripItem = new ToolStripMenuItem(KeeOtp2Statics.PluginName);
+            this.otpMenuToolStripItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
+            this.otpMenuToolStripItem.DropDownItems.Add(this.otpCopyToolStripItem);
+            this.otpMenuToolStripItem.DropDownItems.Add(this.otpDialogToolStripItem);
+            this.otpMenuToolStripItem.DropDownItems.Add(this.otpConfigureToolStripItem);
+
+
+            host.MainWindow.EntryContextMenu.Items.Add(this.otpMenuToolStripItem);
             host.MainWindow.EntryContextMenu.Opening += entryContextMenu_Opening;
+
 
             SprEngine.FilterCompile += new EventHandler<SprEventArgs>(SprEngine_FilterCompile);
             SprEngine.FilterCompilePre += new EventHandler<SprEventArgs>(SprEngine_FilterCompilePre);
 
-            loadConfig();
+            KeeOtp2Config.handler = onHotKeyTriggered;
+            KeeOtp2Config.loadConfig();
 
             return true; // Initialization successful
         }
 
         public override void Terminate()
         {
-            if (hotKeyProvider != null)
-                hotKeyProvider.unregisterHotKey();
+            KeeOtp2Config.unregisterHotKey();
 
             // Remove all of our menu items
             ToolStripItemCollection menu = host.MainWindow.EntryContextMenu.Items;
-            menu.Remove(otpDialogToolStripItem);
-            menu.Remove(otpCopyToolStripItem);
+            menu.Remove(otpMenuToolStripItem);
+            menu = host.MainWindow.ToolsMenu.DropDownItems;
+            menu.Remove(MainMenuToolStripItem);
         }
 
         // If built-in {TIMEOTP} placeholder is used, but KeeOtp1 Save Mode is used
@@ -93,7 +105,7 @@ namespace KeeOtp2
                         OtpAuthData data = OtpAuthUtils.loadData(entry);
                         if (data != null)
                         {
-                            var text = OtpAuthUtils.getTotp(data, OtpTime.getTime());
+                            var text = OtpAuthUtils.getTotpString(data, OtpTime.getTime());
 
                             e.Text = StrUtil.ReplaceCaseInsensitive(e.Text, BuiltInPlaceHolder, text);
                         }
@@ -112,7 +124,7 @@ namespace KeeOtp2
                     OtpAuthData data = OtpAuthUtils.loadData(entry);
                     if (data != null)
                     {
-                        var text = OtpAuthUtils.getTotp(data, OtpTime.getTime());
+                        var text = OtpAuthUtils.getTotpString(data, OtpTime.getTime());
 
                         e.Text = StrUtil.ReplaceCaseInsensitive(e.Text, KeeOtp1PlaceHolder, text);
                     }
@@ -123,12 +135,28 @@ namespace KeeOtp2
         private void entryContextMenu_Opening(object sender, CancelEventArgs e)
         {
             PwEntry[] selectedEntries = this.host.MainWindow.GetSelectedEntries();
-            this.otpCopyToolStripItem.Enabled =
-                this.otpDialogToolStripItem.Enabled =
-                selectedEntries != null && selectedEntries.Length == 1;
+            bool selectedOne = selectedEntries != null && selectedEntries.Length == 1;
+            if (selectedOne)
+            {
+                bool configured = OtpAuthUtils.checkEntry(selectedEntries[0]);
+                this.otpCopyToolStripItem.Enabled = configured;
+                this.otpDialogToolStripItem.Enabled = configured;
+            }
+            this.otpMenuToolStripItem.Enabled = selectedOne;
         }
 
-        void otpDialogToolStripItem_Click(object sender, EventArgs e)
+        private void otpConfigureToolStripItem_Click(object sender, EventArgs e)
+        {
+            PwEntry entry;
+            if (GetSelectedSingleEntry(out entry))
+            {
+                OtpAuthData data = OtpAuthUtils.loadData(entry);
+                OtpInformation addEditForm = new OtpInformation(data, entry, host);
+                addEditForm.ShowDialog();
+            }
+        }
+
+        private void otpDialogToolStripItem_Click(object sender, EventArgs e)
         {
             PwEntry entry;
             if (GetSelectedSingleEntry(out entry))
@@ -138,7 +166,7 @@ namespace KeeOtp2
             }
         }
 
-        void otpCopyToolStripItem_Click(object sender, EventArgs e)
+        private void otpCopyToolStripItem_Click(object sender, EventArgs e)
         {
             PwEntry entry;
             if (this.GetSelectedSingleEntry(out entry))
@@ -146,7 +174,7 @@ namespace KeeOtp2
                 OtpAuthData data = OtpAuthUtils.loadData(entry);
                 if (data == null)
                 {
-                    if (MessageBox.Show("Must configure TOTP on this entry.  Do you want to do this now?", "Not Configured", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    if (MessageBox.Show(KeeOtp2Statics.MessageBoxOtpNotConfigured, KeeOtp2Statics.PluginName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         ShowOneTimePasswords form = new ShowOneTimePasswords(entry, host);
                         form.ShowDialog();
@@ -154,7 +182,7 @@ namespace KeeOtp2
                 }
                 else
                 {
-                    var text = OtpAuthUtils.getTotp(data, OtpTime.getTime());
+                    var text = OtpAuthUtils.getTotpString(data, OtpTime.getTime());
 
                     if (ClipboardUtil.CopyAndMinimize(new KeePassLib.Security.ProtectedString(true, text), true, this.host.MainWindow, entry, this.host.Database))
                         this.host.MainWindow.StartClipboardCountdown();
@@ -162,16 +190,19 @@ namespace KeeOtp2
             }
         }
 
-        void settingsToolStripitem_Click(object sender, EventArgs e)
+        private void settingsToolStripitem_Click(object sender, EventArgs e)
         {
             Settings settings = new Settings(this.host);
             settings.ShowDialog();
 
             if (settings.DialogResult == DialogResult.OK)
-                loadConfig();
+            {
+                KeeOtp2Config.handler = onHotKeyTriggered;
+                KeeOtp2Config.loadConfig();
+            }
         }
 
-        void aboutToolStripitem_Click(object sender, EventArgs e)
+        private void aboutToolStripitem_Click(object sender, EventArgs e)
         {
             About about = new About(this.host);
             about.ShowDialog();
@@ -184,12 +215,12 @@ namespace KeeOtp2
             var entries = this.host.MainWindow.GetSelectedEntries();
             if (entries == null || entries.Length == 0)
             {
-                MessageBox.Show("Please select an entry", "Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(KeeOtp2Statics.MessageBoxSelectedMultipleEntries, KeeOtp2Statics.Failure, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             else if (entries.Length > 1)
             {
-                MessageBox.Show("Please select only one entry", "Failure", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(KeeOtp2Statics.MessageBoxSelectedMultipleEntries, KeeOtp2Statics.Failure, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             else
@@ -200,67 +231,17 @@ namespace KeeOtp2
             }
         }
 
-        private void loadConfig()
+        private void onHotKeyTriggered(object sender, HotkeyEventArgs e)
         {
-            if (hotKeyProvider == null)
-                hotKeyProvider = new HotKeyProvider(host);
-            hotKeyProvider.unregisterHotKey();
 
-            Keys hotKey = KeeOtp2Config.HotKeyKeys;
-            if (KeeOtp2Config.UseHotKey && hotKey != Keys.None)
-            {
-                hotKeyProvider.registerHotKey(hotKey);
-            }
-
-            if (OtpTime.getTimeType() == OtpTimeType.CustomNtpServer)
-                OtpTime.pollCustomNtpServer();
-        }
-
-        private class HotKeyProvider : Form
-        {
-            private static readonly int AutoTypeId = 10001;
-            private IPluginHost host;
-
-            private _MethodInfo m_miAutoType = null;
-
-            public HotKeyProvider(IPluginHost host)
-            {
-                this.host = host;
-                this.m_miAutoType = host.MainWindow.GetType().GetMethod("ExecuteGlobalAutoType", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic, null, new Type[] { typeof(string) }, null);
-            }
-
-            public void registerHotKey(Keys keys)
-            {
-                HotKeyManager.Initialize(this);
-                HotKeyManager.RegisterHotKey(AutoTypeId, keys);
-            }
-
-            public void unregisterHotKey()
-            {
-                HotKeyManager.Initialize(this);
-                HotKeyManager.UnregisterHotKey(AutoTypeId);
-            }
-
-            internal void HandleHotKey(int wParam)
-            {
-                if (wParam == AutoTypeId)
-                    if (m_miAutoType != null)
-                        m_miAutoType.Invoke(this.host.MainWindow, new object[] { KeeOtp2Config.HotKeySequence });
-            }
-
-            protected override void WndProc(ref Message m)
-            {
-                if (m.Msg == 0x0312)
-                {
-                    HandleHotKey((int)m.WParam);
-                }
-                base.WndProc(ref m);
-            }
+            _MethodInfo m_miAutoType = host.MainWindow.GetType().GetMethod("ExecuteGlobalAutoType", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic, null, new Type[] { typeof(string) }, null);
+            if (m_miAutoType != null)
+                m_miAutoType.Invoke(this.host.MainWindow, new object[] { KeeOtp2Config.HotKeySequence });
         }
 
         public override string UpdateUrl
         {
-            get { return "https://raw.githubusercontent.com/tiuub/KeeOtp2/master/VERSION"; }
+            get { return KeeOtp2Statics.PluginUpdateUrl; }
         }
     }
 }
