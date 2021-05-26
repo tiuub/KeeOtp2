@@ -486,7 +486,7 @@ namespace KeeOtp2
         {
             try
             {
-                return getTotp(data).ComputeTotp(time);
+                return getTotp(data).ComputeTotp(time).ToString();
             }
             catch
             {

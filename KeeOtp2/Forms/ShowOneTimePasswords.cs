@@ -61,8 +61,8 @@ namespace KeeOtp2
             var totp = this.totp;
             if (totp != null)
             {
-                string code = totp.ComputeTotp(OtpTime.getTime());
-                string nextCode = totp.ComputeTotp(OtpTime.getTime().AddSeconds(data.Period));
+                string code = totp.ComputeTotp(OtpTime.getTime()).ToString();
+                string nextCode = totp.ComputeTotp(OtpTime.getTime().AddSeconds(data.Period)).ToString();
                 var remaining = totp.RemainingSeconds();
 
                 if (code != lastCode)

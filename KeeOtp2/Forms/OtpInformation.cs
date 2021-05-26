@@ -106,40 +106,46 @@ namespace KeeOtp2
                 if (string.IsNullOrEmpty(this.textBoxKey.Text))
                     throw new InvalidOtpConfiguration(KeeOtp2Statics.InvalidOtpConfigurationMissingSecret);
 
-                if (this.radioButtonBase32.Checked)
-                    data.Encoding = OtpSecretEncoding.Base32;
-                else if (this.radioButtonBase64.Checked)
-                    data.Encoding = OtpSecretEncoding.Base64;
-                else if (this.radioButtonHex.Checked)
-                    data.Encoding = OtpSecretEncoding.Hex;
-                else if (this.radioButtonUtf8.Checked)
-                    data.Encoding = OtpSecretEncoding.UTF8;
+                if (checkBoxCustomSettings.Checked)
+                {
+                    if (this.radioButtonBase32.Checked)
+                        data.Encoding = OtpSecretEncoding.Base32;
+                    else if (this.radioButtonBase64.Checked)
+                        data.Encoding = OtpSecretEncoding.Base64;
+                    else if (this.radioButtonHex.Checked)
+                        data.Encoding = OtpSecretEncoding.Hex;
+                    else if (this.radioButtonUtf8.Checked)
+                        data.Encoding = OtpSecretEncoding.UTF8;
+                }
 
                 // Secret validation, will throw an error if invalid
-                secret = OtpAuthUtils.correctPlainSecret(secret, this.Data.Encoding);
-                OtpAuthUtils.validatePlainSecret(secret, this.Data.Encoding);
+                secret = OtpAuthUtils.correctPlainSecret(secret, data.Encoding);
+                OtpAuthUtils.validatePlainSecret(secret, data.Encoding);
 
-                int step = 30;
-                if (int.TryParse(this.textBoxStep.Text, out step))
+                if (checkBoxCustomSettings.Checked)
                 {
-                    if (step <= 0)
+                    int step = 30;
+                    if (int.TryParse(this.textBoxStep.Text, out step))
+                    {
+                        if (step <= 0)
+                            throw new InvalidOtpConfiguration(KeeOtp2Statics.InvalidOtpConfigurationInvalidInteger);
+                    }
+                    else
                         throw new InvalidOtpConfiguration(KeeOtp2Statics.InvalidOtpConfigurationInvalidInteger);
+                    data.Period = step;
+
+                    if (this.radioButtonSix.Checked)
+                        data.Digits = 6;
+                    else if (this.radioButtonEight.Checked)
+                        data.Digits = 8;
+
+                    if (this.radioButtonSha1.Checked)
+                        data.Algorithm = OtpHashMode.Sha1;
+                    else if (this.radioButtonSha256.Checked)
+                        data.Algorithm = OtpHashMode.Sha256;
+                    else if (this.radioButtonSha512.Checked)
+                        data.Algorithm = OtpHashMode.Sha512;
                 }
-                else
-                    throw new InvalidOtpConfiguration(KeeOtp2Statics.InvalidOtpConfigurationInvalidInteger);
-                data.Period = step;
-
-                if (this.radioButtonSix.Checked)
-                    data.Digits = 6;
-                else if (this.radioButtonEight.Checked)
-                    data.Digits = 8;
-
-                if (this.radioButtonSha1.Checked)
-                    data.Algorithm = OtpHashMode.Sha1;
-                else if (this.radioButtonSha256.Checked)
-                    data.Algorithm = OtpHashMode.Sha256;
-                else if (this.radioButtonSha512.Checked)
-                    data.Algorithm = OtpHashMode.Sha512;
 
                 data.SetPlainSecret(secret);
 
