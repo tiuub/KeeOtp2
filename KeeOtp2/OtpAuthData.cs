@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using OtpSharp;
+using OtpNet;
+using KeePass;
+using KeePassLib.Security;
+using KeePassLib.Utility;
 
 namespace KeeOtp2
 {
@@ -9,7 +12,7 @@ namespace KeeOtp2
     /// </summary>
     public class OtpAuthData
     {
-        public Key Key { get; set; }
+        public KeePassLib.Security.ProtectedString Key { get; set; }
         public OtpType Type { get; set; }
         public OtpSecretEncoding Encoding { get; set; }
 
@@ -35,35 +38,33 @@ namespace KeeOtp2
             this.Digits = 6;
 
             this.KeeOtp1Mode = false;
+            this.Key = new ProtectedString(true, "");
         }
-
+        
         public string GetPlainSecret()
         {
-            string secret = null;
-            this.Key.UsePlainKey(key =>
-            {
-                if (this.Encoding == OtpSecretEncoding.Base32)
-                    secret = Base32.Encode(key);
-                else if (this.Encoding == OtpSecretEncoding.Base64)
-                    secret = Convert.ToBase64String(key);
-                else if (this.Encoding == OtpSecretEncoding.Hex)
-                    secret = KeePassLib.Utility.MemUtil.ByteArrayToHexString(key);
-                else if (this.Encoding == OtpSecretEncoding.UTF8)
-                    secret = KeePassLib.Utility.StrUtil.Utf8.GetString(key);
-            });
-            return secret;
+            if (this.Encoding == OtpSecretEncoding.Base32)
+                return Base32Encoding.ToString(this.Key.ReadUtf8());
+            else if (this.Encoding == OtpSecretEncoding.Base64)
+                return Convert.ToBase64String(this.Key.ReadUtf8());
+            else if (this.Encoding == OtpSecretEncoding.Hex)
+                return MemUtil.ByteArrayToHexString(this.Key.ReadUtf8());
+            else if (this.Encoding == OtpSecretEncoding.UTF8)
+                return StrUtil.Utf8.GetString(this.Key.ReadUtf8());
+            else
+                return null;
         }
 
         public void SetPlainSecret(string secret)
         {
             if (this.Encoding == OtpSecretEncoding.Base32)
-                this.Key = ProtectedKey.CreateProtectedKeyAndDestroyPlaintextKey(KeePassLib.Utility.MemUtil.ParseBase32(secret));
+                this.Key = new ProtectedString(true, MemUtil.ParseBase32(secret));
             else if (this.Encoding == OtpSecretEncoding.Base64)
-                this.Key = ProtectedKey.CreateProtectedKeyAndDestroyPlaintextKey(Convert.FromBase64String(secret));
+                this.Key = new ProtectedString(true, Convert.FromBase64String(secret));
             else if (this.Encoding == OtpSecretEncoding.Hex)
-                this.Key = ProtectedKey.CreateProtectedKeyAndDestroyPlaintextKey(KeePassLib.Utility.MemUtil.HexStringToByteArray(secret));
+                this.Key = new ProtectedString(true, MemUtil.HexStringToByteArray(secret));
             else if (this.Encoding == OtpSecretEncoding.UTF8)
-                this.Key = ProtectedKey.CreateProtectedKeyAndDestroyPlaintextKey(KeePassLib.Utility.StrUtil.Utf8.GetBytes(secret));
+                this.Key = new ProtectedString(true, StrUtil.Utf8.GetBytes(secret));
         }
     }
 }

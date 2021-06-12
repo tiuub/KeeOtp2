@@ -59,25 +59,25 @@ namespace KeeOtp2
             clv_Dependencies.Columns.Add(KeeOtp2Statics.License, 80);
 
             ListViewItem lvi = new ListViewItem("KeeOtp(1)");
-            lvi.SubItems.Add("devinmartin");
+            lvi.SubItems.Add("Devin Martin");
             lvi.SubItems.Add("MIT");
             lvi.Tag = Resources.KeeOtpLICENSE;
             clv_Dependencies.Items.Add(lvi);
 
-            lvi = new ListViewItem("OtpSharp");
-            lvi.SubItems.Add("devinmartin");
+            lvi = new ListViewItem("Otp.NET");
+            lvi.SubItems.Add("Kyle Spearrin");
             lvi.SubItems.Add("MIT");
-            lvi.Tag = Resources.OtpSharpLICENSE;
+            lvi.Tag = Resources.OtpNetLICENSE;
             clv_Dependencies.Items.Add(lvi);
-
+            
             lvi = new ListViewItem("Yort.Ntp.Portable");
-            lvi.SubItems.Add("Yortw");
+            lvi.SubItems.Add("Troy Willmot");
             lvi.SubItems.Add("MIT");
             lvi.Tag = Resources.YortNtpPortableLICENSE;
             clv_Dependencies.Items.Add(lvi);
 
             lvi = new ListViewItem("ZXing.Net");
-            lvi.SubItems.Add("micjahn");
+            lvi.SubItems.Add("Michael Jahn");
             lvi.SubItems.Add("Apache 2.0");
             lvi.Tag = Resources.ZXingNetLICENSE;
             clv_Dependencies.Items.Add(lvi);
@@ -89,13 +89,13 @@ namespace KeeOtp2
             clv_Dependencies.Items.Add(lvi);
 
             lvi = new ListViewItem("NHotkey");
-            lvi.SubItems.Add("thomaslevesque");
+            lvi.SubItems.Add("Thomas Levesque");
             lvi.SubItems.Add("Apache 2.0");
             lvi.Tag = Resources.NHotkeyLICENSE;
             clv_Dependencies.Items.Add(lvi);
 
             lvi = new ListViewItem("NHotkey.WindowsForms");
-            lvi.SubItems.Add("thomaslevesque");
+            lvi.SubItems.Add("Thomas Levesque");
             lvi.SubItems.Add("Apache 2.0");
             lvi.Tag = Resources.NHotkeyWindowsFormsLICENSE;
             clv_Dependencies.Items.Add(lvi);

@@ -1,7 +1,7 @@
 ﻿using KeePassLib;
 using KeePassLib.Collections;
 using KeePassLib.Security;
-using OtpSharp;
+using OtpNet;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -474,7 +474,7 @@ namespace KeeOtp2
 
         public static Totp getTotp(OtpAuthData data)
         {
-            return new Totp(data.Key, data.Period, data.Algorithm, data.Digits, null);
+            return new Totp(data.Key.ReadUtf8(), data.Period, data.Algorithm, data.Digits, null);
         }
 
         public static string getTotpString(OtpAuthData data)

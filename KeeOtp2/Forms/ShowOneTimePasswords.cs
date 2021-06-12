@@ -4,7 +4,7 @@ using KeeOtp2.Properties;
 using KeePass.Plugins;
 using KeePass.Util;
 using KeePassLib.Security;
-using OtpSharp;
+using OtpNet;
 
 namespace KeeOtp2
 {
@@ -112,7 +112,7 @@ namespace KeeOtp2
             this.lastCode = "";
             this.lastRemainingTime = 0;
 
-            this.totp = new Totp(data.Key, data.Period, data.Algorithm, data.Digits, null);
+            this.totp = OtpAuthUtils.getTotp(data);
             this.timerUpdateTotp.Enabled = true;
         }
 

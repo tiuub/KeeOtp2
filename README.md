@@ -138,13 +138,13 @@ This will create a new folder in your cloned repository, called *Releases*. Ther
 
 Dependencie | Source | NuGet | Author | License
 --- | --- | --- | --- | ---
-**KeeOtp(1)** | [source](https://github.com/tiuub/KeeOtpMirror)/[archive](http://web.archive.org/web/20200621144226/https://bitbucket.org/devinmartin/keeotp/wiki/Home) | - | [devinmartin](https://bitbucket.org/devinmartin) | [MIT](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/KeeOtp/LICENSE)
-**OtpSharp** | [source](https://bitbucket.org/devinmartin/otp-sharp/wiki/Home)/[archive](http://web.archive.org/web/20200805171740/https://bitbucket.org/devinmartin/otp-sharp/wiki/Home) | [NuGet](https://www.nuget.org/packages/OtpSharp/) | [devinmartin](https://bitbucket.org/devinmartin) | [MIT](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/OtpSharp/LICENSE)
-**Yort.Ntp.Portable** | [source](https://github.com/Yortw/Yort.Ntp) | [NuGet](https://www.nuget.org/packages/Yort.Ntp.Portable/) | [Yortw](https://github.com/Yortw) | [MIT](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/Yort.Ntp.Portable/LICENSE)
-**ZXing.Net** | [source](https://github.com/micjahn/ZXing.Net/) | [NuGet](https://www.nuget.org/packages/ZXing.Net/) | [micjahn](https://github.com/micjahn/) | [Apache 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/ZXing.Net/LICENSE)
+**KeeOtp(1)** | [source](https://github.com/tiuub/KeeOtpMirror)/[archive](http://web.archive.org/web/20200621144226/https://bitbucket.org/devinmartin/keeotp/wiki/Home) | - | [Devin Martin](https://bitbucket.org/devinmartin) | [MIT](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/KeeOtp/LICENSE)
+**Otp.NET** | [source](https://github.com/kspearrin/Otp.NET) | [NuGet](https://www.nuget.org/packages/Otp.NET) | [Kyle Spearrin](https://github.com/kspearrin) | [MIT](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/Otp.NET/LICENSE)
+**Yort.Ntp.Portable** | [source](https://github.com/Yortw/Yort.Ntp) | [NuGet](https://www.nuget.org/packages/Yort.Ntp.Portable/) | [Troy Willmot](https://github.com/Yortw) | [MIT](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/Yort.Ntp.Portable/LICENSE)
+**ZXing.Net** | [source](https://github.com/micjahn/ZXing.Net/) | [NuGet](https://www.nuget.org/packages/ZXing.Net/) | [Michael Jahn](https://github.com/micjahn/) | [Apache 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/ZXing.Net/LICENSE)
 **Microsoft.Xaml** | - | [NuGet](https://packages.nuget.org/packages/Microsoft.Xaml/) | [karelz](https://packages.nuget.org/profiles/karelz)/[bmarshall](https://packages.nuget.org/profiles/bmarshall) | Not given
-**NHotkey** | [source](https://github.com/thomaslevesque/NHotkey) | [NuGet](https://www.nuget.org/packages/NHotkey/) | [thomaslevesque](https://github.com/thomaslevesque) | [Apache 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/NHotkey/LICENSE)
-**NHotkey.WindowsForms** | [source](https://github.com/thomaslevesque/NHotkey) | [NuGet](https://www.nuget.org/packages/NHotkey.WindowsForms/) | [thomaslevesque](https://github.com/thomaslevesque) | [Apache 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/NHotkey.WindowsForms/LICENSE)
+**NHotkey** | [source](https://github.com/thomaslevesque/NHotkey) | [NuGet](https://www.nuget.org/packages/NHotkey/) | [Thomas Levesque](https://github.com/thomaslevesque) | [Apache 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/NHotkey/LICENSE)
+**NHotkey.WindowsForms** | [source](https://github.com/thomaslevesque/NHotkey) | [NuGet](https://www.nuget.org/packages/NHotkey.WindowsForms/) | [Thomas Levesque](https://github.com/thomaslevesque) | [Apache 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/NHotkey.WindowsForms/LICENSE)
 
 
 ### Icons

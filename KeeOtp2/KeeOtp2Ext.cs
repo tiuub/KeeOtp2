@@ -149,7 +149,11 @@ namespace KeeOtp2
                 this.EntryContextMenuCopySubItem.Enabled = configured;
                 this.EntryContextMenuShowOtpSubItem.Enabled = configured;
             }
-            this.EntryContextMenuMainItem.Enabled = selectedOne;
+            this.EntryContextMenuCopyItem.Enabled =
+            this.EntryContextMenuMainItem.Enabled =
+            this.EntryContextMenuConfigureSubItem.Enabled =
+            this.EntryContextMenuCopySubItem.Enabled = 
+            this.EntryContextMenuShowOtpSubItem.Enabled = selectedOne;
         }
 
         private void otpConfigureToolStripItem_Click(object sender, EventArgs e)

@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using KeeOtp2.Properties;
 using KeePass.Plugins;
-using OtpSharp;
+using OtpNet;
 using ZXing;
 
 namespace KeeOtp2
@@ -255,8 +255,6 @@ namespace KeeOtp2
             }
             else
             {
-                linkLabelLoadUriScanQR.Visible = false;
-                linkLabelLoadUriScanQR.Enabled = false;
                 try
                 {
                     this.Data = OtpAuthUtils.uriToOtpAuthData(new Uri(textBoxKey.Text));
