@@ -1,0 +1,11 @@
+*.user
+*.sln
+*.suo
+*.pdb
+*.xml
+*.md
+PresentationCore.dll
+PresentationFramework.dll
+System.Design.dll
+System.Xaml.dll
+UIAutomationProvider.dll

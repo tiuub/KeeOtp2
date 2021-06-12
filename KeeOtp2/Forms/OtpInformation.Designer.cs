@@ -56,6 +56,8 @@
             this.timerUpdateTotp = new System.Windows.Forms.Timer(this.components);
             this.linkLabelMigrate = new System.Windows.Forms.LinkLabel();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.radioButtonCustomDigits = new System.Windows.Forms.RadioButton();
+            this.textBoxCustomDigits = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBanner)).BeginInit();
             this.groupboxHashAlgorithm.SuspendLayout();
             this.groupboxTimeStep.SuspendLayout();
@@ -271,6 +273,8 @@
             // groupboxSize
             // 
             this.groupboxSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupboxSize.Controls.Add(this.textBoxCustomDigits);
+            this.groupboxSize.Controls.Add(this.radioButtonCustomDigits);
             this.groupboxSize.Controls.Add(this.radioButtonSix);
             this.groupboxSize.Controls.Add(this.radioButtonEight);
             this.groupboxSize.Location = new System.Drawing.Point(131, 190);
@@ -353,6 +357,25 @@
             this.labelStatus.TabIndex = 24;
             this.labelStatus.Text = "(*Hover for more information)";
             // 
+            // radioButtonCustomDigits
+            // 
+            this.radioButtonCustomDigits.AutoSize = true;
+            this.radioButtonCustomDigits.Location = new System.Drawing.Point(6, 65);
+            this.radioButtonCustomDigits.Name = "radioButtonCustomDigits";
+            this.radioButtonCustomDigits.Size = new System.Drawing.Size(63, 17);
+            this.radioButtonCustomDigits.TabIndex = 25;
+            this.radioButtonCustomDigits.TabStop = true;
+            this.radioButtonCustomDigits.Text = "Custom:";
+            this.radioButtonCustomDigits.UseVisualStyleBackColor = true;
+            this.radioButtonCustomDigits.CheckedChanged += new System.EventHandler(this.radioButtonCustomDigits_CheckedChanged);
+            // 
+            // textBoxCustomDigits
+            // 
+            this.textBoxCustomDigits.Location = new System.Drawing.Point(70, 64);
+            this.textBoxCustomDigits.Name = "textBoxCustomDigits";
+            this.textBoxCustomDigits.Size = new System.Drawing.Size(34, 20);
+            this.textBoxCustomDigits.TabIndex = 26;
+            // 
             // OtpInformation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -424,5 +447,7 @@
         private System.Windows.Forms.Timer timerUpdateTotp;
         private System.Windows.Forms.LinkLabel linkLabelMigrate;
         private System.Windows.Forms.Label labelStatus;
+        private System.Windows.Forms.TextBox textBoxCustomDigits;
+        private System.Windows.Forms.RadioButton radioButtonCustomDigits;
     }
 }

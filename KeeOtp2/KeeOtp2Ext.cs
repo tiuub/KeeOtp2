@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using KeePass.Plugins;
- using KeePass.Util;
+using KeePass.Util;
 using KeePass.Util.Spr;
 using KeePassLib;
 using KeePassLib.Utility;
@@ -15,14 +15,15 @@ namespace KeeOtp2
     {
         private IPluginHost host = null;
 
-        private ToolStripMenuItem otpMenuToolStripItem;
-        private ToolStripMenuItem otpConfigureToolStripItem;
-        private ToolStripMenuItem otpDialogToolStripItem;
-        private ToolStripMenuItem otpCopyToolStripItem;
+        private ToolStripMenuItem EntryContextMenuMainItem;
+        private ToolStripMenuItem EntryContextMenuCopyItem;
+        private ToolStripMenuItem EntryContextMenuConfigureSubItem;
+        private ToolStripMenuItem EntryContextMenuShowOtpSubItem;
+        private ToolStripMenuItem EntryContextMenuCopySubItem;
 
-        private ToolStripMenuItem MainMenuToolStripItem;
-        private ToolStripMenuItem SettingsToolStripItem;
-        private ToolStripMenuItem AboutToolStripItem;
+        private ToolStripMenuItem ToolsMenuMainItem;
+        private ToolStripMenuItem ToolsMenuSettingsSubMenuItem;
+        private ToolStripMenuItem ToolsMenuAboutSubMenuItem;
 
         public const string KeeOtp1PlaceHolder = "{TOTP}"; // Deprecated
         public const string BuiltInPlaceHolder = "{TIMEOTP}";
@@ -34,40 +35,46 @@ namespace KeeOtp2
             this.host = host;
 
 
-            this.SettingsToolStripItem = new ToolStripMenuItem(KeeOtp2Statics.Settings);
-            this.SettingsToolStripItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Configuration];
-            this.SettingsToolStripItem.Click += settingsToolStripitem_Click;
+            this.ToolsMenuSettingsSubMenuItem = new ToolStripMenuItem(KeeOtp2Statics.Settings);
+            this.ToolsMenuSettingsSubMenuItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Configuration];
+            this.ToolsMenuSettingsSubMenuItem.Click += settingsToolStripitem_Click;
 
-            this.AboutToolStripItem = new ToolStripMenuItem(KeeOtp2Statics.About);
-            this.AboutToolStripItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Info];
-            this.AboutToolStripItem.Click += aboutToolStripitem_Click;
+            this.ToolsMenuAboutSubMenuItem = new ToolStripMenuItem(KeeOtp2Statics.About);
+            this.ToolsMenuAboutSubMenuItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Info];
+            this.ToolsMenuAboutSubMenuItem.Click += aboutToolStripitem_Click;
 
-            this.MainMenuToolStripItem = new ToolStripMenuItem(KeeOtp2Statics.PluginName);
-            this.MainMenuToolStripItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
-            this.MainMenuToolStripItem.DropDownItems.Add(this.SettingsToolStripItem);
-            this.MainMenuToolStripItem.DropDownItems.Add(this.AboutToolStripItem);
-            host.MainWindow.ToolsMenu.DropDownItems.Add(this.MainMenuToolStripItem);
+            this.ToolsMenuMainItem = new ToolStripMenuItem(KeeOtp2Statics.PluginName);
+            this.ToolsMenuMainItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
+            this.ToolsMenuMainItem.DropDownItems.Add(this.ToolsMenuSettingsSubMenuItem);
+            this.ToolsMenuMainItem.DropDownItems.Add(this.ToolsMenuAboutSubMenuItem);
+            host.MainWindow.ToolsMenu.DropDownItems.Add(this.ToolsMenuMainItem);
 
-            this.otpConfigureToolStripItem = new ToolStripMenuItem(KeeOtp2Statics.ToolStripMenuConfigure);
-            this.otpConfigureToolStripItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
-            this.otpConfigureToolStripItem.Click += otpConfigureToolStripItem_Click;
+            this.EntryContextMenuConfigureSubItem = new ToolStripMenuItem(KeeOtp2Statics.ToolStripMenuConfigure);
+            this.EntryContextMenuConfigureSubItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
+            this.EntryContextMenuConfigureSubItem.Click += otpConfigureToolStripItem_Click;
 
-            this.otpDialogToolStripItem = new ToolStripMenuItem(KeeOtp2Statics.ToolStripMenuShowOtp);
-            this.otpDialogToolStripItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
-            this.otpDialogToolStripItem.Click += otpDialogToolStripItem_Click;
+            this.EntryContextMenuShowOtpSubItem = new ToolStripMenuItem(KeeOtp2Statics.ToolStripMenuShowOtp);
+            this.EntryContextMenuShowOtpSubItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
+            this.EntryContextMenuShowOtpSubItem.Click += otpDialogToolStripItem_Click;
 
-            this.otpCopyToolStripItem = new ToolStripMenuItem(KeeOtp2Statics.ToolStripMenuCopyOtp);
-            this.otpCopyToolStripItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
-            this.otpCopyToolStripItem.Click += otpCopyToolStripItem_Click;            
+            this.EntryContextMenuCopySubItem = new ToolStripMenuItem(KeeOtp2Statics.ToolStripMenuCopyOtp);
+            this.EntryContextMenuCopySubItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
+            this.EntryContextMenuCopySubItem.Click += otpCopyToolStripItem_Click;
 
-            this.otpMenuToolStripItem = new ToolStripMenuItem(KeeOtp2Statics.PluginName);
-            this.otpMenuToolStripItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
-            this.otpMenuToolStripItem.DropDownItems.Add(this.otpCopyToolStripItem);
-            this.otpMenuToolStripItem.DropDownItems.Add(this.otpDialogToolStripItem);
-            this.otpMenuToolStripItem.DropDownItems.Add(this.otpConfigureToolStripItem);
+            this.EntryContextMenuMainItem = new ToolStripMenuItem(KeeOtp2Statics.PluginName);
+            this.EntryContextMenuMainItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
+            this.EntryContextMenuMainItem.DropDownItems.Add(this.EntryContextMenuCopySubItem);
+            this.EntryContextMenuMainItem.DropDownItems.Add(this.EntryContextMenuShowOtpSubItem);
+            this.EntryContextMenuMainItem.DropDownItems.Add(this.EntryContextMenuConfigureSubItem);
+
+            this.EntryContextMenuCopyItem = new ToolStripMenuItem(KeeOtp2Statics.ToolStripMenuCopyOtp);
+            this.EntryContextMenuCopyItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
+            this.EntryContextMenuCopyItem.Click += otpCopyToolStripItem_Click;
+            this.EntryContextMenuCopyItem.ShortcutKeys = Keys.T | Keys.Control;
 
 
-            host.MainWindow.EntryContextMenu.Items.Add(this.otpMenuToolStripItem);
+            host.MainWindow.EntryContextMenu.Items.Insert(2, this.EntryContextMenuCopyItem);
+            host.MainWindow.EntryContextMenu.Items.Add(this.EntryContextMenuMainItem);
             host.MainWindow.EntryContextMenu.Opening += entryContextMenu_Opening;
 
 
@@ -86,9 +93,9 @@ namespace KeeOtp2
 
             // Remove all of our menu items
             ToolStripItemCollection menu = host.MainWindow.EntryContextMenu.Items;
-            menu.Remove(otpMenuToolStripItem);
+            menu.Remove(EntryContextMenuMainItem);
             menu = host.MainWindow.ToolsMenu.DropDownItems;
-            menu.Remove(MainMenuToolStripItem);
+            menu.Remove(ToolsMenuMainItem);
         }
 
         // If built-in {TIMEOTP} placeholder is used, but KeeOtp1 Save Mode is used
@@ -139,10 +146,10 @@ namespace KeeOtp2
             if (selectedOne)
             {
                 bool configured = OtpAuthUtils.checkEntry(selectedEntries[0]);
-                this.otpCopyToolStripItem.Enabled = configured;
-                this.otpDialogToolStripItem.Enabled = configured;
+                this.EntryContextMenuCopySubItem.Enabled = configured;
+                this.EntryContextMenuShowOtpSubItem.Enabled = configured;
             }
-            this.otpMenuToolStripItem.Enabled = selectedOne;
+            this.EntryContextMenuMainItem.Enabled = selectedOne;
         }
 
         private void otpConfigureToolStripItem_Click(object sender, EventArgs e)

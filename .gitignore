@@ -6,8 +6,6 @@
 /.vs/*
 /*/bin/*
 /*/obj/*
-*.bat
-PlgXExclude.txt
 Releases/
 Debug/
 *.user

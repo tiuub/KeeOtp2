@@ -53,6 +53,7 @@ namespace KeeOtp2
             groupboxSize.Text = KeeOtp2Statics.Size;
             radioButtonSix.Text = KeeOtp2Statics.SixDigits;
             radioButtonEight.Text = KeeOtp2Statics.EightDigits;
+            radioButtonCustomDigits.Text = KeeOtp2Statics.Custom + KeeOtp2Statics.SelectorChar;
             groupboxHashAlgorithm.Text = KeeOtp2Statics.HashAlgorithm;
             radioButtonSha1.Text = KeeOtp2Statics.Sha1;
             radioButtonSha256.Text = KeeOtp2Statics.Sha256;
@@ -138,6 +139,19 @@ namespace KeeOtp2
                         data.Digits = 6;
                     else if (this.radioButtonEight.Checked)
                         data.Digits = 8;
+                    else if (this.radioButtonCustomDigits.Checked)
+                    {
+                        int digits = 6;
+                        if (int.TryParse(this.textBoxCustomDigits.Text, out digits))
+                        {
+                            if (digits <= 0)
+                                throw new InvalidOtpConfiguration(KeeOtp2Statics.InvalidOtpConfigurationInvalidInteger);
+                        }
+                        else
+                            throw new InvalidOtpConfiguration(KeeOtp2Statics.InvalidOtpConfigurationInvalidInteger);
+                        data.Digits = digits;
+                    }
+
 
                     if (this.radioButtonSha1.Checked)
                         data.Algorithm = OtpHashMode.Sha1;
@@ -306,10 +320,12 @@ namespace KeeOtp2
                 {
                     this.checkBoxCustomSettings.Checked = true;
                 }
-
+                
                 this.textBoxStep.Text = this.Data.Period.ToString();
 
                 this.checkboxOldKeeOtp.Checked = this.Data.KeeOtp1Mode;
+
+                this.textBoxCustomDigits.Text = this.Data.Digits.ToString();
 
                 if (this.Data.Encoding == OtpSecretEncoding.Base64)
                 {
@@ -341,15 +357,33 @@ namespace KeeOtp2
 
                 }
 
-                if (this.Data.Digits == 8)
+                if (this.Data.Digits == 6)
+                {
+                    this.radioButtonSix.Checked = true;
+                    this.radioButtonEight.Checked = false;
+                    this.radioButtonCustomDigits.Checked = false;
+                    this.textBoxCustomDigits.ReadOnly = true;
+                }
+                else if (this.Data.Digits == 8)
                 {
                     this.radioButtonSix.Checked = false;
                     this.radioButtonEight.Checked = true;
+                    this.radioButtonCustomDigits.Checked = false;
+                    this.textBoxCustomDigits.ReadOnly = true;
+                }
+                else if (this.Data.Digits > 0)
+                {
+                    this.radioButtonSix.Checked = false;
+                    this.radioButtonEight.Checked = false;
+                    this.radioButtonCustomDigits.Checked = true;
+                    this.textBoxCustomDigits.ReadOnly = false;
                 }
                 else // default size
                 {
                     this.radioButtonSix.Checked = true;
                     this.radioButtonEight.Checked = false;
+                    this.radioButtonCustomDigits.Checked = false;
+                    this.textBoxCustomDigits.ReadOnly = true;
                 }
 
                 if (this.Data.Algorithm == OtpHashMode.Sha256)
@@ -380,6 +414,8 @@ namespace KeeOtp2
 
                 this.radioButtonSix.Checked = true;
                 this.radioButtonEight.Checked = false;
+                this.radioButtonCustomDigits.Checked = false;
+                this.textBoxCustomDigits.ReadOnly = true;
 
                 this.radioButtonBase32.Checked = true;
                 this.radioButtonBase64.Checked = false;
@@ -402,6 +438,8 @@ namespace KeeOtp2
                 this.radioButtonUtf8.Enabled =
                 this.radioButtonSix.Enabled =
                 this.radioButtonEight.Enabled =
+                this.radioButtonCustomDigits.Enabled =
+                this.textBoxCustomDigits.Enabled =
                 this.textBoxStep.Enabled =
                 this.radioButtonSha1.Enabled =
                 this.radioButtonSha256.Enabled =
@@ -465,6 +503,11 @@ namespace KeeOtp2
             {
                 groupBoxKey.Text = KeeOtp2Statics.OtpInformationKeyUri;
             }
+        }
+
+        private void radioButtonCustomDigits_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxCustomDigits.ReadOnly = !radioButtonCustomDigits.Checked;
         }
     }
 }

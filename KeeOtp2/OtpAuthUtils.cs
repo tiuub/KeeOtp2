@@ -401,7 +401,7 @@ namespace KeeOtp2
 
             List<string> parameters = new List<string>();
             parameters.Add(String.Format("{0}={1}", uriSecretKey, data.GetPlainSecret()));
-            parameters.Add(String.Format("{0}={1}", uriIssuerKey, entry.Strings.ReadSafe(PwDefs.TitleField)));
+            parameters.Add(String.Format("{0}={1}", uriIssuerKey, Uri.EscapeDataString(entry.Strings.ReadSafe(PwDefs.TitleField))));
             if (data.Algorithm != OtpHashMode.Sha1)
                 parameters.Add(String.Format("{0}={1}", uriAlgorithmKey, data.Algorithm.ToString()));
             if (data.Digits != 6)
@@ -457,11 +457,11 @@ namespace KeeOtp2
                         data.Algorithm = (OtpHashMode)Enum.Parse(typeof(OtpHashMode), parameters[uriAlgorithmKey], true);
 
                     if (data.Type == OtpType.Totp)
-                        data.Period = GetIntOrDefault(parameters, KeeOtp1StepParameter, 30);
+                        data.Period = GetIntOrDefault(parameters, uriPeriodKey, 30);
                     else if (data.Type == OtpType.Hotp)
-                        data.Counter = GetIntOrDefault(parameters, KeeOtp1CounterParameter, 0);
+                        data.Counter = GetIntOrDefault(parameters, uriCounterKey, 0);
 
-                    data.Digits = GetIntOrDefault(parameters, KeeOtp1SizeParameter, 6);
+                    data.Digits = GetIntOrDefault(parameters, uriDigitsKey, 6);
 
                     return data;
                 }

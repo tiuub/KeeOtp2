@@ -121,6 +121,13 @@ You can download the .plgx file [here](https://github.com/tiuub/KeeOtp2/releases
 
 
 
+## Compiling
+
+If you want to compile the project by yourself, you have to clone the repository and run the *makeplgx.bat* file.
+This will create a new folder in your cloned repository, called *Releases*. There you can find your self-compiled .plgx file.
+
+
+
 ## License
 
 [![GitHub](https://img.shields.io/github/license/tiuub/KeeOtp2)](https://github.com/tiuub/KeeOtp2/blob/master/LICENSE)

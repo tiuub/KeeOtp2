@@ -50,6 +50,7 @@ namespace KeeOtp2
         public static readonly string TOTP = "TOTP";
         public static readonly string Information = "Information";
         public static readonly string Actions = "Actions";
+        public static readonly string Custom = "Custom";
 
         public static readonly string About = "About";
         public static readonly string AboutSubline = "KeeOtp2 Plugin.";
