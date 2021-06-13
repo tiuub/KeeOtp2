@@ -12,6 +12,7 @@ namespace KeeOtp2
         public Key Key { get; set; }
         public OtpType Type { get; set; }
         public OtpSecretEncoding Encoding { get; set; }
+        public OtpTransformType Transform { get; set; }
 
         public OtpHashMode Algorithm { get; set; }
 
@@ -29,6 +30,7 @@ namespace KeeOtp2
             this.Type = OtpType.Totp;
             this.Encoding = OtpSecretEncoding.Base32;
             this.Algorithm = OtpHashMode.Sha1;
+            this.Transform = OtpTransformType.Digits;
 
             this.Counter = 25;
             this.Period = 30;

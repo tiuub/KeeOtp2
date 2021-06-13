@@ -51,6 +51,8 @@ namespace KeeOtp2
         public static readonly string Information = "Information";
         public static readonly string Actions = "Actions";
         public static readonly string Custom = "Custom";
+        public static readonly string Digits = "Digits";
+        public static readonly string Steam = "Steam";
 
         public static readonly string About = "About";
         public static readonly string AboutSubline = "KeeOtp2 Plugin.";

@@ -12,7 +12,7 @@ namespace KeeOtp2
     {
         private readonly KeePassLib.PwEntry entry;
         private readonly IPluginHost host ;
-        private Totp totp;
+        private OtpTotp totp;
         private string lastCode;
         private int lastRemainingTime;
 
@@ -61,19 +61,19 @@ namespace KeeOtp2
             var totp = this.totp;
             if (totp != null)
             {
-                string code = totp.ComputeTotp(OtpTime.getTime()).ToString();
-                string nextCode = totp.ComputeTotp(OtpTime.getTime().AddSeconds(data.Period)).ToString();
-                var remaining = totp.RemainingSeconds();
+                string code = totp.getTotpString(OtpTime.getTime());
+                string nextCode = totp.getTotpString(OtpTime.getTime().AddSeconds(data.Period));
+                var remaining = totp.getRemainingSeconds();
 
                 if (code != lastCode)
                 {
                     lastCode = code;
-                    this.labelOtp.Text = code.ToString().PadLeft(this.data.Digits, '0');
+                    this.labelOtp.Text = code;
                 }
                 if (remaining != lastRemainingTime)
                 {
                     lastRemainingTime = remaining;
-                    this.groupboxTotp.Text = String.Format(KeeOtp2Statics.ShowOtpNextRemaining, remaining.ToString().PadLeft(2, '0'), nextCode.ToString().PadLeft(this.data.Digits, '0'));
+                    this.groupboxTotp.Text = String.Format(KeeOtp2Statics.ShowOtpNextRemaining, remaining.ToString().PadLeft(2, '0'), nextCode);
                 }
             }
             else
@@ -112,7 +112,7 @@ namespace KeeOtp2
             this.lastCode = "";
             this.lastRemainingTime = 0;
 
-            this.totp = new Totp(data.Key, data.Period, data.Algorithm, data.Digits, null);
+            this.totp = OtpAuthUtils.getTotp(data);
             this.timerUpdateTotp.Enabled = true;
         }
 
@@ -149,7 +149,7 @@ namespace KeeOtp2
 
         private void labelOtp_Click(object sender, EventArgs e)
         {
-            if (ClipboardUtil.CopyAndMinimize(new ProtectedString(true, this.totp.ComputeTotp(OtpTime.getTime()).ToString().PadLeft(data.Digits, '0')), true, this.host.MainWindow, entry, this.host.Database))
+            if (ClipboardUtil.CopyAndMinimize(new ProtectedString(true, this.totp.getTotpString(OtpTime.getTime())), true, this.host.MainWindow, entry, this.host.Database))
                 this.host.MainWindow.StartClipboardCountdown();
             this.Close();
         }
@@ -171,7 +171,7 @@ namespace KeeOtp2
 
         private void buttonCopyTotp_Click(object sender, EventArgs e)
         {
-            if (ClipboardUtil.CopyAndMinimize(new ProtectedString(true, this.totp.ComputeTotp(OtpTime.getTime()).ToString().PadLeft(data.Digits, '0')), true, this.host.MainWindow, entry, this.host.Database))
+            if (ClipboardUtil.CopyAndMinimize(new ProtectedString(true, this.totp.getTotpString(OtpTime.getTime())), true, this.host.MainWindow, entry, this.host.Database))
                 this.host.MainWindow.StartClipboardCountdown();
             this.Close();
         }

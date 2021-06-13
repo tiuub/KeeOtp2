@@ -54,6 +54,8 @@ namespace KeeOtp2
             radioButtonSix.Text = KeeOtp2Statics.SixDigits;
             radioButtonEight.Text = KeeOtp2Statics.EightDigits;
             radioButtonCustomDigits.Text = KeeOtp2Statics.Custom + KeeOtp2Statics.SelectorChar;
+            radioButtonDigits.Text = KeeOtp2Statics.Digits;
+            radioButtonSteam.Text = KeeOtp2Statics.Steam;
             groupboxHashAlgorithm.Text = KeeOtp2Statics.HashAlgorithm;
             radioButtonSha1.Text = KeeOtp2Statics.Sha1;
             radioButtonSha256.Text = KeeOtp2Statics.Sha256;
@@ -152,13 +154,17 @@ namespace KeeOtp2
                         data.Digits = digits;
                     }
 
-
                     if (this.radioButtonSha1.Checked)
                         data.Algorithm = OtpHashMode.Sha1;
                     else if (this.radioButtonSha256.Checked)
                         data.Algorithm = OtpHashMode.Sha256;
                     else if (this.radioButtonSha512.Checked)
                         data.Algorithm = OtpHashMode.Sha512;
+
+                    if (this.radioButtonDigits.Checked)
+                        data.Transform = OtpTransformType.Digits;
+                    else if (this.radioButtonSteam.Checked)
+                        data.Transform = OtpTransformType.Steam;
                 }
 
                 data.SetPlainSecret(secret);
@@ -316,7 +322,8 @@ namespace KeeOtp2
 
                 if (this.Data.Period != 30 || this.Data.KeeOtp1Mode ||
                     this.Data.Encoding != OtpSecretEncoding.Base32 ||
-                    this.Data.Digits != 6 || this.Data.Algorithm != OtpHashMode.Sha1)
+                    this.Data.Digits != 6 || this.Data.Algorithm != OtpHashMode.Sha1 ||
+                    this.Data.Transform != OtpTransformType.Digits)
                 {
                     this.checkBoxCustomSettings.Checked = true;
                 }
@@ -404,6 +411,17 @@ namespace KeeOtp2
                     this.radioButtonSha256.Checked = false;
                     this.radioButtonSha512.Checked = false;
                 }
+
+                if (this.Data.Transform == OtpTransformType.Steam)
+                {
+                    this.radioButtonDigits.Checked = false;
+                    this.radioButtonSteam.Checked = true;
+                }
+                else // default transform
+                {
+                    this.radioButtonDigits.Checked = true;
+                    this.radioButtonSteam.Checked = false;
+                }
             }
             else
             {
@@ -416,11 +434,15 @@ namespace KeeOtp2
                 this.radioButtonEight.Checked = false;
                 this.radioButtonCustomDigits.Checked = false;
                 this.textBoxCustomDigits.ReadOnly = true;
+                this.radioButtonSteam.Checked = false;
 
                 this.radioButtonBase32.Checked = true;
                 this.radioButtonBase64.Checked = false;
                 this.radioButtonHex.Checked = false;
                 this.radioButtonUtf8.Checked = false;
+
+                this.radioButtonDigits.Checked = true;
+                this.radioButtonSteam.Checked = false;
             }
 
             SetCustomSettingsState(false);
@@ -444,6 +466,8 @@ namespace KeeOtp2
                 this.radioButtonSha1.Enabled =
                 this.radioButtonSha256.Enabled =
                 this.radioButtonSha512.Enabled =
+                this.radioButtonDigits.Enabled =
+                this.radioButtonSteam.Enabled =
                 this.checkboxOldKeeOtp.Enabled = useCustom;
         }
 
@@ -491,8 +515,8 @@ namespace KeeOtp2
                 try
                 {
                     OtpAuthData data = readData();
-                    Totp totp = OtpAuthUtils.getTotp(data);
-                    groupBoxKey.Text = String.Format(KeeOtp2Statics.OtpInformationKeyUriPreview, totp.ComputeTotp(OtpTime.getTime()), totp.RemainingSeconds());
+                    OtpTotp totp = OtpAuthUtils.getTotp(data);
+                    groupBoxKey.Text = String.Format(KeeOtp2Statics.OtpInformationKeyUriPreview, totp.getTotpString(OtpTime.getTime()), totp.getRemainingSeconds());
                 }
                 catch
                 {

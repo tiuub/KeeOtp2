@@ -49,6 +49,8 @@
             this.groupboxEncoding = new System.Windows.Forms.GroupBox();
             this.radioButtonUtf8 = new System.Windows.Forms.RadioButton();
             this.groupboxSize = new System.Windows.Forms.GroupBox();
+            this.textBoxCustomDigits = new System.Windows.Forms.TextBox();
+            this.radioButtonCustomDigits = new System.Windows.Forms.RadioButton();
             this.groupboxInfo = new System.Windows.Forms.GroupBox();
             this.checkboxOldKeeOtp = new System.Windows.Forms.CheckBox();
             this.linkLabelLoadUriScanQR = new System.Windows.Forms.LinkLabel();
@@ -56,8 +58,9 @@
             this.timerUpdateTotp = new System.Windows.Forms.Timer(this.components);
             this.linkLabelMigrate = new System.Windows.Forms.LinkLabel();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.radioButtonCustomDigits = new System.Windows.Forms.RadioButton();
-            this.textBoxCustomDigits = new System.Windows.Forms.TextBox();
+            this.groupBoxTransform = new System.Windows.Forms.GroupBox();
+            this.radioButtonDigits = new System.Windows.Forms.RadioButton();
+            this.radioButtonSteam = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBanner)).BeginInit();
             this.groupboxHashAlgorithm.SuspendLayout();
             this.groupboxTimeStep.SuspendLayout();
@@ -65,13 +68,14 @@
             this.groupboxSize.SuspendLayout();
             this.groupboxInfo.SuspendLayout();
             this.groupBoxKey.SuspendLayout();
+            this.groupBoxTransform.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBoxKey
             // 
             this.textBoxKey.Location = new System.Drawing.Point(6, 19);
             this.textBoxKey.Name = "textBoxKey";
-            this.textBoxKey.Size = new System.Drawing.Size(330, 20);
+            this.textBoxKey.Size = new System.Drawing.Size(446, 20);
             this.textBoxKey.TabIndex = 0;
             this.textBoxKey.TextChanged += new System.EventHandler(this.textBoxKey_TextChanged);
             this.textBoxKey.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxKey_KeyDown);
@@ -80,7 +84,7 @@
             // 
             this.textBoxStep.Location = new System.Drawing.Point(118, 13);
             this.textBoxStep.Name = "textBoxStep";
-            this.textBoxStep.Size = new System.Drawing.Size(23, 20);
+            this.textBoxStep.Size = new System.Drawing.Size(20, 20);
             this.textBoxStep.TabIndex = 1;
             // 
             // radioButtonSix
@@ -118,7 +122,7 @@
             // 
             this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOk.Location = new System.Drawing.Point(201, 312);
+            this.buttonOk.Location = new System.Drawing.Point(317, 312);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(75, 23);
             this.buttonOk.TabIndex = 7;
@@ -129,7 +133,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(282, 312);
+            this.buttonCancel.Location = new System.Drawing.Point(398, 312);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 8;
@@ -173,7 +177,7 @@
             this.pictureBoxBanner.Dock = System.Windows.Forms.DockStyle.Top;
             this.pictureBoxBanner.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxBanner.Name = "pictureBoxBanner";
-            this.pictureBoxBanner.Size = new System.Drawing.Size(374, 58);
+            this.pictureBoxBanner.Size = new System.Drawing.Size(490, 58);
             this.pictureBoxBanner.TabIndex = 12;
             this.pictureBoxBanner.TabStop = false;
             // 
@@ -241,7 +245,7 @@
             this.groupboxTimeStep.Controls.Add(this.textBoxStep);
             this.groupboxTimeStep.Location = new System.Drawing.Point(15, 143);
             this.groupboxTimeStep.Name = "groupboxTimeStep";
-            this.groupboxTimeStep.Size = new System.Drawing.Size(168, 41);
+            this.groupboxTimeStep.Size = new System.Drawing.Size(226, 41);
             this.groupboxTimeStep.TabIndex = 17;
             this.groupboxTimeStep.TabStop = false;
             this.groupboxTimeStep.Text = "Time Step";
@@ -284,13 +288,32 @@
             this.groupboxSize.TabStop = false;
             this.groupboxSize.Text = "Size";
             // 
+            // textBoxCustomDigits
+            // 
+            this.textBoxCustomDigits.Location = new System.Drawing.Point(70, 64);
+            this.textBoxCustomDigits.Name = "textBoxCustomDigits";
+            this.textBoxCustomDigits.Size = new System.Drawing.Size(34, 20);
+            this.textBoxCustomDigits.TabIndex = 26;
+            // 
+            // radioButtonCustomDigits
+            // 
+            this.radioButtonCustomDigits.AutoSize = true;
+            this.radioButtonCustomDigits.Location = new System.Drawing.Point(6, 65);
+            this.radioButtonCustomDigits.Name = "radioButtonCustomDigits";
+            this.radioButtonCustomDigits.Size = new System.Drawing.Size(63, 17);
+            this.radioButtonCustomDigits.TabIndex = 25;
+            this.radioButtonCustomDigits.TabStop = true;
+            this.radioButtonCustomDigits.Text = "Custom:";
+            this.radioButtonCustomDigits.UseVisualStyleBackColor = true;
+            this.radioButtonCustomDigits.CheckedChanged += new System.EventHandler(this.radioButtonCustomDigits_CheckedChanged);
+            // 
             // groupboxInfo
             // 
             this.groupboxInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.groupboxInfo.Controls.Add(this.checkboxOldKeeOtp);
-            this.groupboxInfo.Location = new System.Drawing.Point(189, 143);
+            this.groupboxInfo.Location = new System.Drawing.Point(247, 143);
             this.groupboxInfo.Name = "groupboxInfo";
-            this.groupboxInfo.Size = new System.Drawing.Size(168, 41);
+            this.groupboxInfo.Size = new System.Drawing.Size(226, 41);
             this.groupboxInfo.TabIndex = 5;
             this.groupboxInfo.TabStop = false;
             this.groupboxInfo.Text = "KeeOtp1 String (Deprecated)";
@@ -308,7 +331,7 @@
             // linkLabelLoadUriScanQR
             // 
             this.linkLabelLoadUriScanQR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkLabelLoadUriScanQR.Location = new System.Drawing.Point(259, 0);
+            this.linkLabelLoadUriScanQR.Location = new System.Drawing.Point(375, 0);
             this.linkLabelLoadUriScanQR.Name = "linkLabelLoadUriScanQR";
             this.linkLabelLoadUriScanQR.Size = new System.Drawing.Size(80, 13);
             this.linkLabelLoadUriScanQR.TabIndex = 20;
@@ -323,7 +346,7 @@
             this.groupBoxKey.Controls.Add(this.linkLabelLoadUriScanQR);
             this.groupBoxKey.Location = new System.Drawing.Point(15, 64);
             this.groupBoxKey.Name = "groupBoxKey";
-            this.groupBoxKey.Size = new System.Drawing.Size(342, 49);
+            this.groupBoxKey.Size = new System.Drawing.Size(458, 49);
             this.groupBoxKey.TabIndex = 22;
             this.groupBoxKey.TabStop = false;
             this.groupBoxKey.Text = "Key or Uri (otpauth://):";
@@ -337,7 +360,7 @@
             // 
             this.linkLabelMigrate.AutoSize = true;
             this.linkLabelMigrate.Enabled = false;
-            this.linkLabelMigrate.Location = new System.Drawing.Point(263, 121);
+            this.linkLabelMigrate.Location = new System.Drawing.Point(379, 121);
             this.linkLabelMigrate.Name = "linkLabelMigrate";
             this.linkLabelMigrate.Size = new System.Drawing.Size(91, 13);
             this.linkLabelMigrate.TabIndex = 23;
@@ -357,30 +380,46 @@
             this.labelStatus.TabIndex = 24;
             this.labelStatus.Text = "(*Hover for more information)";
             // 
-            // radioButtonCustomDigits
+            // groupBoxTransform
             // 
-            this.radioButtonCustomDigits.AutoSize = true;
-            this.radioButtonCustomDigits.Location = new System.Drawing.Point(6, 65);
-            this.radioButtonCustomDigits.Name = "radioButtonCustomDigits";
-            this.radioButtonCustomDigits.Size = new System.Drawing.Size(63, 17);
-            this.radioButtonCustomDigits.TabIndex = 25;
-            this.radioButtonCustomDigits.TabStop = true;
-            this.radioButtonCustomDigits.Text = "Custom:";
-            this.radioButtonCustomDigits.UseVisualStyleBackColor = true;
-            this.radioButtonCustomDigits.CheckedChanged += new System.EventHandler(this.radioButtonCustomDigits_CheckedChanged);
+            this.groupBoxTransform.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxTransform.Controls.Add(this.radioButtonDigits);
+            this.groupBoxTransform.Controls.Add(this.radioButtonSteam);
+            this.groupBoxTransform.Location = new System.Drawing.Point(363, 190);
+            this.groupBoxTransform.Name = "groupBoxTransform";
+            this.groupBoxTransform.Size = new System.Drawing.Size(110, 113);
+            this.groupBoxTransform.TabIndex = 18;
+            this.groupBoxTransform.TabStop = false;
+            this.groupBoxTransform.Text = "Transform";
             // 
-            // textBoxCustomDigits
+            // radioButtonDigits
             // 
-            this.textBoxCustomDigits.Location = new System.Drawing.Point(70, 64);
-            this.textBoxCustomDigits.Name = "textBoxCustomDigits";
-            this.textBoxCustomDigits.Size = new System.Drawing.Size(34, 20);
-            this.textBoxCustomDigits.TabIndex = 26;
+            this.radioButtonDigits.AutoSize = true;
+            this.radioButtonDigits.Checked = true;
+            this.radioButtonDigits.Location = new System.Drawing.Point(6, 19);
+            this.radioButtonDigits.Name = "radioButtonDigits";
+            this.radioButtonDigits.Size = new System.Drawing.Size(51, 17);
+            this.radioButtonDigits.TabIndex = 16;
+            this.radioButtonDigits.TabStop = true;
+            this.radioButtonDigits.Text = "Digits";
+            this.radioButtonDigits.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonSteam
+            // 
+            this.radioButtonSteam.AutoSize = true;
+            this.radioButtonSteam.Location = new System.Drawing.Point(6, 42);
+            this.radioButtonSteam.Name = "radioButtonSteam";
+            this.radioButtonSteam.Size = new System.Drawing.Size(55, 17);
+            this.radioButtonSteam.TabIndex = 14;
+            this.radioButtonSteam.Text = "Steam";
+            this.radioButtonSteam.UseVisualStyleBackColor = true;
             // 
             // OtpInformation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(374, 350);
+            this.ClientSize = new System.Drawing.Size(490, 350);
+            this.Controls.Add(this.groupBoxTransform);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.linkLabelMigrate);
             this.Controls.Add(this.groupBoxKey);
@@ -413,6 +452,8 @@
             this.groupboxInfo.PerformLayout();
             this.groupBoxKey.ResumeLayout(false);
             this.groupBoxKey.PerformLayout();
+            this.groupBoxTransform.ResumeLayout(false);
+            this.groupBoxTransform.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -449,5 +490,8 @@
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.TextBox textBoxCustomDigits;
         private System.Windows.Forms.RadioButton radioButtonCustomDigits;
+        private System.Windows.Forms.GroupBox groupBoxTransform;
+        private System.Windows.Forms.RadioButton radioButtonDigits;
+        private System.Windows.Forms.RadioButton radioButtonSteam;
     }
 }

@@ -22,6 +22,7 @@ namespace KeeOtp2
         const string KeeOtp1EncodingParameter = "encoding";
         const string KeeOtp1CounterParameter = "counter";
         const string KeeOtp1OtpHashModeParameter = "otpHashMode";
+        const string KeeOtp1TransformParameter = "transform";
 
         const string builtInOtpPrefix = "TimeOtp";
 
@@ -33,10 +34,14 @@ namespace KeeOtp2
         const string builtInLengthSuffix = "-Length";
         const string builtInPeriodSuffix = "-Period";
         const string builtInAlgorithmSuffix = "-Algorithm";
+        const string builtInTransformSuffix = "-Transform";
 
         const string builtInOtpHashModeSha1 = "HMAC-SHA-1";
         const string builtInOtpHashModeSha256 = "HMAC-SHA-256";
         const string builtInOtpHashModeSha512 = "HMAC-SHA-512";
+
+        const string builtInTransformTypeDigits = "Digits";
+        const string builtInTransformTypeSteam = "Steam";
 
         const string uriScheme = "otpauth";
         const string uriSecretKey = "secret";
@@ -45,6 +50,7 @@ namespace KeeOtp2
         const string uriDigitsKey = "digits";
         const string uriCounterKey = "counter";
         const string uriPeriodKey = "period";
+        const string uriTransformKey = "transform";
 
         public static OtpAuthData loadData(PwEntry entry)
         {
@@ -142,6 +148,9 @@ namespace KeeOtp2
                 if (parameters[KeeOtp1OtpHashModeParameter] != null)
                     otpData.Algorithm = (OtpHashMode)Enum.Parse(typeof(OtpHashMode), parameters[KeeOtp1OtpHashModeParameter], true);
 
+                if (parameters[KeeOtp1TransformParameter] != null)
+                    otpData.Transform = (OtpTransformType)Enum.Parse(typeof(OtpTransformType), parameters[KeeOtp1TransformParameter], true);
+
                 if (otpData.Type == OtpType.Totp)
                     otpData.Period = GetIntOrDefault(parameters, KeeOtp1StepParameter, 30);
                 else if (otpData.Type == OtpType.Hotp)
@@ -225,6 +234,17 @@ namespace KeeOtp2
                 otpData.loadedFields.Add(hashModeKey);
             }
 
+            string transformKey = builtInOtpPrefix + builtInTransformSuffix;
+            if (entry.Strings.Exists(transformKey))
+            {
+                string transform = entry.Strings.Get(transformKey).ReadString();
+                if (transform == builtInTransformTypeDigits)
+                    otpData.Transform = OtpTransformType.Digits;
+                else if (transform == builtInTransformTypeSteam)
+                    otpData.Transform = OtpTransformType.Steam;
+                otpData.loadedFields.Add(transformKey);
+            }
+
             return otpData;
         }
 
@@ -253,6 +273,9 @@ namespace KeeOtp2
 
             if (data.Encoding != OtpSecretEncoding.Base32)
                 collection.Add(KeeOtp1EncodingParameter, data.Encoding.ToString());
+
+            if (data.Transform != OtpTransformType.Digits)
+                collection.Add(KeeOtp1TransformParameter, data.Transform.ToString());
 
             string output = string.Empty;
             foreach (var key in collection.AllKeys)
@@ -290,6 +313,14 @@ namespace KeeOtp2
                     entry.Strings.Set(builtInOtpPrefix + builtInAlgorithmSuffix, new ProtectedString(false, builtInOtpHashModeSha256));
                 else if (data.Algorithm == OtpHashMode.Sha512)
                     entry.Strings.Set(builtInOtpPrefix + builtInAlgorithmSuffix, new ProtectedString(false, builtInOtpHashModeSha512));
+            }
+
+            if (data.Transform != OtpTransformType.Digits)
+            {
+                if (data.Transform == OtpTransformType.Digits)
+                    entry.Strings.Set(builtInOtpPrefix + builtInTransformSuffix, new ProtectedString(false, builtInTransformTypeDigits));
+                else if (data.Transform == OtpTransformType.Steam)
+                    entry.Strings.Set(builtInOtpPrefix + builtInTransformSuffix, new ProtectedString(false, builtInTransformTypeSteam));
             }
 
             return entry;
@@ -410,6 +441,8 @@ namespace KeeOtp2
                 parameters.Add(String.Format("{0}={1}", uriCounterKey, data.Counter));
             if (data.Period != 30)
                 parameters.Add(String.Format("{0}={1}", uriPeriodKey, data.Period));
+            if (data.Transform != OtpTransformType.Digits)
+                parameters.Add(String.Format("{0}={1}", uriTransformKey, data.Transform.ToString()));
 
             uriBuilder.Query = String.Join("&", parameters.ToArray()); 
 
@@ -456,6 +489,9 @@ namespace KeeOtp2
                     if (parameters[uriAlgorithmKey] != null)
                         data.Algorithm = (OtpHashMode)Enum.Parse(typeof(OtpHashMode), parameters[uriAlgorithmKey], true);
 
+                    if (parameters[uriTransformKey] != null)
+                        data.Transform = (OtpTransformType)Enum.Parse(typeof(OtpTransformType), parameters[uriTransformKey], true);
+
                     if (data.Type == OtpType.Totp)
                         data.Period = GetIntOrDefault(parameters, uriPeriodKey, 30);
                     else if (data.Type == OtpType.Hotp)
@@ -472,9 +508,9 @@ namespace KeeOtp2
                 throw new InvalidUriFormat("Given Uri does not start with 'otpauth://'!");
         }
 
-        public static Totp getTotp(OtpAuthData data)
+        public static OtpTotp getTotp(OtpAuthData data)
         {
-            return new Totp(data.Key, data.Period, data.Algorithm, data.Digits, null);
+            return new OtpTotp(data);
         }
 
         public static string getTotpString(OtpAuthData data)
@@ -486,7 +522,7 @@ namespace KeeOtp2
         {
             try
             {
-                return getTotp(data).ComputeTotp(time).ToString();
+                return getTotp(data).getTotpString(time);
             }
             catch
             {
