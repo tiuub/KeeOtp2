@@ -18,27 +18,49 @@ namespace KeeOtp2
 
         private bool removeAfterMigration;
         private bool migrateAutoType;
-        private MigrateMode migrateMode;
+        private MigrationProfile currentMigrationProfile;
+        private bool encounteredForcedKeeOtp1Entries;
 
-        public enum MigrateMode
+        public enum MigrationMode
         {
             KeeOtp1ToBuiltIn,
             BuiltInToKeeOtp1
         }
 
-        private Dictionary<MigrateMode, string> migrateModeString = new Dictionary<MigrateMode, string>()
+        public class MigrationProfile
         {
-            { MigrateMode.KeeOtp1ToBuiltIn, "KeeOtp(1) -> Built-In" },
-            { MigrateMode.BuiltInToKeeOtp1, "Built-In -> KeeOtp(1)" }
+            public string name { get; set; }
+            public MigrationMode migrationMode { get; set; }
+            public Dictionary<OtpType, string> findPlaceholder { get; set; }
+            public Dictionary<OtpType, string> replacePlaceholder { get; set; }
+
+            public MigrationProfile(string name)
+            {
+                this.name = name;
+            }
+
+            public MigrationProfile(string name, MigrationMode migrationMode, Dictionary<OtpType, string> findPlaceholder, Dictionary<OtpType, string> replacePlaceholder)
+            {
+                this.name = name;
+                this.migrationMode = migrationMode;
+                this.findPlaceholder = findPlaceholder;
+                this.replacePlaceholder = replacePlaceholder;
+            }
+        }
+
+        private Dictionary<MigrationMode, string> migrateModeString = new Dictionary<MigrationMode, string>()
+        {
+            { MigrationMode.KeeOtp1ToBuiltIn, "KeeOtp(1) -> Built-In" },
+            { MigrationMode.BuiltInToKeeOtp1, "Built-In -> KeeOtp(1)" }
         };
 
-        private Dictionary<MigrateMode, List<string>> migrateModePlaceholder = new Dictionary<MigrateMode, List<string>>()
+        private Dictionary<MigrationMode, Dictionary<string, Dictionary<OtpType, string>>> migrateModePlaceholder = new Dictionary<MigrationMode, Dictionary<string, Dictionary<OtpType, string>>>()
         {
-            { MigrateMode.KeeOtp1ToBuiltIn, new List<string>() { KeeOtp2Ext.KeeOtp1PlaceHolder, KeeOtp2Ext.BuiltInPlaceHolder } },
-            { MigrateMode.BuiltInToKeeOtp1, new List<string>() { KeeOtp2Ext.BuiltInPlaceHolder, KeeOtp2Ext.KeeOtp1PlaceHolder } }
+            { MigrationMode.KeeOtp1ToBuiltIn, new Dictionary<string, Dictionary<OtpType, string>>() { { "find", new Dictionary<OtpType, string>() { { OtpType.Totp | OtpType.Hotp | OtpType.Steam, KeeOtp2Ext.KeeOtp1PlaceHolder } } }, { "replace", new Dictionary<OtpType, string>() { { OtpType.Totp | OtpType.Steam, KeeOtp2Ext.BuiltInTotpPlaceHolder }, { OtpType.Hotp, KeeOtp2Ext.BuiltInHotpPlaceHolder } } } } },
+            { MigrationMode.BuiltInToKeeOtp1, new Dictionary<string, Dictionary<OtpType, string>>() { { "find", new Dictionary<OtpType, string>() { { OtpType.Totp, KeeOtp2Ext.BuiltInTotpPlaceHolder }, { OtpType.Hotp, KeeOtp2Ext.BuiltInHotpPlaceHolder } } }, { "replace", new Dictionary<OtpType, string>() { { OtpType.Totp | OtpType.Hotp | OtpType.Steam, KeeOtp2Ext.KeeOtp1PlaceHolder } } } } },
         };
 
-        private Dictionary<int, MigrateMode> comboBoxMigrateIndexes = new Dictionary<int, MigrateMode>() { };
+        private Dictionary<int, MigrationProfile> comboBoxMigrationProfileIndexes = new Dictionary<int, MigrationProfile>() { };
 
         public Settings(IPluginHost host)
         {
@@ -104,7 +126,6 @@ namespace KeeOtp2
             string toolTipOverrideBuiltInTime = KeeOtp2Statics.ToolTipOverrideBuiltInTime;
             toolTip.SetToolTip(labelOverrideBuiltInTime, toolTipOverrideBuiltInTime);
             toolTip.SetToolTip(checkBoxOverrideBuiltInTime, toolTipOverrideBuiltInTime);
-
         }
 
         private void Settings_Load(object sender, EventArgs e)
@@ -112,10 +133,10 @@ namespace KeeOtp2
             this.Left = this.host.MainWindow.Left + 20;
             this.Top = this.host.MainWindow.Top + 20;
 
-            foreach (MigrateMode migrateMode in Enum.GetValues(typeof(MigrateMode)))
+            foreach (MigrationMode migrationMode in Enum.GetValues(typeof(MigrationMode)))
             {
-                if (migrateModeString.ContainsKey(migrateMode))
-                    comboBoxMigrateIndexes.Add(comboBoxMigrate.Items.Add(migrateModeString[migrateMode]), migrateMode);
+                MigrationProfile migrationProfile = new MigrationProfile(migrateModeString[migrationMode], migrationMode, migrateModePlaceholder[migrationMode]["find"], migrateModePlaceholder[migrationMode]["replace"]);
+                comboBoxMigrationProfileIndexes.Add(comboBoxMigrate.Items.Add(migrationProfile.name), migrationProfile);
             }
             if (comboBoxMigrate.Items.Count > 0)
                 comboBoxMigrate.SelectedIndex = 0;
@@ -204,16 +225,15 @@ namespace KeeOtp2
         private void buttonMigrate_Click(object sender, EventArgs e)
         {
             if (comboBoxMigrate.SelectedIndex > -1 &&
-                comboBoxMigrateIndexes.ContainsKey(comboBoxMigrate.SelectedIndex))
+                comboBoxMigrationProfileIndexes.ContainsKey(comboBoxMigrate.SelectedIndex))
             {
-                this.migrateMode = comboBoxMigrateIndexes[comboBoxMigrate.SelectedIndex];
-                if (migrateModeString.ContainsKey(migrateMode) && MessageBox.Show(String.Format("Do you really want to migrate?\n\nMigration: {0}", migrateModeString[migrateMode]), "Migrate", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                this.currentMigrationProfile = comboBoxMigrationProfileIndexes[comboBoxMigrate.SelectedIndex];
+                if (!string.IsNullOrEmpty(currentMigrationProfile.name) && MessageBox.Show(String.Format(KeeOtp2Statics.MessageBoxMigrationConfirmation, currentMigrationProfile.name), KeeOtp2Statics.Migration, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    this.removeAfterMigration = ((MessageBox.Show("Do you want to remove the string fields after successful migration?", "Remove after migration", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) ? true : false);
-                    if (migrateModePlaceholder.ContainsKey(migrateMode))
+                    this.removeAfterMigration = ((MessageBox.Show(KeeOtp2Statics.MessageBoxMigrationRemoveStringAfterMigration, KeeOtp2Statics.Migration, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) ? true : false);
+                    if (currentMigrationProfile.findPlaceholder.Count > 0 && currentMigrationProfile.replacePlaceholder.Count > 0)
                     {
-                        List<string> placeholder = migrateModePlaceholder[migrateMode];
-                        this.migrateAutoType = ((MessageBox.Show(String.Format("Do you want to replace the Auto-Type key {0} with the key {1}?", placeholder.ElementAt(0), placeholder.ElementAt(1)), "Migrate Auto-Type", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) ? true : false);
+                        this.migrateAutoType = ((MessageBox.Show(String.Format(KeeOtp2Statics.MessageBoxMigrationReplacePlaceholder, string.Join("/", currentMigrationProfile.findPlaceholder.Values), string.Join("/", currentMigrationProfile.replacePlaceholder.Values)), KeeOtp2Statics.Migration, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) ? true : false);
                     }
                     else
                         this.migrateAutoType = false;
@@ -228,16 +248,16 @@ namespace KeeOtp2
         private void textBoxHotKeySequence_Click(object sender, EventArgs e)
         {
             AutoTypeConfig autoTypeConfig = new AutoTypeConfig();
-            if (textBoxHotKeySequence.Text != KeeOtp2Ext.BuiltInPlaceHolder)
+            if (textBoxHotKeySequence.Text != KeeOtp2Ext.BuiltInTotpPlaceHolder)
                 autoTypeConfig.DefaultSequence = textBoxHotKeySequence.Text;
             EditAutoTypeItemForm eatf = new EditAutoTypeItemForm();
-            eatf.InitEx(autoTypeConfig, -1, true, KeeOtp2Ext.BuiltInPlaceHolder, null);
+            eatf.InitEx(autoTypeConfig, -1, true, KeeOtp2Ext.BuiltInTotpPlaceHolder, null);
             eatf.ShowDialog();
 
             if (eatf.DialogResult == DialogResult.OK && autoTypeConfig.DefaultSequence != string.Empty)
                 textBoxHotKeySequence.Text = autoTypeConfig.DefaultSequence;
             else
-                textBoxHotKeySequence.Text = KeeOtp2Ext.BuiltInPlaceHolder;
+                textBoxHotKeySequence.Text = KeeOtp2Ext.BuiltInTotpPlaceHolder;
         }
 
         private void checkBoxUseHotkey_CheckedChanged(object sender, EventArgs e)
@@ -282,53 +302,51 @@ namespace KeeOtp2
             int counter = 0;
             int succeeded = 0;
 
-            string oldPlaceholder = string.Empty;
-            string newPlaceholder = string.Empty;
-
-            if (this.migrateAutoType && migrateModePlaceholder.ContainsKey(migrateMode))
-            {
-                List<string> placeholder = migrateModePlaceholder[migrateMode];
-                oldPlaceholder = placeholder.ElementAt(0);
-                newPlaceholder = placeholder.ElementAt(1);
-            }
-
             labelStatus.Text = String.Format(KeeOtp2Statics.SettingsLoadedNEntries, count);
             
             foreach (PwEntry entry in entries)
             {
                 if (entry.ParentGroup.Uuid != RecycleBinUuid)
                 {
-                    if (checkEntryMigratable(entry, migrateMode))
+                    if (checkEntryMigratable(entry, currentMigrationProfile.migrationMode))
                     {
                         OtpAuthData data = OtpAuthUtils.loadData(entry);
                         if (data != null) {
                             entry.CreateBackup(this.host.Database);
-                            switch (migrateMode)
+                            switch (currentMigrationProfile.migrationMode)
                             {
-                                case MigrateMode.KeeOtp1ToBuiltIn:
-                                    OtpAuthUtils.migrateToBuiltInOtp(data, entry);
-                                    if (OtpAuthUtils.loadDataFromKeeOtp1String(entry) != null)
+                                case MigrationMode.KeeOtp1ToBuiltIn:
+                                    if (!data.isForcedKeeOtp1Mode())
                                     {
-                                        if (removeAfterMigration)
-                                            OtpAuthUtils.purgeLoadedFields(data, entry);
-                                        if (migrateAutoType && oldPlaceholder != string.Empty && newPlaceholder != string.Empty)
-                                            OtpAuthUtils.replacePlaceholder(entry, oldPlaceholder, newPlaceholder);
+                                        OtpAuthUtils.migrateToBuiltInOtp(data, entry);
+                                        if (OtpAuthUtils.loadDataFromKeeOtp1String(entry) != null)
+                                        {
+                                            if (removeAfterMigration)
+                                                OtpAuthUtils.purgeLoadedFields(data, entry);
+                                        }
                                     }
+                                    else
+                                        encounteredForcedKeeOtp1Entries = true;
                                     break;
-                                case MigrateMode.BuiltInToKeeOtp1:
+                                case MigrationMode.BuiltInToKeeOtp1:
                                     OtpAuthUtils.migrateToKeeOtp1String(data, entry);
                                     if (OtpAuthUtils.loadDataFromKeeOtp1String(entry) != null)
                                     {
                                         if (removeAfterMigration)
                                             OtpAuthUtils.purgeLoadedFields(data, entry);
-                                        if (migrateAutoType && oldPlaceholder != string.Empty && newPlaceholder != string.Empty)
-                                            OtpAuthUtils.replacePlaceholder(entry, oldPlaceholder, newPlaceholder);
                                     }
                                     break;
                                 default:
                                     break;
                             }
                                 
+                            if (migrateAutoType)
+                            {
+                                foreach(string currentPlaceholder in currentMigrationProfile.findPlaceholder.Values)
+                                {
+                                    OtpAuthUtils.replacePlaceholder(entry, currentPlaceholder, currentMigrationProfile.replacePlaceholder[data.Type]);
+                                }
+                            }
                             entry.Touch(true);
                             succeeded++;
                         }
@@ -354,6 +372,8 @@ namespace KeeOtp2
         }
         private void backgroundWorkerMigrate_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (encounteredForcedKeeOtp1Entries)
+                MessageBox.Show(KeeOtp2Statics.MessageBoxMigrationForcedKeeOtp1Mode, KeeOtp2Statics.Migration, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             this.buttonOK.Enabled = true;
         }
 
@@ -371,13 +391,13 @@ namespace KeeOtp2
             labelTime.Text = String.Format(KeeOtp2Statics.SettingsPreviewUtc, dateTime.ToLongTimeString());
         }
 
-        public static bool checkEntryMigratable(PwEntry entry, MigrateMode migrateMode)
+        public static bool checkEntryMigratable(PwEntry entry, MigrationMode migrateMode)
         {
             switch (migrateMode)
             {
-                case MigrateMode.KeeOtp1ToBuiltIn:
+                case MigrationMode.KeeOtp1ToBuiltIn:
                     return OtpAuthUtils.checkKeeOtp1Mode(entry);
-                case MigrateMode.BuiltInToKeeOtp1:
+                case MigrationMode.BuiltInToKeeOtp1:
                     return OtpAuthUtils.checkBuiltInMode(entry);
                 default:
                     return false;

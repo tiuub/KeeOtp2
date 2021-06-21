@@ -16,14 +16,15 @@ namespace KeeOtp2
         const int SHARINGTIMEOUT = 180;
         private bool sharingExpired = false;
 
-        IPluginHost host;
-        PwEntry entry;
-        Uri uri;
+        private IPluginHost host;
+        private PwEntry entry;
+        private OtpAuthData data;
+        private Uri uri;
 
         private ToolTip copyUriToolTip;
         private ToolTip reloadToolTip;
 
-        public ShowQrCode(Uri uri, PwEntry entry, IPluginHost host)
+        public ShowQrCode(OtpAuthData data, PwEntry entry, IPluginHost host)
         {
             InitializeComponent();
 
@@ -37,7 +38,8 @@ namespace KeeOtp2
             this.Icon = host.MainWindow.Icon;
             this.TopMost = host.MainWindow.TopMost;
 
-            this.uri = uri;
+            this.data = data;
+            this.uri = OtpAuthUtils.otpAuthDataToUri(entry, data);
             this.entry = entry;
             this.host = host;
 
@@ -86,6 +88,9 @@ namespace KeeOtp2
         {
             this.Left = this.host.MainWindow.Left + 20;
             this.Top = this.host.MainWindow.Top + 20;
+
+            if (!data.Proprietary)
+                MessageBox.Show(KeeOtp2Statics.MessageBoxOtpNotProprietary, KeeOtp2Statics.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
             showQrCodeImage();
         }

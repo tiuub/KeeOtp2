@@ -14,6 +14,10 @@ namespace KeeOtp2
         /// <summary>
         /// HMAC One Time Password
         /// </summary>
-        Hotp
+        Hotp,
+        /// <summary>
+        /// Steam Timed One Time Password
+        /// </summary>
+        Steam,
     }
 }

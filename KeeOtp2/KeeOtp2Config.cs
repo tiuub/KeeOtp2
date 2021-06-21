@@ -58,7 +58,7 @@ namespace KeeOtp2
         {
             get
             {
-                return Program.Config.CustomConfig.GetString(PATH_HOTKEY_SEQUENCE, KeeOtp2Ext.BuiltInPlaceHolder);
+                return Program.Config.CustomConfig.GetString(PATH_HOTKEY_SEQUENCE, KeeOtp2Ext.BuiltInTotpPlaceHolder);
             }
             set
             {

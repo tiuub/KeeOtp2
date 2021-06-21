@@ -29,18 +29,22 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.timerUpdateTotp = new System.Windows.Forms.Timer(this.components);
+            this.timerUpdateOtp = new System.Windows.Forms.Timer(this.components);
             this.labelOtp = new System.Windows.Forms.Label();
             this.buttonClose = new System.Windows.Forms.Button();
             this.buttonEdit = new System.Windows.Forms.Button();
             this.pictureBoxBanner = new System.Windows.Forms.PictureBox();
             this.groupboxTotp = new System.Windows.Forms.GroupBox();
-            this.linkLabelIncorrect = new System.Windows.Forms.LinkLabel();
+            this.linkLabelIncorrectNext = new System.Windows.Forms.LinkLabel();
             this.buttonCopyTotp = new System.Windows.Forms.Button();
             this.buttonShowQR = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBanner)).BeginInit();
             this.groupboxTotp.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // timerUpdateOtp
+            // 
+            this.timerUpdateOtp.Tick += new System.EventHandler(this.timerUpdateOtp_Tick);
             // 
             // labelOtp
             // 
@@ -95,7 +99,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupboxTotp.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupboxTotp.Controls.Add(this.linkLabelIncorrect);
+            this.groupboxTotp.Controls.Add(this.linkLabelIncorrectNext);
             this.groupboxTotp.Controls.Add(this.labelOtp);
             this.groupboxTotp.Location = new System.Drawing.Point(12, 64);
             this.groupboxTotp.Name = "groupboxTotp";
@@ -104,17 +108,17 @@
             this.groupboxTotp.TabStop = false;
             this.groupboxTotp.Text = "TOTP";
             // 
-            // linkLabelIncorrect
+            // linkLabelIncorrectNext
             // 
-            this.linkLabelIncorrect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkLabelIncorrect.AutoSize = true;
-            this.linkLabelIncorrect.Location = new System.Drawing.Point(290, 0);
-            this.linkLabelIncorrect.Name = "linkLabelIncorrect";
-            this.linkLabelIncorrect.Size = new System.Drawing.Size(55, 13);
-            this.linkLabelIncorrect.TabIndex = 11;
-            this.linkLabelIncorrect.TabStop = true;
-            this.linkLabelIncorrect.Text = "Incorrect?";
-            this.linkLabelIncorrect.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelWrong_LinkClicked);
+            this.linkLabelIncorrectNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabelIncorrectNext.AutoSize = true;
+            this.linkLabelIncorrectNext.Location = new System.Drawing.Point(290, 0);
+            this.linkLabelIncorrectNext.Name = "linkLabelIncorrectNext";
+            this.linkLabelIncorrectNext.Size = new System.Drawing.Size(55, 13);
+            this.linkLabelIncorrectNext.TabIndex = 11;
+            this.linkLabelIncorrectNext.TabStop = true;
+            this.linkLabelIncorrectNext.Text = "Incorrect?";
+            this.linkLabelIncorrectNext.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelIncorrectNext_LinkClicked);
             // 
             // buttonCopyTotp
             // 
@@ -154,7 +158,9 @@
             this.MinimizeBox = false;
             this.Name = "ShowOneTimePasswords";
             this.Text = "Timed Passwords";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ShowOneTimePasswords_FormClosing);
             this.Load += new System.EventHandler(this.ShowOneTimePasswords_Load);
+            this.Shown += new System.EventHandler(this.ShowOneTimePasswords_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBanner)).EndInit();
             this.groupboxTotp.ResumeLayout(false);
             this.groupboxTotp.PerformLayout();
@@ -164,7 +170,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Timer timerUpdateTotp;
+        private System.Windows.Forms.Timer timerUpdateOtp;
         private System.Windows.Forms.Label labelOtp;
         private System.Windows.Forms.Button buttonClose;
         private System.Windows.Forms.Button buttonEdit;
@@ -172,6 +178,6 @@
         private System.Windows.Forms.GroupBox groupboxTotp;
         private System.Windows.Forms.Button buttonCopyTotp;
         private System.Windows.Forms.Button buttonShowQR;
-        private System.Windows.Forms.LinkLabel linkLabelIncorrect;
+        private System.Windows.Forms.LinkLabel linkLabelIncorrectNext;
     }
 }

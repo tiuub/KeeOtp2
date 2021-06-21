@@ -31,16 +31,14 @@ namespace KeeOtp2
         public static readonly string DonateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5F5QB7744AD5G&source=url";
         public static readonly string Error = "Error";
         public static readonly string Failure = "Failure";
-        public static readonly string TimeStep = "Time Step";
+        public static readonly string Period = "Time Step";
         public static readonly string Encoding = "Encoding";
-        public static readonly string Size = "Size";
         public static readonly string HashAlgorithm = "Hash Algorithm";
         public static readonly string Base32 = "Base 32";
         public static readonly string Base64 = "Base 64";
         public static readonly string Hex = "Hex";
         public static readonly string Utf8 = "Utf-8";
-        public static readonly string SixDigits = "6 Digits";
-        public static readonly string EightDigits = "8 Digits";
+        public static readonly string General = "General";
         public static readonly string Sha1 = "Sha-1";
         public static readonly string Sha256 = "Sha-256";
         public static readonly string Sha512 = "Sha-512";
@@ -51,6 +49,11 @@ namespace KeeOtp2
         public static readonly string Information = "Information";
         public static readonly string Actions = "Actions";
         public static readonly string Custom = "Custom";
+        public static readonly string Counter = "Counter";
+        public static readonly string Type = "Type";
+        public static readonly string Length = "Length";
+        public static readonly string CommonAbbreviation = "CMN";
+        public static readonly string Warning = "Warning";
 
         public static readonly string About = "About";
         public static readonly string AboutSubline = "KeeOtp2 Plugin.";
@@ -61,15 +64,17 @@ namespace KeeOtp2
         public static readonly string OtpInformation = "Configuration";
         public static readonly string OtpInformationSubline = "Set up the key for generating one time passwords";
         public static readonly string OtpInformationKeyUri = "Key or Uri (otpauth://):";
-        public static readonly string OtpInformationKeyUriPreview = OtpInformationKeyUri + " (Preview: {0} - {1})";
+        public static readonly string OtpInformationKeyUriTotpPreview = OtpInformationKeyUri + " (Preview: {0} - {1})";
+        public static readonly string OtpInformationKeyUriHotpPreview = OtpInformationKeyUri + " (Preview: {0})";
         public static readonly string OtpInformationKeyUriInvalid = OtpInformationKeyUri + " (Invalid)";
         public static readonly string OtpInformationLoadUri = "Load Uri";
         public static readonly string OtpInformationScanQr = "Scan QR Code";
         public static readonly string OtpInformationCustomSettings = "Use Custom Settings";
         public static readonly string OtpInformationMigrate = "Migrate to built-in";
-        public static readonly string OtpInformationTimeStepSeconds = TimeStep + " (Seconds)";
+        public static readonly string OtpInformationPeriodSeconds = Period + " (Seconds)";
         public static readonly string OtpInformationKeeOtp1String = "KeeOtp1 String (Deprecated)";
         public static readonly string OtpInformationKeeOtp1SaveMode = "Use old KeeOtp save mode";
+        public static readonly string OtpInformationCommonAbbreviationExplanation = "(*cmn = common)";
 
         public static readonly string Settings = "Settings";
         public static readonly string SettingsSubline = "Configure the KeeOtp2 plugin.";
@@ -89,8 +94,10 @@ namespace KeeOtp2
         public static readonly string ShowOtp = "Timed Passwords";
         public static readonly string ShowOtpSubline = "Enter this code in the verification system.";
         public static readonly string ShowOtpIncorrect = "Incorrect?";
+        public static readonly string ShowOtpNextCode = "Next code";
         public static readonly string ShowOtpShowQr = "Show Qr";
         public static readonly string ShowOtpNextRemaining = TOTP + " - Time remaining: {0} - Next code: {1}";
+        public static readonly string ShowOtpNextCounter = TOTP + " - Counter: {0} - Next code: {1}";
 
         public static readonly string ShowQr = "QR Code";
         public static readonly string ShowQrSubline = "Set up your TOTP on other devices.";
@@ -113,11 +120,16 @@ namespace KeeOtp2
         public static readonly string MessageBoxScanQrCode = "Ensure that the QRCode is somewhere visible on the screen.\nThe plugin will look for any QRCode on the screen.\n\nPress 'OK' to start the scan!";
         public static readonly string MessageBoxQrCodeFound = "Great! The QRCode was found and the credentials will now be configured for you!";
         public static readonly string MessageBoxQrCodeNotFound = "No QRCodes found!\n\nPlease ensure that the QRCode is somewhere visible on the screen.\n\nPress 'Retry' to restart the scan!";
-        public static readonly string MessageBoxMigrationReplacePlaceholder = "Do you want to replace the Auto-Type key {TOTP} with the built-in key {TIMEOTP}?";
+        public static readonly string MessageBoxMigrationConfirmation = "Do you really want to migrate?\n\nMigration: {0}";
+        public static readonly string MessageBoxMigrationReplacePlaceholder = "Do you want to replace the Auto-Type key {0} with the key {1}?";
+        public static readonly string MessageBoxMigrationRemoveStringAfterMigration = "Do you want to remove the string fields after successful migration?";
+        public static readonly string MessageBoxMigrationForcedKeeOtp1Mode = "Some of your entries are forced to KeeOtp(1). This means, if you would migrate them, they would definitely stop working. This manly happens to entries, configured for Steam.";
         public static readonly string MessageBoxCantParseEntry = "Cant parse the following entry:\nGroup: {0}\nTitle: {1}\nUsername: {2}\n\bPlease check the format of this entry.";
         public static readonly string MessageBoxShowQrWrongEncoding = "QRCodes can only be used with Base32 secret encoding.\n\nYour encoding: {0}";
         public static readonly string MessageBoxSelectedMultipleEntries = "Please select only one entry";
         public static readonly string MessageBoxOtpNotConfigured = "Must configure TOTP on this entry. Do you want to do this now?";
+        public static readonly string MessageBoxOtpNotProprietary = "Your configuration for your OTP is not proprietary. This might rise up some issues, while sharing this configuration with the uri or the qr code.\n\nPlease remember this, if you run into issues.\n\nPress OK to continue.";
+        
 
         public static readonly string ToolStripMenuConfigure = "Configure TOTP";
         public static readonly string ToolStripMenuShowOtp = "Show TOTP";

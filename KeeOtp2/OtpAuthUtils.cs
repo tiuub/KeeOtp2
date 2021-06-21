@@ -1,13 +1,14 @@
 ﻿using KeePassLib;
 using KeePassLib.Collections;
 using KeePassLib.Security;
-using OtpNet;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using OtpNet;
+using KeePass.Plugins;
 
 namespace KeeOtp2
 {
@@ -22,8 +23,10 @@ namespace KeeOtp2
         const string KeeOtp1EncodingParameter = "encoding";
         const string KeeOtp1CounterParameter = "counter";
         const string KeeOtp1OtpHashModeParameter = "otpHashMode";
+        const string KeeOtp1EncoderParameter = "encoder";
 
-        const string builtInOtpPrefix = "TimeOtp";
+        const string builtInTotpPrefix = "TimeOtp";
+        const string builtInHotpPrefix = "HmacOtp";
 
         const string builtInBase32Suffix = "-Secret-Base32";
         const string builtInBase64Suffix = "-Secret-Base64";
@@ -33,6 +36,7 @@ namespace KeeOtp2
         const string builtInLengthSuffix = "-Length";
         const string builtInPeriodSuffix = "-Period";
         const string builtInAlgorithmSuffix = "-Algorithm";
+        const string builtInCounterSuffix = "-Counter";
 
         const string builtInOtpHashModeSha1 = "HMAC-SHA-1";
         const string builtInOtpHashModeSha256 = "HMAC-SHA-256";
@@ -56,7 +60,7 @@ namespace KeeOtp2
                     data.KeeOtp1Mode = true;
                     return data;
                 }
-                else if (entry.Strings.GetKeys().Any(x => x.StartsWith(builtInOtpPrefix)))
+                else if (checkBuiltInMode(entry))
                 {
                     OtpAuthData data = loadDataFromBuiltInOtp(entry);
                     return data;
@@ -83,12 +87,32 @@ namespace KeeOtp2
 
         public static bool checkBuiltInMode(PwEntry entry)
         {
-            if (entry.Strings.Exists(builtInOtpPrefix + builtInBase32Suffix) ||
-                entry.Strings.Exists(builtInOtpPrefix + builtInBase64Suffix) ||
-                entry.Strings.Exists(builtInOtpPrefix + builtInHexSuffix) ||
-                entry.Strings.Exists(builtInOtpPrefix + builtInUtf8Suffix))
+            if (entry.Strings.Exists(builtInTotpPrefix + builtInBase32Suffix) ||
+                entry.Strings.Exists(builtInTotpPrefix + builtInBase64Suffix) ||
+                entry.Strings.Exists(builtInTotpPrefix + builtInHexSuffix) ||
+                entry.Strings.Exists(builtInTotpPrefix + builtInUtf8Suffix))
+                return true;
+            else if (entry.Strings.Exists(builtInHotpPrefix + builtInBase32Suffix) ||
+                entry.Strings.Exists(builtInHotpPrefix + builtInBase64Suffix) ||
+                entry.Strings.Exists(builtInHotpPrefix + builtInHexSuffix) ||
+                entry.Strings.Exists(builtInHotpPrefix + builtInUtf8Suffix))
                 return true;
             return false;
+        }
+
+        public static OtpType checkBuiltInType(PwEntry entry)
+        {
+            if (entry.Strings.Exists(builtInTotpPrefix + builtInBase32Suffix) ||
+                entry.Strings.Exists(builtInTotpPrefix + builtInBase64Suffix) ||
+                entry.Strings.Exists(builtInTotpPrefix + builtInHexSuffix) ||
+                entry.Strings.Exists(builtInTotpPrefix + builtInUtf8Suffix))
+                return OtpType.Totp;
+            else if (entry.Strings.Exists(builtInHotpPrefix + builtInBase32Suffix) ||
+                entry.Strings.Exists(builtInHotpPrefix + builtInBase64Suffix) ||
+                entry.Strings.Exists(builtInHotpPrefix + builtInHexSuffix) ||
+                entry.Strings.Exists(builtInHotpPrefix + builtInUtf8Suffix))
+                return OtpType.Hotp;
+            return OtpType.Totp;
         }
 
         public static PwEntry purgeLoadedFields(OtpAuthData data, PwEntry entry)
@@ -118,6 +142,7 @@ namespace KeeOtp2
             {
                 OtpAuthData data = uriToOtpAuthData(new Uri(entry.Strings.Get(StringDictionaryKey).ReadString()));
                 data.loadedFields = new List<string>() { StringDictionaryKey };
+                data.Proprietary = false;
                 return data;
             }
             else
@@ -127,105 +152,143 @@ namespace KeeOtp2
                 if (parameters[KeeOtp1KeyParameter] == null)
                     throw new ArgumentException("Must have a key in the data");
 
-                OtpAuthData otpData = new OtpAuthData();
+                OtpAuthData data = new OtpAuthData();
 
-                otpData.loadedFields = new List<string>() { StringDictionaryKey };
-
-                if (parameters[KeeOtp1EncodingParameter] != null)
-                    otpData.Encoding = (OtpSecretEncoding)Enum.Parse(typeof(OtpSecretEncoding), parameters[KeeOtp1EncodingParameter], true);
-
-                otpData.SetPlainSecret(correctPlainSecret(parameters[KeeOtp1KeyParameter].Replace("%3d", "="), otpData.Encoding));
+                data.loadedFields = new List<string>() { StringDictionaryKey };
 
                 if (parameters[KeeOtp1TypeParameter] != null)
-                    otpData.Type = (OtpType)Enum.Parse(typeof(OtpType), parameters[KeeOtp1TypeParameter], true);
+                    data.Type = (OtpType)Enum.Parse(typeof(OtpType), parameters[KeeOtp1TypeParameter], true);
+
+                if (data.Type == OtpType.Totp && parameters[KeeOtp1EncoderParameter] != null)
+                    data.Type = (OtpType)Enum.Parse(typeof(OtpType), parameters[KeeOtp1EncoderParameter], true);
+
+                if (data.Type == OtpType.Steam)
+                    data.Proprietary = false;
+
+                if (parameters[KeeOtp1EncodingParameter] != null)
+                    data.Encoding = (OtpSecretEncoding)Enum.Parse(typeof(OtpSecretEncoding), parameters[KeeOtp1EncodingParameter], true);
+
+                data.SetPlainSecret(correctPlainSecret(parameters[KeeOtp1KeyParameter].Replace("%3d", "="), data.Encoding));
 
                 if (parameters[KeeOtp1OtpHashModeParameter] != null)
-                    otpData.Algorithm = (OtpHashMode)Enum.Parse(typeof(OtpHashMode), parameters[KeeOtp1OtpHashModeParameter], true);
+                    data.Algorithm = (OtpHashMode)Enum.Parse(typeof(OtpHashMode), parameters[KeeOtp1OtpHashModeParameter], true);
 
-                if (otpData.Type == OtpType.Totp)
-                    otpData.Period = GetIntOrDefault(parameters, KeeOtp1StepParameter, 30);
-                else if (otpData.Type == OtpType.Hotp)
-                    otpData.Counter = GetIntOrDefault(parameters, KeeOtp1CounterParameter, 0);
+                if (data.Type == OtpType.Hotp && data.Algorithm != OtpHashMode.Sha1)
+                    data.Proprietary = false;
 
-                otpData.Digits = GetIntOrDefault(parameters, KeeOtp1SizeParameter, 6);
+                if (data.Type == OtpType.Totp)
+                    data.Period = GetIntOrDefault(parameters, KeeOtp1StepParameter, 30);
+                else if (data.Type == OtpType.Hotp)
+                    data.Counter = GetIntOrDefault(parameters, KeeOtp1CounterParameter, 0);
 
-                return otpData;
+                data.Digits = GetIntOrDefault(parameters, KeeOtp1SizeParameter, 6);
+                if (data.Type == OtpType.Hotp && data.Digits != 6)
+                    data.Proprietary = false;
+
+
+                return data;
             }
         }
 
         public static OtpAuthData loadDataFromBuiltInOtp(PwEntry entry)
         {
-            OtpAuthData otpData = new OtpAuthData();
+            OtpAuthData data = new OtpAuthData();
 
-            otpData.loadedFields = new List<string>();
+            data.Type = checkBuiltInType(entry);
 
-            string secretBase32Key = builtInOtpPrefix + builtInBase32Suffix;
-            string secretBase64Key = builtInOtpPrefix + builtInBase64Suffix;
-            string secretHexKey = builtInOtpPrefix + builtInHexSuffix;
-            string secretUTF8Key = builtInOtpPrefix + builtInUtf8Suffix;
+            data.loadedFields = new List<string>();
+
+            string currentOtpPrefix = builtInTotpPrefix;
+            if (data.Type == OtpType.Hotp)
+                currentOtpPrefix = builtInHotpPrefix;
+
+            string secretBase32Key = currentOtpPrefix + builtInBase32Suffix;
+            string secretBase64Key = currentOtpPrefix + builtInBase64Suffix;
+            string secretHexKey = currentOtpPrefix + builtInHexSuffix;
+            string secretUTF8Key = currentOtpPrefix + builtInUtf8Suffix;
             if (entry.Strings.Exists(secretBase32Key))
             {
-                otpData.Encoding = OtpSecretEncoding.Base32;
-                otpData.SetPlainSecret(correctPlainSecret(entry.Strings.Get(secretBase32Key).ReadString(), otpData.Encoding));
-                otpData.loadedFields.Add(secretBase32Key);
+                data.Encoding = OtpSecretEncoding.Base32;
+                data.SetPlainSecret(correctPlainSecret(entry.Strings.Get(secretBase32Key).ReadString(), data.Encoding));
+                data.loadedFields.Add(secretBase32Key);
             }
             else if (entry.Strings.Exists(secretBase64Key))
             {
-                otpData.Encoding = OtpSecretEncoding.Base64;
-                otpData.SetPlainSecret(correctPlainSecret(entry.Strings.Get(secretBase64Key).ReadString(), otpData.Encoding));
-                otpData.loadedFields.Add(secretBase64Key);
+                data.Encoding = OtpSecretEncoding.Base64;
+                data.SetPlainSecret(correctPlainSecret(entry.Strings.Get(secretBase64Key).ReadString(), data.Encoding));
+                data.loadedFields.Add(secretBase64Key);
             }
             else if (entry.Strings.Exists(secretHexKey))
             {
-                otpData.Encoding = OtpSecretEncoding.Hex;
-                otpData.SetPlainSecret(entry.Strings.Get(secretHexKey).ReadString());
-                otpData.loadedFields.Add(secretHexKey);
+                data.Encoding = OtpSecretEncoding.Hex;
+                data.SetPlainSecret(entry.Strings.Get(secretHexKey).ReadString());
+                data.loadedFields.Add(secretHexKey);
             }
             else if (entry.Strings.Exists(secretUTF8Key))
             {
-                otpData.Encoding = OtpSecretEncoding.UTF8;
-                otpData.SetPlainSecret(entry.Strings.Get(secretUTF8Key).ReadString());
-                otpData.loadedFields.Add(secretUTF8Key);
+                data.Encoding = OtpSecretEncoding.UTF8;
+                data.SetPlainSecret(entry.Strings.Get(secretUTF8Key).ReadString());
+                data.loadedFields.Add(secretUTF8Key);
             }
             else
                 return null;
 
-            string lengthKey = builtInOtpPrefix + builtInLengthSuffix;
+            string lengthKey = currentOtpPrefix + builtInLengthSuffix;
             if (entry.Strings.Exists(lengthKey))
             {
                 int size;
                 if (int.TryParse(entry.Strings.Get(lengthKey).ReadString(), out size))
                 {
-                    otpData.Digits = size;
-                    otpData.loadedFields.Add(lengthKey);
+                    data.Digits = size;
+                    data.loadedFields.Add(lengthKey);
+                    if (data.Type == OtpType.Hotp && data.Digits != 6)
+                        data.Proprietary = false;
                 }
             }
 
-            string stepKey = builtInOtpPrefix + builtInPeriodSuffix;
-            if (entry.Strings.Exists(stepKey))
-            {
-                int step;
-                if (int.TryParse(entry.Strings.Get(stepKey).ReadString(), out step))
-                {
-                    otpData.Period = step;
-                    otpData.loadedFields.Add(stepKey);
-                }
-            }
-
-            string hashModeKey = builtInOtpPrefix + builtInAlgorithmSuffix;
+            string hashModeKey = currentOtpPrefix + builtInAlgorithmSuffix;
             if (entry.Strings.Exists(hashModeKey))
             {
                 string hashMode = entry.Strings.Get(hashModeKey).ReadString();
                 if (hashMode == builtInOtpHashModeSha1)
-                    otpData.Algorithm = OtpHashMode.Sha1;
+                    data.Algorithm = OtpHashMode.Sha1;
                 else if (hashMode == builtInOtpHashModeSha256)
-                    otpData.Algorithm = OtpHashMode.Sha256;
+                    data.Algorithm = OtpHashMode.Sha256;
                 else if (hashMode == builtInOtpHashModeSha512)
-                    otpData.Algorithm = OtpHashMode.Sha512;
-                otpData.loadedFields.Add(hashModeKey);
+                    data.Algorithm = OtpHashMode.Sha512;
+                data.loadedFields.Add(hashModeKey);
+                if (data.Type == OtpType.Hotp && data.Algorithm != OtpHashMode.Sha1)
+                    data.Proprietary = false;
             }
 
-            return otpData;
+            if (data.Type == OtpType.Totp)
+            {
+                string periodKey = currentOtpPrefix + builtInPeriodSuffix;
+                if (entry.Strings.Exists(periodKey))
+                {
+                    int period;
+                    if (int.TryParse(entry.Strings.Get(periodKey).ReadString(), out period))
+                    {
+                        data.Period = period;
+                        data.loadedFields.Add(periodKey);
+                    }
+                }
+            }
+            else if (data.Type == OtpType.Hotp)
+            {
+                string counterKey = currentOtpPrefix + builtInCounterSuffix;
+                if (entry.Strings.Exists(counterKey))
+                {
+                    int counter;
+                    if (int.TryParse(entry.Strings.Get(counterKey).ReadString(), out counter))
+                    {
+                        data.Counter = counter;
+                        data.loadedFields.Add(counterKey);
+                    }
+                }
+            }
+
+            return data;
         }
 
         public static PwEntry migrateToKeeOtp1String(OtpAuthData data, PwEntry entry)
@@ -267,29 +330,40 @@ namespace KeeOtp2
 
         public static PwEntry migrateToBuiltInOtp(OtpAuthData data, PwEntry entry)
         {
+            string currentOtpPrefix = builtInTotpPrefix;
+            if (data.Type == OtpType.Hotp)
+                currentOtpPrefix = builtInHotpPrefix;
+
             if (data.Encoding == OtpSecretEncoding.Base32)
-                entry.Strings.Set(builtInOtpPrefix + builtInBase32Suffix, new ProtectedString(true, data.GetPlainSecret()));
+                entry.Strings.Set(currentOtpPrefix + builtInBase32Suffix, new ProtectedString(true, data.GetPlainSecret()));
             else if (data.Encoding == OtpSecretEncoding.Base64)
-                entry.Strings.Set(builtInOtpPrefix + builtInBase64Suffix, new ProtectedString(true, data.GetPlainSecret()));
+                entry.Strings.Set(currentOtpPrefix + builtInBase64Suffix, new ProtectedString(true, data.GetPlainSecret()));
             else if (data.Encoding == OtpSecretEncoding.Hex)
-                entry.Strings.Set(builtInOtpPrefix + builtInHexSuffix, new ProtectedString(true, data.GetPlainSecret()));
+                entry.Strings.Set(currentOtpPrefix + builtInHexSuffix, new ProtectedString(true, data.GetPlainSecret()));
             else if (data.Encoding == OtpSecretEncoding.UTF8)
-                entry.Strings.Set(builtInOtpPrefix + builtInUtf8Suffix, new ProtectedString(true, data.GetPlainSecret()));
+                entry.Strings.Set(currentOtpPrefix + builtInUtf8Suffix, new ProtectedString(true, data.GetPlainSecret()));
 
             if (data.Digits != 6)
-                entry.Strings.Set(builtInOtpPrefix + builtInLengthSuffix, new ProtectedString(false, data.Digits.ToString()));
-
-            if (data.Period != 30)
-                entry.Strings.Set(builtInOtpPrefix + builtInPeriodSuffix, new ProtectedString(false, data.Period.ToString()));
+                entry.Strings.Set(currentOtpPrefix + builtInLengthSuffix, new ProtectedString(false, data.Digits.ToString()));
 
             if (data.Algorithm != OtpHashMode.Sha1)
             {
                 if (data.Algorithm == OtpHashMode.Sha1)
-                    entry.Strings.Set(builtInOtpPrefix + builtInAlgorithmSuffix, new ProtectedString(false, builtInOtpHashModeSha1));
+                    entry.Strings.Set(currentOtpPrefix + builtInAlgorithmSuffix, new ProtectedString(false, builtInOtpHashModeSha1));
                 else if (data.Algorithm == OtpHashMode.Sha256)
-                    entry.Strings.Set(builtInOtpPrefix + builtInAlgorithmSuffix, new ProtectedString(false, builtInOtpHashModeSha256));
+                    entry.Strings.Set(currentOtpPrefix + builtInAlgorithmSuffix, new ProtectedString(false, builtInOtpHashModeSha256));
                 else if (data.Algorithm == OtpHashMode.Sha512)
-                    entry.Strings.Set(builtInOtpPrefix + builtInAlgorithmSuffix, new ProtectedString(false, builtInOtpHashModeSha512));
+                    entry.Strings.Set(currentOtpPrefix + builtInAlgorithmSuffix, new ProtectedString(false, builtInOtpHashModeSha512));
+            }
+
+            if (data.Type == OtpType.Totp)
+            {
+                if (data.Period != 30)
+                    entry.Strings.Set(currentOtpPrefix + builtInPeriodSuffix, new ProtectedString(false, data.Period.ToString()));
+            }
+            else if(data.Type == OtpType.Hotp)
+            {
+                entry.Strings.Set(currentOtpPrefix + builtInCounterSuffix, new ProtectedString(false, data.Counter.ToString()));
             }
 
             return entry;
@@ -444,6 +518,9 @@ namespace KeeOtp2
                 NameValueCollection parameters = ParseQueryString(query);
                 if (parameters[uriSecretKey] != null)
                 {
+                    if (data.Type == OtpType.Totp && parameters[KeeOtp1EncoderParameter] != null)
+                        data.Type = (OtpType)Enum.Parse(typeof(OtpType), parameters[KeeOtp1EncoderParameter], true);
+
                     data.Encoding = OtpSecretEncoding.Base32;
 
                     string secret = correctPlainSecret(parameters[uriSecretKey], data.Encoding);
@@ -472,26 +549,42 @@ namespace KeeOtp2
                 throw new InvalidUriFormat("Given Uri does not start with 'otpauth://'!");
         }
 
-        public static Totp getTotp(OtpAuthData data)
+        public static OtpBase getOtp(OtpAuthData data)
         {
-            return new Totp(data.Key.ReadUtf8(), data.Period, data.Algorithm, data.Digits, null);
+            if (data.Type == OtpType.Totp)
+                return new OtpTotp(data);
+            else if (data.Type == OtpType.Hotp)
+                return new OtpHotp(data);
+            else if (data.Type == OtpType.Steam)
+                return new OtpSteam(data);
+            throw new InvalidOtpConfiguration();
         }
 
-        public static string getTotpString(OtpAuthData data)
+        public static string getOtpString(OtpAuthData data)
         {
-           return getTotpString(data, DateTime.UtcNow);
+            if (data.Type == OtpType.Totp || data.Type == OtpType.Steam)
+                return getTotpString(data, DateTime.UtcNow);
+            else if (data.Type == OtpType.Hotp)
+                return getOtp(data).getHotpString(data.Counter);
+            throw new InvalidOtpConfiguration();
         }
 
         public static string getTotpString(OtpAuthData data, DateTime time)
         {
-            try
-            {
-                return getTotp(data).ComputeTotp(time).ToString();
-            }
-            catch
-            {
-                return null;
-            }
+            return getOtp(data).getTotpString(time);
+        }
+
+        public static void increaseHotpCounter(IPluginHost host, OtpAuthData data, PwEntry entry)
+        {
+            data.Counter = data.Counter + 1;
+            if (data.KeeOtp1Mode)
+                migrateToKeeOtp1String(data, entry);
+            else
+                migrateToBuiltInOtp(data, entry);
+
+            entry.Touch(true);
+            host.MainWindow.ActiveDatabase.Modified = true;
+            host.MainWindow.UpdateUI(false, null, false, null, false, null, true);
         }
 
         public static bool CheckInternetConnection()

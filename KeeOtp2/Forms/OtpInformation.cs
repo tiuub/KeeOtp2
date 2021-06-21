@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Linq;
 using KeeOtp2.Properties;
 using KeePass.Plugins;
 using OtpNet;
@@ -11,16 +12,18 @@ namespace KeeOtp2
 {
     public partial class OtpInformation : Form
     {
-        public OtpAuthData Data { get; set; }
-        bool fullyLoaded = false;
+        private readonly KeePassLib.PwEntry entry;
+        private readonly IPluginHost host;
+        private OtpAuthData data;
+
         bool scanQRMode = true;
-        KeePassLib.PwEntry entry;
-        IPluginHost host;
+
+        private Dictionary<int, int> comboBoxLengthIndexValue;
+        private Dictionary<int, OtpType> comboBoxTypeIndexValue;
 
         public OtpInformation(OtpAuthData data, KeePassLib.PwEntry entry, IPluginHost host)
         {
             InitializeComponent();
-            this.Shown += (sender, e) => FormWasShown();
 
             pictureBoxBanner.Image = KeePass.UI.BannerFactory.CreateBanner(pictureBoxBanner.Width,
                 pictureBoxBanner.Height,
@@ -31,7 +34,7 @@ namespace KeeOtp2
 
             this.Icon = host.MainWindow.Icon;
 
-            this.Data = data;
+            this.data = data;
             this.entry = entry;
             this.host = host;
 
@@ -41,19 +44,18 @@ namespace KeeOtp2
             linkLabelLoadUriScanQR.Text = KeeOtp2Statics.OtpInformationScanQr;
             checkBoxCustomSettings.Text = KeeOtp2Statics.OtpInformationCustomSettings + KeeOtp2Statics.InformationChar;
             linkLabelMigrate.Text = KeeOtp2Statics.OtpInformationMigrate + KeeOtp2Statics.InformationChar;
-            groupboxTimeStep.Text = KeeOtp2Statics.TimeStep;
-            labelStep.Text = KeeOtp2Statics.OtpInformationTimeStepSeconds;
+            groupBoxPeriodCounter.Text = KeeOtp2Statics.Period;
+            labelPeriodCounter.Text = KeeOtp2Statics.OtpInformationPeriodSeconds;
             groupboxInfo.Text = KeeOtp2Statics.OtpInformationKeeOtp1String;
             checkboxOldKeeOtp.Text = KeeOtp2Statics.OtpInformationKeeOtp1SaveMode + KeeOtp2Statics.InformationChar;
+            groupboxGeneral.Text = KeeOtp2Statics.General;
+            labelLength.Text = KeeOtp2Statics.Length;
+            labelType.Text = KeeOtp2Statics.Type;
             groupboxEncoding.Text = KeeOtp2Statics.Encoding;
             radioButtonBase32.Text = KeeOtp2Statics.Base32;
             radioButtonBase64.Text = KeeOtp2Statics.Base64;
             radioButtonHex.Text = KeeOtp2Statics.Hex;
             radioButtonUtf8.Text = KeeOtp2Statics.Utf8;
-            groupboxSize.Text = KeeOtp2Statics.Size;
-            radioButtonSix.Text = KeeOtp2Statics.SixDigits;
-            radioButtonEight.Text = KeeOtp2Statics.EightDigits;
-            radioButtonCustomDigits.Text = KeeOtp2Statics.Custom + KeeOtp2Statics.SelectorChar;
             groupboxHashAlgorithm.Text = KeeOtp2Statics.HashAlgorithm;
             radioButtonSha1.Text = KeeOtp2Statics.Sha1;
             radioButtonSha256.Text = KeeOtp2Statics.Sha256;
@@ -67,104 +69,34 @@ namespace KeeOtp2
             toolTip.IsBalloon = true;
             toolTip.SetToolTip(checkBoxCustomSettings, KeeOtp2Statics.ToolTipOtpInformationUseCustomSettings);
 
-            if (this.Data != null && this.Data.KeeOtp1Mode)
-            {
-                linkLabelMigrate.Visible = true;
-                linkLabelMigrate.Enabled = true;
-                toolTip.ToolTipTitle = KeeOtp2Statics.ToolTipMigrateHeadline;
-                toolTip.IsBalloon = true;
-                toolTip.SetToolTip(linkLabelMigrate, KeeOtp2Statics.ToolTipMigrate);
-            }
-
             toolTip.ToolTipTitle = KeeOtp2Statics.OtpInformation;
             toolTip.IsBalloon = true;
             toolTip.SetToolTip(checkboxOldKeeOtp, KeeOtp2Statics.ToolTipOtpInformationUseOldKeeOtpSaveMode);
+
+            comboBoxLengthIndexValue = new Dictionary<int, int>();
+            for (int i = 5; i<=10; i++)
+            {
+                if (i == 6 || i == 8)
+                    comboBoxLengthIndexValue[comboBoxLength.Items.Add(String.Format("{0} ({1})", i, KeeOtp2Statics.CommonAbbreviation.ToLower() + KeeOtp2Statics.InformationChar))] = i;
+                else
+                    comboBoxLengthIndexValue[comboBoxLength.Items.Add(i.ToString())] = i;
+            }
+            comboBoxTypeIndexValue = new Dictionary<int, OtpType>();
+            foreach (OtpType type in Enum.GetValues(typeof(OtpType))){
+                comboBoxTypeIndexValue[comboBoxType.Items.Add(type.ToString())] = type;
+            }
         }
 
         private void OtpInformation_Load(object sender, EventArgs e)
         {
             this.Left = this.host.MainWindow.Left + 20;
             this.Top = this.host.MainWindow.Top + 20;
-
-            timerUpdateTotp.Start();
         }
 
-        private void FormWasShown()
+        private void OtpInformation_Shown(object sender, EventArgs e)
         {
             loadData();
-        }
-
-        private OtpAuthData readData()
-        {
-            if (OtpAuthUtils.checkUriString(textBoxKey.Text))
-            {
-                return OtpAuthUtils.uriToOtpAuthData(new Uri(textBoxKey.Text));
-            }
-            else
-            {
-                OtpAuthData data = new OtpAuthData();
-                string secret = textBoxKey.Text.Replace(" ", string.Empty).Replace("-", string.Empty);
-                if (string.IsNullOrEmpty(this.textBoxKey.Text))
-                    throw new InvalidOtpConfiguration(KeeOtp2Statics.InvalidOtpConfigurationMissingSecret);
-
-                if (checkBoxCustomSettings.Checked)
-                {
-                    if (this.radioButtonBase32.Checked)
-                        data.Encoding = OtpSecretEncoding.Base32;
-                    else if (this.radioButtonBase64.Checked)
-                        data.Encoding = OtpSecretEncoding.Base64;
-                    else if (this.radioButtonHex.Checked)
-                        data.Encoding = OtpSecretEncoding.Hex;
-                    else if (this.radioButtonUtf8.Checked)
-                        data.Encoding = OtpSecretEncoding.UTF8;
-                }
-
-                // Secret validation, will throw an error if invalid
-                secret = OtpAuthUtils.correctPlainSecret(secret, data.Encoding);
-                OtpAuthUtils.validatePlainSecret(secret, data.Encoding);
-
-                if (checkBoxCustomSettings.Checked)
-                {
-                    int step = 30;
-                    if (int.TryParse(this.textBoxStep.Text, out step))
-                    {
-                        if (step <= 0)
-                            throw new InvalidOtpConfiguration(KeeOtp2Statics.InvalidOtpConfigurationInvalidInteger);
-                    }
-                    else
-                        throw new InvalidOtpConfiguration(KeeOtp2Statics.InvalidOtpConfigurationInvalidInteger);
-                    data.Period = step;
-
-                    if (this.radioButtonSix.Checked)
-                        data.Digits = 6;
-                    else if (this.radioButtonEight.Checked)
-                        data.Digits = 8;
-                    else if (this.radioButtonCustomDigits.Checked)
-                    {
-                        int digits = 6;
-                        if (int.TryParse(this.textBoxCustomDigits.Text, out digits))
-                        {
-                            if (digits <= 0)
-                                throw new InvalidOtpConfiguration(KeeOtp2Statics.InvalidOtpConfigurationInvalidInteger);
-                        }
-                        else
-                            throw new InvalidOtpConfiguration(KeeOtp2Statics.InvalidOtpConfigurationInvalidInteger);
-                        data.Digits = digits;
-                    }
-
-
-                    if (this.radioButtonSha1.Checked)
-                        data.Algorithm = OtpHashMode.Sha1;
-                    else if (this.radioButtonSha256.Checked)
-                        data.Algorithm = OtpHashMode.Sha256;
-                    else if (this.radioButtonSha512.Checked)
-                        data.Algorithm = OtpHashMode.Sha512;
-                }
-
-                data.SetPlainSecret(secret);
-
-                return data;
-            }
+            timerUpdateTotp.Start();
         }
 
         private void OtpInformation_FormClosing(object sender, FormClosingEventArgs e)
@@ -173,26 +105,20 @@ namespace KeeOtp2
                 return;
             try
             {
-                List<string> loadedFields = null;
-                if (this.Data != null)
-                    loadedFields = this.Data.loadedFields;
-
-                this.Data = readData();
-                
-                this.Data.loadedFields = loadedFields;
+                this.data = readData();
 
                 this.entry.CreateBackup(this.host.Database);
 
-                if (this.Data.loadedFields != null && !string.IsNullOrEmpty(OtpAuthUtils.getTotpString(this.Data)))
-                    OtpAuthUtils.purgeLoadedFields(this.Data, this.entry);
+                if (this.data.loadedFields != null && !string.IsNullOrEmpty(OtpAuthUtils.getOtpString(this.data)))
+                    OtpAuthUtils.purgeLoadedFields(this.data, this.entry);
 
-                if (checkboxOldKeeOtp.Checked)
+                if (this.data.KeeOtp1Mode)
                 {
-                    OtpAuthUtils.migrateToKeeOtp1String(this.Data, this.entry);
+                    OtpAuthUtils.migrateToKeeOtp1String(this.data, this.entry);
                 }
                 else
                 {
-                    OtpAuthUtils.migrateToBuiltInOtp(this.Data, this.entry);
+                    OtpAuthUtils.migrateToBuiltInOtp(this.data, this.entry);
                 }
                 
 
@@ -238,11 +164,6 @@ namespace KeeOtp2
             }
         }
 
-        private void checkBoxCustomSettings_CheckedChanged(object sender, EventArgs e)
-        {
-            SetCustomSettingsState(this.fullyLoaded);
-        }
-
         private void linkLabelLoadUriScanQR_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (scanQRMode)
@@ -257,7 +178,7 @@ namespace KeeOtp2
             {
                 try
                 {
-                    this.Data = OtpAuthUtils.uriToOtpAuthData(new Uri(textBoxKey.Text));
+                    this.data = OtpAuthUtils.uriToOtpAuthData(new Uri(textBoxKey.Text));
                     loadData();
                 }
                 catch (InvalidBase32FormatException ex)
@@ -295,138 +216,301 @@ namespace KeeOtp2
             }
         }
 
+        private void checkBoxCustomSettings_CheckedChanged(object sender, EventArgs e)
+        {
+            SetCustomSettingsState();
+        }
+
         private void linkLabelMigrate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (MessageBox.Show(KeeOtp2Statics.MessageBoxMigrationReplacePlaceholder, KeeOtp2Statics.Migration, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                OtpAuthUtils.replacePlaceholder(this.entry, KeeOtp2Ext.KeeOtp1PlaceHolder, KeeOtp2Ext.BuiltInPlaceHolder);
+                if (data.Type == OtpType.Totp)
+                    OtpAuthUtils.replacePlaceholder(this.entry, KeeOtp2Ext.KeeOtp1PlaceHolder, KeeOtp2Ext.BuiltInTotpPlaceHolder);
+                else if (data.Type == OtpType.Hotp)
+                    OtpAuthUtils.replacePlaceholder(this.entry, KeeOtp2Ext.KeeOtp1PlaceHolder, KeeOtp2Ext.BuiltInHotpPlaceHolder);
             }
 
             checkboxOldKeeOtp.Checked = false;
             this.DialogResult = DialogResult.OK;
         }
 
-        private void loadData()
+        private void comboBoxLength_DropDown(object sender, EventArgs e)
         {
-            if (this.Data != null)
+            labelStatus.Text = KeeOtp2Statics.OtpInformationCommonAbbreviationExplanation;
+        }
+
+        private void comboBoxLength_DropDownClosed(object sender, EventArgs e)
+        {
+            labelStatus.Text = KeeOtp2Statics.HoverInformation;
+        }
+
+        private void comboBoxType_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            timerUpdateTotp.Stop();
+            timerUpdateTotp.Dispose();
+            OtpType type = comboBoxTypeIndexValue[comboBoxType.SelectedIndex];
+
+            try
             {
-                this.textBoxKey.Text = this.Data.GetPlainSecret();
+                this.data = readData(true);
+            }
+            catch
+            {
+                this.data = new OtpAuthData();
+            }
 
-                if (this.Data.Period != 30 || this.Data.KeeOtp1Mode ||
-                    this.Data.Encoding != OtpSecretEncoding.Base32 ||
-                    this.Data.Digits != 6 || this.Data.Algorithm != OtpHashMode.Sha1)
-                {
-                    this.checkBoxCustomSettings.Checked = true;
-                }
-                
-                this.textBoxStep.Text = this.Data.Period.ToString();
+            if (type == OtpType.Totp)
+            {
+                this.data.Proprietary = true;
+                this.data.Type = OtpType.Totp;
+            }
+            else if (type == OtpType.Hotp)
+            {
+                this.data.Proprietary = true;
+                this.data.Digits = 6;
+                this.data.Type = OtpType.Hotp;
+            }
+            else if (type == OtpType.Steam)
+            {
+                this.data.Proprietary = false;
+                this.data.Digits = 5;
+                this.data.KeeOtp1Mode = true;
+                this.data.Type = OtpType.Steam;
+            }
 
-                this.checkboxOldKeeOtp.Checked = this.Data.KeeOtp1Mode;
+            loadData();
+            timerUpdateTotp.Start();
+        }
 
-                this.textBoxCustomDigits.Text = this.Data.Digits.ToString();
+        private void timerUpdateTotp_Tick(object sender, EventArgs e)
+        {
+            if (textBoxKey.Text.Length > 0)
+            {
+                try
+                {
+                    OtpAuthData data = readData();
+                    OtpBase otp = OtpAuthUtils.getOtp(data);
+                    if (data.Type == OtpType.Totp || data.Type == OtpType.Steam)
+                    {
+                        groupBoxKey.Text = String.Format(KeeOtp2Statics.OtpInformationKeyUriTotpPreview, otp.getTotpString(OtpTime.getTime()), otp.getRemainingSeconds());
+                    }
+                    else if (data.Type == OtpType.Hotp)
+                    {
 
-                if (this.Data.Encoding == OtpSecretEncoding.Base64)
-                {
-                    this.radioButtonBase32.Checked = false;
-                    this.radioButtonBase64.Checked = true;
-                    this.radioButtonHex.Checked = false;
-                    this.radioButtonUtf8.Checked = false;
+                        groupBoxKey.Text = String.Format(KeeOtp2Statics.OtpInformationKeyUriHotpPreview, otp.getHotpString(data.Counter));
+                    }
                 }
-                else if (this.Data.Encoding == OtpSecretEncoding.Hex)
+                catch
                 {
-                    this.radioButtonBase32.Checked = false;
-                    this.radioButtonBase64.Checked = false;
-                    this.radioButtonHex.Checked = true;
-                    this.radioButtonUtf8.Checked = false;
-                }
-                else if (this.Data.Encoding == OtpSecretEncoding.UTF8)
-                {
-                    this.radioButtonBase32.Checked = false;
-                    this.radioButtonBase64.Checked = false;
-                    this.radioButtonHex.Checked = false;
-                    this.radioButtonUtf8.Checked = true;
-                }
-                else // default encoding
-                {
-                    this.radioButtonBase32.Checked = true;
-                    this.radioButtonBase64.Checked = false;
-                    this.radioButtonHex.Checked = false;
-                    this.radioButtonUtf8.Checked = false;
-
-                }
-
-                if (this.Data.Digits == 6)
-                {
-                    this.radioButtonSix.Checked = true;
-                    this.radioButtonEight.Checked = false;
-                    this.radioButtonCustomDigits.Checked = false;
-                    this.textBoxCustomDigits.ReadOnly = true;
-                }
-                else if (this.Data.Digits == 8)
-                {
-                    this.radioButtonSix.Checked = false;
-                    this.radioButtonEight.Checked = true;
-                    this.radioButtonCustomDigits.Checked = false;
-                    this.textBoxCustomDigits.ReadOnly = true;
-                }
-                else if (this.Data.Digits > 0)
-                {
-                    this.radioButtonSix.Checked = false;
-                    this.radioButtonEight.Checked = false;
-                    this.radioButtonCustomDigits.Checked = true;
-                    this.textBoxCustomDigits.ReadOnly = false;
-                }
-                else // default size
-                {
-                    this.radioButtonSix.Checked = true;
-                    this.radioButtonEight.Checked = false;
-                    this.radioButtonCustomDigits.Checked = false;
-                    this.textBoxCustomDigits.ReadOnly = true;
-                }
-
-                if (this.Data.Algorithm == OtpHashMode.Sha256)
-                {
-                    this.radioButtonSha1.Checked = false;
-                    this.radioButtonSha256.Checked = true;
-                    this.radioButtonSha512.Checked = false;
-                }
-                else if (this.Data.Algorithm == OtpHashMode.Sha512)
-                {
-                    this.radioButtonSha1.Checked = false;
-                    this.radioButtonSha256.Checked = false;
-                    this.radioButtonSha512.Checked = true;
-                }
-                else // default hashmode
-                {
-                    this.radioButtonSha1.Checked = true;
-                    this.radioButtonSha256.Checked = false;
-                    this.radioButtonSha512.Checked = false;
+                    groupBoxKey.Text = KeeOtp2Statics.OtpInformationKeyUriInvalid;
                 }
             }
             else
             {
-                this.textBoxStep.Text = "30";
-                this.radioButtonSha1.Checked = true;
-                this.radioButtonSha256.Checked = false;
-                this.radioButtonSha512.Checked = false;
+                groupBoxKey.Text = KeeOtp2Statics.OtpInformationKeyUri;
+            }
+        }
 
-                this.radioButtonSix.Checked = true;
-                this.radioButtonEight.Checked = false;
-                this.radioButtonCustomDigits.Checked = false;
-                this.textBoxCustomDigits.ReadOnly = true;
+        private OtpAuthData readData(bool skipType = false)
+        {
+            if (OtpAuthUtils.checkUriString(textBoxKey.Text))
+            {
+                OtpAuthData data = OtpAuthUtils.uriToOtpAuthData(new Uri(textBoxKey.Text));
+                if (this.data != null)
+                    data.loadedFields = this.data.loadedFields;
+                return data;
+            }
+            else
+            {
+                OtpAuthData data = new OtpAuthData();
 
+                if (this.data != null)
+                    data = (OtpAuthData)this.data.Clone();
+
+                string secret = textBoxKey.Text.Replace(" ", string.Empty).Replace("-", string.Empty);
+                if (string.IsNullOrEmpty(this.textBoxKey.Text))
+                    throw new InvalidOtpConfiguration(KeeOtp2Statics.InvalidOtpConfigurationMissingSecret);
+
+                if (checkBoxCustomSettings.Checked)
+                {
+                    if (this.radioButtonBase32.Checked)
+                        data.Encoding = OtpSecretEncoding.Base32;
+                    else if (this.radioButtonBase64.Checked)
+                        data.Encoding = OtpSecretEncoding.Base64;
+                    else if (this.radioButtonHex.Checked)
+                        data.Encoding = OtpSecretEncoding.Hex;
+                    else if (this.radioButtonUtf8.Checked)
+                        data.Encoding = OtpSecretEncoding.UTF8;
+                }
+
+                // Secret validation, will throw an error if invalid
+                secret = OtpAuthUtils.correctPlainSecret(secret, data.Encoding);
+                OtpAuthUtils.validatePlainSecret(secret, data.Encoding);
+
+                if (checkBoxCustomSettings.Checked)
+                {
+                    if (!skipType)
+                        data.Type = comboBoxTypeIndexValue[comboBoxType.SelectedIndex];
+
+                    if (data.Type == OtpType.Totp || data.Type == OtpType.Steam)
+                    {
+                        int period = 30;
+                        if (int.TryParse(this.textBoxPeriodCounter.Text, out period))
+                        {
+                            if (period <= 0)
+                                throw new InvalidOtpConfiguration(KeeOtp2Statics.InvalidOtpConfigurationInvalidInteger);
+                        }
+                        else
+                            throw new InvalidOtpConfiguration(KeeOtp2Statics.InvalidOtpConfigurationInvalidInteger);
+                        data.Period = period;
+                    }
+                    else if (data.Type == OtpType.Hotp)
+                    {
+                        int counter = 0;
+                        if (int.TryParse(this.textBoxPeriodCounter.Text, out counter))
+                        {
+                            if (counter < 0)
+                                throw new InvalidOtpConfiguration(KeeOtp2Statics.InvalidOtpConfigurationInvalidInteger);
+                        }
+                        else
+                            throw new InvalidOtpConfiguration(KeeOtp2Statics.InvalidOtpConfigurationInvalidInteger);
+                        data.Counter = counter;
+                    }
+
+                    data.Digits = comboBoxLengthIndexValue[comboBoxLength.SelectedIndex];
+
+                    if (this.radioButtonSha1.Checked)
+                        data.Algorithm = OtpHashMode.Sha1;
+                    else if (this.radioButtonSha256.Checked)
+                        data.Algorithm = OtpHashMode.Sha256;
+                    else if (this.radioButtonSha512.Checked)
+                        data.Algorithm = OtpHashMode.Sha512;
+
+                    data.KeeOtp1Mode = checkboxOldKeeOtp.Checked;
+                }
+
+                data.SetPlainSecret(secret);
+
+                return data;
+            }
+        }
+
+        private void loadData()
+        {
+            bool timerEnabled = timerUpdateTotp.Enabled;
+            bool comboBoxLengthEnabled = comboBoxLength.Enabled;
+            bool comboBoxTypeEnabled = comboBoxType.Enabled;
+            timerUpdateTotp.Enabled = false;
+            comboBoxLength.Enabled = false;
+            comboBoxType.Enabled = false;
+
+            if (this.data == null)
+                this.data = new OtpAuthData();
+
+            this.textBoxKey.Text = this.data.GetPlainSecret();
+
+            if (this.data.Period != 30 ||
+                this.data.KeeOtp1Mode ||
+                this.data.Encoding != OtpSecretEncoding.Base32 ||
+                this.data.Digits != 6 ||
+                this.data.Type != OtpType.Totp ||
+                this.data.Algorithm != OtpHashMode.Sha1)
+            {
+                this.checkBoxCustomSettings.Checked = true;
+            }
+
+            if (this.data.Type == OtpType.Totp || this.data.Type == OtpType.Steam)
+            {
+                this.textBoxPeriodCounter.Text = this.data.Period.ToString();
+                groupBoxPeriodCounter.Text = KeeOtp2Statics.Period;
+                labelPeriodCounter.Text = KeeOtp2Statics.OtpInformationPeriodSeconds;
+            }
+            else if (this.data.Type == OtpType.Hotp)
+            {
+                this.textBoxPeriodCounter.Text = this.data.Counter.ToString();
+                groupBoxPeriodCounter.Text = KeeOtp2Statics.Counter;
+                labelPeriodCounter.Text = KeeOtp2Statics.Counter;
+            }
+
+            this.checkboxOldKeeOtp.Checked = this.data.KeeOtp1Mode;
+
+            this.comboBoxLength.SelectedIndex = comboBoxLengthIndexValue.FirstOrDefault(x => x.Value == this.data.Digits).Key;
+            this.comboBoxType.SelectedIndex = comboBoxTypeIndexValue.FirstOrDefault(x => x.Value == this.data.Type).Key;
+
+            if (this.data.Encoding == OtpSecretEncoding.Base64)
+            {
+                this.radioButtonBase32.Checked = false;
+                this.radioButtonBase64.Checked = true;
+                this.radioButtonHex.Checked = false;
+                this.radioButtonUtf8.Checked = false;
+            }
+            else if (this.data.Encoding == OtpSecretEncoding.Hex)
+            {
+                this.radioButtonBase32.Checked = false;
+                this.radioButtonBase64.Checked = false;
+                this.radioButtonHex.Checked = true;
+                this.radioButtonUtf8.Checked = false;
+            }
+            else if (this.data.Encoding == OtpSecretEncoding.UTF8)
+            {
+                this.radioButtonBase32.Checked = false;
+                this.radioButtonBase64.Checked = false;
+                this.radioButtonHex.Checked = false;
+                this.radioButtonUtf8.Checked = true;
+            }
+            else // default encoding
+            {
                 this.radioButtonBase32.Checked = true;
                 this.radioButtonBase64.Checked = false;
                 this.radioButtonHex.Checked = false;
                 this.radioButtonUtf8.Checked = false;
+
             }
 
-            SetCustomSettingsState(false);
-            this.fullyLoaded = true;
+            if (this.data.Algorithm == OtpHashMode.Sha256)
+            {
+                this.radioButtonSha1.Checked = false;
+                this.radioButtonSha256.Checked = true;
+                this.radioButtonSha512.Checked = false;
+            }
+            else if (this.data.Algorithm == OtpHashMode.Sha512)
+            {
+                this.radioButtonSha1.Checked = false;
+                this.radioButtonSha256.Checked = false;
+                this.radioButtonSha512.Checked = true;
+            }
+            else // default hashmode
+            {
+                this.radioButtonSha1.Checked = true;
+                this.radioButtonSha256.Checked = false;
+                this.radioButtonSha512.Checked = false;
+            }
+
+            if (this.data != null && this.data.KeeOtp1Mode && !this.data.isForcedKeeOtp1Mode())
+            {
+                linkLabelMigrate.Visible = true;
+                linkLabelMigrate.Enabled = true;
+                ToolTip toolTip = new ToolTip();
+                toolTip.ToolTipTitle = KeeOtp2Statics.ToolTipMigrateHeadline;
+                toolTip.IsBalloon = true;
+                toolTip.SetToolTip(linkLabelMigrate, KeeOtp2Statics.ToolTipMigrate);
+            }
+            else
+            {
+                linkLabelMigrate.Visible = false;
+                linkLabelMigrate.Enabled = false;
+            }
+
+            SetCustomSettingsState();
+
+            timerUpdateTotp.Enabled = timerEnabled;
+            comboBoxLength.Enabled = comboBoxLengthEnabled;
+            comboBoxType.Enabled = comboBoxTypeEnabled;
         }
 
 
-        private void SetCustomSettingsState(bool showWarning)
+        private void SetCustomSettingsState()
         {
             var useCustom = this.checkBoxCustomSettings.Checked;
 
@@ -434,14 +518,16 @@ namespace KeeOtp2
                 this.radioButtonBase64.Enabled =
                 this.radioButtonHex.Enabled =
                 this.radioButtonUtf8.Enabled =
-                this.radioButtonSix.Enabled =
-                this.radioButtonEight.Enabled =
-                this.radioButtonCustomDigits.Enabled =
-                this.textBoxCustomDigits.Enabled =
-                this.textBoxStep.Enabled =
+                this.comboBoxLength.Enabled =
+                this.comboBoxType.Enabled =
+                this.textBoxPeriodCounter.Enabled =
                 this.radioButtonSha1.Enabled =
                 this.radioButtonSha256.Enabled =
-                this.radioButtonSha512.Enabled =
+                this.radioButtonSha512.Enabled = useCustom;
+
+            if (this.data != null && this.data.isForcedKeeOtp1Mode())
+                this.checkboxOldKeeOtp.Enabled = false;
+            else
                 this.checkboxOldKeeOtp.Enabled = useCustom;
         }
 
@@ -470,7 +556,7 @@ namespace KeeOtp2
             if (uri != null)
             {
                 MessageBox.Show(KeeOtp2Statics.MessageBoxQrCodeFound, KeeOtp2Statics.OtpInformationScanQr, MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Data = OtpAuthUtils.uriToOtpAuthData(uri);
+                this.data = OtpAuthUtils.uriToOtpAuthData(uri);
                 loadData();
             }
             else
@@ -480,32 +566,6 @@ namespace KeeOtp2
                     scanQRCode();
                 }
             }
-        }
-
-        private void timerUpdateTotp_Tick(object sender, EventArgs e)
-        {
-            if (textBoxKey.Text.Length > 0)
-            {
-                try
-                {
-                    OtpAuthData data = readData();
-                    Totp totp = OtpAuthUtils.getTotp(data);
-                    groupBoxKey.Text = String.Format(KeeOtp2Statics.OtpInformationKeyUriPreview, totp.ComputeTotp(OtpTime.getTime()), totp.RemainingSeconds());
-                }
-                catch
-                {
-                    groupBoxKey.Text = KeeOtp2Statics.OtpInformationKeyUriInvalid;
-                }
-            }
-            else
-            {
-                groupBoxKey.Text = KeeOtp2Statics.OtpInformationKeyUri;
-            }
-        }
-
-        private void radioButtonCustomDigits_CheckedChanged(object sender, EventArgs e)
-        {
-            textBoxCustomDigits.ReadOnly = !radioButtonCustomDigits.Checked;
         }
     }
 }

@@ -8,6 +8,7 @@ using KeePassLib;
 using KeePassLib.Utility;
 using System.Runtime.InteropServices;
 using NHotkey;
+using KeePassLib.Security;
 
 namespace KeeOtp2
 {
@@ -26,7 +27,8 @@ namespace KeeOtp2
         private ToolStripMenuItem ToolsMenuAboutSubMenuItem;
 
         public const string KeeOtp1PlaceHolder = "{TOTP}"; // Deprecated
-        public const string BuiltInPlaceHolder = "{TIMEOTP}";
+        public const string BuiltInTotpPlaceHolder = "{TIMEOTP}";
+        public const string BuiltInHotpPlaceHolder = "{HMACOTP}";
 
         public override bool Initialize(IPluginHost host)
         {
@@ -99,29 +101,43 @@ namespace KeeOtp2
         }
 
         // If built-in {TIMEOTP} placeholder is used, but KeeOtp1 Save Mode is used
-        void SprEngine_FilterCompilePre(object sender, SprEventArgs e)
+        private void SprEngine_FilterCompilePre(object sender, SprEventArgs e)
         {
             if ((e.Context.Flags & SprCompileFlags.ExtActive) == SprCompileFlags.ExtActive)
             {
-                if (e.Text.IndexOf(BuiltInPlaceHolder, StringComparison.InvariantCultureIgnoreCase) >= 0)
+                string currentPlaceHolder = null;
+                if (e.Text.IndexOf(BuiltInTotpPlaceHolder, StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    currentPlaceHolder = BuiltInTotpPlaceHolder;
+                else if (e.Text.IndexOf(BuiltInHotpPlaceHolder, StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    currentPlaceHolder = BuiltInHotpPlaceHolder;
+                if (!string.IsNullOrEmpty(currentPlaceHolder))
                 {
                     PwEntry entry = e.Context.Entry;
-                    if (!OtpAuthUtils.checkBuiltInMode(entry) || 
-                        (OtpAuthUtils.checkEntry(entry) && OtpTime.getOverrideBuiltInTime() && (OtpTime.getTimeType() == OtpTimeType.FixedOffset || OtpTime.getTimeType() == OtpTimeType.CustomNtpServer)))
+                    OtpAuthData data = OtpAuthUtils.loadData(entry);
+                    if (data != null)
                     {
-                        OtpAuthData data = OtpAuthUtils.loadData(entry);
-                        if (data != null)
+                        
+                        if (!OtpAuthUtils.checkBuiltInMode(entry) ||
+                        (OtpAuthUtils.checkEntry(entry) && OtpTime.getOverrideBuiltInTime() && (OtpTime.getTimeType() == OtpTimeType.FixedOffset || OtpTime.getTimeType() == OtpTimeType.CustomNtpServer)) ||
+                        !data.Proprietary)
                         {
-                            var text = OtpAuthUtils.getTotpString(data, OtpTime.getTime());
-
-                            e.Text = StrUtil.ReplaceCaseInsensitive(e.Text, BuiltInPlaceHolder, text);
+                            OtpBase otp = OtpAuthUtils.getOtp(data);
+                            if (data.Type == OtpType.Totp || data.Type == OtpType.Steam)
+                            {
+                                e.Text = StrUtil.ReplaceCaseInsensitive(e.Text, currentPlaceHolder, otp.getTotpString(OtpTime.getTime()));
+                            }
+                            else if (data.Type == OtpType.Hotp)
+                            {
+                                e.Text = StrUtil.ReplaceCaseInsensitive(e.Text, currentPlaceHolder, otp.getHotpString(data.Counter));
+                                OtpAuthUtils.increaseHotpCounter(host, data, entry);
+                            }
                         }
                     }
                 }
             }
         }
 
-        void SprEngine_FilterCompile(object sender, SprEventArgs e)
+        private void SprEngine_FilterCompile(object sender, SprEventArgs e)
         {
             if ((e.Context.Flags & SprCompileFlags.ExtActive) == SprCompileFlags.ExtActive)
             {
@@ -131,9 +147,16 @@ namespace KeeOtp2
                     OtpAuthData data = OtpAuthUtils.loadData(entry);
                     if (data != null)
                     {
-                        var text = OtpAuthUtils.getTotpString(data, OtpTime.getTime());
-
-                        e.Text = StrUtil.ReplaceCaseInsensitive(e.Text, KeeOtp1PlaceHolder, text);
+                        OtpBase otp = OtpAuthUtils.getOtp(data);
+                        if (data.Type == OtpType.Totp || data.Type == OtpType.Steam)
+                        {
+                            e.Text = StrUtil.ReplaceCaseInsensitive(e.Text, KeeOtp1PlaceHolder, otp.getTotpString(OtpTime.getTime()));
+                        }
+                        else if (data.Type == OtpType.Hotp)
+                        {
+                            e.Text = StrUtil.ReplaceCaseInsensitive(e.Text, KeeOtp1PlaceHolder, otp.getHotpString(data.Counter));
+                            OtpAuthUtils.increaseHotpCounter(host, data, entry);
+                        }
                     }
                 }
             }
@@ -193,10 +216,18 @@ namespace KeeOtp2
                 }
                 else
                 {
-                    var text = OtpAuthUtils.getTotpString(data, OtpTime.getTime());
-
-                    if (ClipboardUtil.CopyAndMinimize(new KeePassLib.Security.ProtectedString(true, text), true, this.host.MainWindow, entry, this.host.Database))
-                        this.host.MainWindow.StartClipboardCountdown();
+                    OtpBase otp = OtpAuthUtils.getOtp(data);
+                    if (data.Type == OtpType.Totp)
+                    {
+                        if (ClipboardUtil.CopyAndMinimize(new ProtectedString(true, otp.getTotpString(OtpTime.getTime())), true, this.host.MainWindow, entry, this.host.Database))
+                            this.host.MainWindow.StartClipboardCountdown();
+                    }
+                    else if (data.Type == OtpType.Hotp)
+                    {
+                        if (ClipboardUtil.CopyAndMinimize(new ProtectedString(true, otp.getHotpString(data.Counter)), true, this.host.MainWindow, entry, this.host.Database))
+                            this.host.MainWindow.StartClipboardCountdown();
+                        OtpAuthUtils.increaseHotpCounter(host, data, entry);
+                    }
                 }
             }
         }

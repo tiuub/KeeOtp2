@@ -30,10 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             this.textBoxKey = new System.Windows.Forms.TextBox();
-            this.textBoxStep = new System.Windows.Forms.TextBox();
-            this.radioButtonSix = new System.Windows.Forms.RadioButton();
-            this.labelStep = new System.Windows.Forms.Label();
-            this.radioButtonEight = new System.Windows.Forms.RadioButton();
+            this.textBoxPeriodCounter = new System.Windows.Forms.TextBox();
+            this.labelPeriodCounter = new System.Windows.Forms.Label();
             this.buttonOk = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.radioButtonBase32 = new System.Windows.Forms.RadioButton();
@@ -45,10 +43,14 @@
             this.radioButtonSha512 = new System.Windows.Forms.RadioButton();
             this.radioButtonSha1 = new System.Windows.Forms.RadioButton();
             this.groupboxHashAlgorithm = new System.Windows.Forms.GroupBox();
-            this.groupboxTimeStep = new System.Windows.Forms.GroupBox();
+            this.groupBoxPeriodCounter = new System.Windows.Forms.GroupBox();
             this.groupboxEncoding = new System.Windows.Forms.GroupBox();
             this.radioButtonUtf8 = new System.Windows.Forms.RadioButton();
-            this.groupboxSize = new System.Windows.Forms.GroupBox();
+            this.groupboxGeneral = new System.Windows.Forms.GroupBox();
+            this.comboBoxType = new System.Windows.Forms.ComboBox();
+            this.comboBoxLength = new System.Windows.Forms.ComboBox();
+            this.labelType = new System.Windows.Forms.Label();
+            this.labelLength = new System.Windows.Forms.Label();
             this.groupboxInfo = new System.Windows.Forms.GroupBox();
             this.checkboxOldKeeOtp = new System.Windows.Forms.CheckBox();
             this.linkLabelLoadUriScanQR = new System.Windows.Forms.LinkLabel();
@@ -56,13 +58,11 @@
             this.timerUpdateTotp = new System.Windows.Forms.Timer(this.components);
             this.linkLabelMigrate = new System.Windows.Forms.LinkLabel();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.radioButtonCustomDigits = new System.Windows.Forms.RadioButton();
-            this.textBoxCustomDigits = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBanner)).BeginInit();
             this.groupboxHashAlgorithm.SuspendLayout();
-            this.groupboxTimeStep.SuspendLayout();
+            this.groupBoxPeriodCounter.SuspendLayout();
             this.groupboxEncoding.SuspendLayout();
-            this.groupboxSize.SuspendLayout();
+            this.groupboxGeneral.SuspendLayout();
             this.groupboxInfo.SuspendLayout();
             this.groupBoxKey.SuspendLayout();
             this.SuspendLayout();
@@ -76,43 +76,21 @@
             this.textBoxKey.TextChanged += new System.EventHandler(this.textBoxKey_TextChanged);
             this.textBoxKey.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxKey_KeyDown);
             // 
-            // textBoxStep
+            // textBoxPeriodCounter
             // 
-            this.textBoxStep.Location = new System.Drawing.Point(118, 13);
-            this.textBoxStep.Name = "textBoxStep";
-            this.textBoxStep.Size = new System.Drawing.Size(23, 20);
-            this.textBoxStep.TabIndex = 1;
+            this.textBoxPeriodCounter.Location = new System.Drawing.Point(118, 13);
+            this.textBoxPeriodCounter.Name = "textBoxPeriodCounter";
+            this.textBoxPeriodCounter.Size = new System.Drawing.Size(23, 20);
+            this.textBoxPeriodCounter.TabIndex = 1;
             // 
-            // radioButtonSix
+            // labelPeriodCounter
             // 
-            this.radioButtonSix.AutoSize = true;
-            this.radioButtonSix.Checked = true;
-            this.radioButtonSix.Location = new System.Drawing.Point(6, 19);
-            this.radioButtonSix.Name = "radioButtonSix";
-            this.radioButtonSix.Size = new System.Drawing.Size(60, 17);
-            this.radioButtonSix.TabIndex = 2;
-            this.radioButtonSix.TabStop = true;
-            this.radioButtonSix.Text = "6 Digits";
-            this.radioButtonSix.UseVisualStyleBackColor = true;
-            // 
-            // labelStep
-            // 
-            this.labelStep.AutoSize = true;
-            this.labelStep.Location = new System.Drawing.Point(6, 16);
-            this.labelStep.Name = "labelStep";
-            this.labelStep.Size = new System.Drawing.Size(106, 13);
-            this.labelStep.TabIndex = 4;
-            this.labelStep.Text = "Time Step (Seconds)";
-            // 
-            // radioButtonEight
-            // 
-            this.radioButtonEight.AutoSize = true;
-            this.radioButtonEight.Location = new System.Drawing.Point(6, 42);
-            this.radioButtonEight.Name = "radioButtonEight";
-            this.radioButtonEight.Size = new System.Drawing.Size(60, 17);
-            this.radioButtonEight.TabIndex = 6;
-            this.radioButtonEight.Text = "8 Digits";
-            this.radioButtonEight.UseVisualStyleBackColor = true;
+            this.labelPeriodCounter.AutoSize = true;
+            this.labelPeriodCounter.Location = new System.Drawing.Point(6, 16);
+            this.labelPeriodCounter.Name = "labelPeriodCounter";
+            this.labelPeriodCounter.Size = new System.Drawing.Size(106, 13);
+            this.labelPeriodCounter.TabIndex = 4;
+            this.labelPeriodCounter.Text = "Time Step (Seconds)";
             // 
             // buttonOk
             // 
@@ -234,17 +212,17 @@
             this.groupboxHashAlgorithm.TabStop = false;
             this.groupboxHashAlgorithm.Text = "Hash Algorithm";
             // 
-            // groupboxTimeStep
+            // groupBoxPeriodCounter
             // 
-            this.groupboxTimeStep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupboxTimeStep.Controls.Add(this.labelStep);
-            this.groupboxTimeStep.Controls.Add(this.textBoxStep);
-            this.groupboxTimeStep.Location = new System.Drawing.Point(15, 143);
-            this.groupboxTimeStep.Name = "groupboxTimeStep";
-            this.groupboxTimeStep.Size = new System.Drawing.Size(168, 41);
-            this.groupboxTimeStep.TabIndex = 17;
-            this.groupboxTimeStep.TabStop = false;
-            this.groupboxTimeStep.Text = "Time Step";
+            this.groupBoxPeriodCounter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxPeriodCounter.Controls.Add(this.labelPeriodCounter);
+            this.groupBoxPeriodCounter.Controls.Add(this.textBoxPeriodCounter);
+            this.groupBoxPeriodCounter.Location = new System.Drawing.Point(15, 143);
+            this.groupBoxPeriodCounter.Name = "groupBoxPeriodCounter";
+            this.groupBoxPeriodCounter.Size = new System.Drawing.Size(168, 41);
+            this.groupBoxPeriodCounter.TabIndex = 17;
+            this.groupBoxPeriodCounter.TabStop = false;
+            this.groupBoxPeriodCounter.Text = "Time Step";
             // 
             // groupboxEncoding
             // 
@@ -253,7 +231,7 @@
             this.groupboxEncoding.Controls.Add(this.radioButtonBase32);
             this.groupboxEncoding.Controls.Add(this.radioButtonBase64);
             this.groupboxEncoding.Controls.Add(this.radioButtonHex);
-            this.groupboxEncoding.Location = new System.Drawing.Point(15, 190);
+            this.groupboxEncoding.Location = new System.Drawing.Point(131, 190);
             this.groupboxEncoding.Name = "groupboxEncoding";
             this.groupboxEncoding.Size = new System.Drawing.Size(110, 113);
             this.groupboxEncoding.TabIndex = 5;
@@ -270,19 +248,58 @@
             this.radioButtonUtf8.Text = "Utf-8";
             this.radioButtonUtf8.UseVisualStyleBackColor = true;
             // 
-            // groupboxSize
+            // groupboxGeneral
             // 
-            this.groupboxSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupboxSize.Controls.Add(this.textBoxCustomDigits);
-            this.groupboxSize.Controls.Add(this.radioButtonCustomDigits);
-            this.groupboxSize.Controls.Add(this.radioButtonSix);
-            this.groupboxSize.Controls.Add(this.radioButtonEight);
-            this.groupboxSize.Location = new System.Drawing.Point(131, 190);
-            this.groupboxSize.Name = "groupboxSize";
-            this.groupboxSize.Size = new System.Drawing.Size(110, 113);
-            this.groupboxSize.TabIndex = 12;
-            this.groupboxSize.TabStop = false;
-            this.groupboxSize.Text = "Size";
+            this.groupboxGeneral.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupboxGeneral.Controls.Add(this.comboBoxType);
+            this.groupboxGeneral.Controls.Add(this.comboBoxLength);
+            this.groupboxGeneral.Controls.Add(this.labelType);
+            this.groupboxGeneral.Controls.Add(this.labelLength);
+            this.groupboxGeneral.Location = new System.Drawing.Point(15, 190);
+            this.groupboxGeneral.Name = "groupboxGeneral";
+            this.groupboxGeneral.Size = new System.Drawing.Size(110, 113);
+            this.groupboxGeneral.TabIndex = 12;
+            this.groupboxGeneral.TabStop = false;
+            this.groupboxGeneral.Text = "General";
+            // 
+            // comboBoxType
+            // 
+            this.comboBoxType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxType.FormattingEnabled = true;
+            this.comboBoxType.Location = new System.Drawing.Point(55, 45);
+            this.comboBoxType.Name = "comboBoxType";
+            this.comboBoxType.Size = new System.Drawing.Size(49, 21);
+            this.comboBoxType.TabIndex = 3;
+            this.comboBoxType.SelectionChangeCommitted += new System.EventHandler(this.comboBoxType_SelectionChangeCommitted);
+            // 
+            // comboBoxLength
+            // 
+            this.comboBoxLength.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxLength.FormattingEnabled = true;
+            this.comboBoxLength.Location = new System.Drawing.Point(55, 18);
+            this.comboBoxLength.Name = "comboBoxLength";
+            this.comboBoxLength.Size = new System.Drawing.Size(49, 21);
+            this.comboBoxLength.TabIndex = 2;
+            this.comboBoxLength.DropDown += new System.EventHandler(this.comboBoxLength_DropDown);
+            this.comboBoxLength.DropDownClosed += new System.EventHandler(this.comboBoxLength_DropDownClosed);
+            // 
+            // labelType
+            // 
+            this.labelType.AutoSize = true;
+            this.labelType.Location = new System.Drawing.Point(3, 48);
+            this.labelType.Name = "labelType";
+            this.labelType.Size = new System.Drawing.Size(37, 13);
+            this.labelType.TabIndex = 1;
+            this.labelType.Text = "Mode:";
+            // 
+            // labelLength
+            // 
+            this.labelLength.AutoSize = true;
+            this.labelLength.Location = new System.Drawing.Point(3, 21);
+            this.labelLength.Name = "labelLength";
+            this.labelLength.Size = new System.Drawing.Size(43, 13);
+            this.labelLength.TabIndex = 0;
+            this.labelLength.Text = "Length:";
             // 
             // groupboxInfo
             // 
@@ -357,25 +374,6 @@
             this.labelStatus.TabIndex = 24;
             this.labelStatus.Text = "(*Hover for more information)";
             // 
-            // radioButtonCustomDigits
-            // 
-            this.radioButtonCustomDigits.AutoSize = true;
-            this.radioButtonCustomDigits.Location = new System.Drawing.Point(6, 65);
-            this.radioButtonCustomDigits.Name = "radioButtonCustomDigits";
-            this.radioButtonCustomDigits.Size = new System.Drawing.Size(63, 17);
-            this.radioButtonCustomDigits.TabIndex = 25;
-            this.radioButtonCustomDigits.TabStop = true;
-            this.radioButtonCustomDigits.Text = "Custom:";
-            this.radioButtonCustomDigits.UseVisualStyleBackColor = true;
-            this.radioButtonCustomDigits.CheckedChanged += new System.EventHandler(this.radioButtonCustomDigits_CheckedChanged);
-            // 
-            // textBoxCustomDigits
-            // 
-            this.textBoxCustomDigits.Location = new System.Drawing.Point(70, 64);
-            this.textBoxCustomDigits.Name = "textBoxCustomDigits";
-            this.textBoxCustomDigits.Size = new System.Drawing.Size(34, 20);
-            this.textBoxCustomDigits.TabIndex = 26;
-            // 
             // OtpInformation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -385,9 +383,9 @@
             this.Controls.Add(this.linkLabelMigrate);
             this.Controls.Add(this.groupBoxKey);
             this.Controls.Add(this.groupboxInfo);
-            this.Controls.Add(this.groupboxSize);
             this.Controls.Add(this.groupboxEncoding);
-            this.Controls.Add(this.groupboxTimeStep);
+            this.Controls.Add(this.groupboxGeneral);
+            this.Controls.Add(this.groupBoxPeriodCounter);
             this.Controls.Add(this.groupboxHashAlgorithm);
             this.Controls.Add(this.checkBoxCustomSettings);
             this.Controls.Add(this.pictureBoxBanner);
@@ -400,15 +398,16 @@
             this.Text = "Configuration";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OtpInformation_FormClosing);
             this.Load += new System.EventHandler(this.OtpInformation_Load);
+            this.Shown += new System.EventHandler(this.OtpInformation_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBanner)).EndInit();
             this.groupboxHashAlgorithm.ResumeLayout(false);
             this.groupboxHashAlgorithm.PerformLayout();
-            this.groupboxTimeStep.ResumeLayout(false);
-            this.groupboxTimeStep.PerformLayout();
+            this.groupBoxPeriodCounter.ResumeLayout(false);
+            this.groupBoxPeriodCounter.PerformLayout();
             this.groupboxEncoding.ResumeLayout(false);
             this.groupboxEncoding.PerformLayout();
-            this.groupboxSize.ResumeLayout(false);
-            this.groupboxSize.PerformLayout();
+            this.groupboxGeneral.ResumeLayout(false);
+            this.groupboxGeneral.PerformLayout();
             this.groupboxInfo.ResumeLayout(false);
             this.groupboxInfo.PerformLayout();
             this.groupBoxKey.ResumeLayout(false);
@@ -421,10 +420,8 @@
         #endregion
 
         private System.Windows.Forms.TextBox textBoxKey;
-        private System.Windows.Forms.TextBox textBoxStep;
-        private System.Windows.Forms.RadioButton radioButtonSix;
-        private System.Windows.Forms.Label labelStep;
-        private System.Windows.Forms.RadioButton radioButtonEight;
+        private System.Windows.Forms.TextBox textBoxPeriodCounter;
+        private System.Windows.Forms.Label labelPeriodCounter;
         private System.Windows.Forms.Button buttonOk;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.RadioButton radioButtonBase32;
@@ -436,9 +433,9 @@
         private System.Windows.Forms.RadioButton radioButtonSha512;
         private System.Windows.Forms.RadioButton radioButtonSha1;
         private System.Windows.Forms.GroupBox groupboxHashAlgorithm;
-        private System.Windows.Forms.GroupBox groupboxTimeStep;
+        private System.Windows.Forms.GroupBox groupBoxPeriodCounter;
         private System.Windows.Forms.GroupBox groupboxEncoding;
-        private System.Windows.Forms.GroupBox groupboxSize;
+        private System.Windows.Forms.GroupBox groupboxGeneral;
         private System.Windows.Forms.GroupBox groupboxInfo;
         private System.Windows.Forms.RadioButton radioButtonUtf8;
         private System.Windows.Forms.CheckBox checkboxOldKeeOtp;
@@ -447,7 +444,9 @@
         private System.Windows.Forms.Timer timerUpdateTotp;
         private System.Windows.Forms.LinkLabel linkLabelMigrate;
         private System.Windows.Forms.Label labelStatus;
-        private System.Windows.Forms.TextBox textBoxCustomDigits;
-        private System.Windows.Forms.RadioButton radioButtonCustomDigits;
+        private System.Windows.Forms.ComboBox comboBoxType;
+        private System.Windows.Forms.ComboBox comboBoxLength;
+        private System.Windows.Forms.Label labelType;
+        private System.Windows.Forms.Label labelLength;
     }
 }
