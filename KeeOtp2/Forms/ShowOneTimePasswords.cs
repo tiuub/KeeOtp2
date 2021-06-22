@@ -194,7 +194,7 @@ namespace KeeOtp2
                 {
                     this.linkLabelIncorrectNext.Text = KeeOtp2Statics.ShowOtpIncorrect;
                     this.labelOtp.Text = insertSpaceInMiddle(otp.getTotpString(OtpTime.getTime()));
-                    this.groupboxTotp.Text = String.Format(KeeOtp2Statics.ShowOtpNextRemaining, otp.getRemainingSeconds().ToString().PadLeft(2, '0'), insertSpaceInMiddle(otp.getTotpString(OtpTime.getTime().AddSeconds(data.Period))));
+                    this.groupboxTotp.Text = String.Format(KeeOtp2Statics.ShowOtpNextRemaining, otp.getRemainingSeconds(OtpTime.getTime()).ToString().PadLeft(2, '0'), insertSpaceInMiddle(otp.getTotpString(OtpTime.getTime().AddSeconds(data.Period))));
                 }
                 else if (data.Type == OtpType.Hotp)
                 {

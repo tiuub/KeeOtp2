@@ -21,6 +21,7 @@ namespace KeeOtp2
         public abstract string getTotpString(DateTime timestamp);
         public abstract string getHotpString(long counter);
         public abstract int getRemainingSeconds();
+        public abstract int getRemainingSeconds(DateTime timestamp);
     }
 
     public class OtpTotp : OtpBase
@@ -29,7 +30,7 @@ namespace KeeOtp2
 
         public OtpTotp(OtpAuthData data) : base(data)
         {
-            this.totp = new Totp(data.Key.ReadUtf8(), data.Period, data.Algorithm, data.Digits, null);
+            this.totp = new Totp(data.Key.ReadData(), data.Period, data.Algorithm, data.Digits, null);
         }
 
         public override string getTotpString()
@@ -44,7 +45,12 @@ namespace KeeOtp2
 
         public override int getRemainingSeconds()
         {
-            return totp.RemainingSeconds();
+            return getRemainingSeconds(DateTime.Now);
+        }
+
+        public override int getRemainingSeconds(DateTime timestamp)
+        {
+            return totp.RemainingSeconds(timestamp);
         }
 
         public override string getHotpString(long counter)
@@ -59,7 +65,7 @@ namespace KeeOtp2
 
         public OtpHotp(OtpAuthData data) : base(data)
         {
-            this.hotp = new Hotp(data.Key.ReadUtf8(), data.Algorithm, data.Digits);
+            this.hotp = new Hotp(data.Key.ReadData(), data.Algorithm, data.Digits);
         }
 
         public override string getHotpString(long counter)
@@ -78,6 +84,11 @@ namespace KeeOtp2
         }
 
         public override int getRemainingSeconds()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int getRemainingSeconds(DateTime timestamp)
         {
             throw new NotImplementedException();
         }
@@ -106,7 +117,7 @@ namespace KeeOtp2
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(codeInterval);
 
-            InMemoryKey key = new InMemoryKey(data.Key.ReadUtf8());
+            InMemoryKey key = new InMemoryKey(data.Key.ReadData());
             byte[] hash = key.ComputeHmac(OtpHashMode.Sha1, codeInterval);
 
             int start = hash[hash.Length - 1] & 0xf;
@@ -126,11 +137,6 @@ namespace KeeOtp2
             }
 
             return sb.ToString();
-        }
-
-        public override int getRemainingSeconds()
-        {
-            return base.getRemainingSeconds();
         }
     }
 }

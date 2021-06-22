@@ -223,7 +223,7 @@ namespace KeeOtp2
 
         private void linkLabelMigrate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (MessageBox.Show(KeeOtp2Statics.MessageBoxMigrationReplacePlaceholder, KeeOtp2Statics.Migration, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show(String.Format(KeeOtp2Statics.MessageBoxMigrationReplacePlaceholder, KeeOtp2Ext.KeeOtp1PlaceHolder, string.Format("{0}/{1}", KeeOtp2Ext.BuiltInTotpPlaceHolder, KeeOtp2Ext.BuiltInHotpPlaceHolder)), KeeOtp2Statics.Migration, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 if (data.Type == OtpType.Totp)
                     OtpAuthUtils.replacePlaceholder(this.entry, KeeOtp2Ext.KeeOtp1PlaceHolder, KeeOtp2Ext.BuiltInTotpPlaceHolder);
@@ -247,6 +247,7 @@ namespace KeeOtp2
 
         private void comboBoxType_SelectionChangeCommitted(object sender, EventArgs e)
         {
+            bool timerEnabled = timerUpdateTotp.Enabled;
             timerUpdateTotp.Stop();
             timerUpdateTotp.Dispose();
             OtpType type = comboBoxTypeIndexValue[comboBoxType.SelectedIndex];
@@ -280,7 +281,7 @@ namespace KeeOtp2
             }
 
             loadData();
-            timerUpdateTotp.Start();
+            timerUpdateTotp.Enabled = timerEnabled;
         }
 
         private void timerUpdateTotp_Tick(object sender, EventArgs e)
@@ -293,7 +294,7 @@ namespace KeeOtp2
                     OtpBase otp = OtpAuthUtils.getOtp(data);
                     if (data.Type == OtpType.Totp || data.Type == OtpType.Steam)
                     {
-                        groupBoxKey.Text = String.Format(KeeOtp2Statics.OtpInformationKeyUriTotpPreview, otp.getTotpString(OtpTime.getTime()), otp.getRemainingSeconds());
+                        groupBoxKey.Text = String.Format(KeeOtp2Statics.OtpInformationKeyUriTotpPreview, otp.getTotpString(OtpTime.getTime()), otp.getRemainingSeconds(OtpTime.getTime()));
                     }
                     else if (data.Type == OtpType.Hotp)
                     {
@@ -502,11 +503,11 @@ namespace KeeOtp2
                 linkLabelMigrate.Enabled = false;
             }
 
-            SetCustomSettingsState();
-
             timerUpdateTotp.Enabled = timerEnabled;
             comboBoxLength.Enabled = comboBoxLengthEnabled;
             comboBoxType.Enabled = comboBoxTypeEnabled;
+
+            SetCustomSettingsState();
         }
 
 
