@@ -544,7 +544,6 @@ namespace KeeOtp2
         private void scanQRCode()
         {
             Uri uri = null;
-            IBarcodeReader reader = new BarcodeReader();
             Bitmap bmpScreenshot;
             Graphics gfxScreenshot;
 
@@ -560,10 +559,7 @@ namespace KeeOtp2
                 bmpScreenshot = new Bitmap(sc.Bounds.Width, sc.Bounds.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                 gfxScreenshot = Graphics.FromImage(bmpScreenshot);
                 gfxScreenshot.CopyFromScreen(sc.Bounds.X, sc.Bounds.Y, 0, 0, sc.Bounds.Size, CopyPixelOperation.SourceCopy);
-                var result = reader.Decode(bmpScreenshot);
-                if (result != null)
-                    if (result.ToString().StartsWith("otpauth"))
-                        uri = new Uri(result.ToString());
+                uri = OtpAuthUtils.bitmapToUri(bmpScreenshot);
             }
 
             p = this;

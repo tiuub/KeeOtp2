@@ -9,6 +9,8 @@ using System.Net;
 using System.Text.RegularExpressions;
 using OtpNet;
 using KeePass.Plugins;
+using System.Drawing;
+using ZXing;
 
 namespace KeeOtp2
 {
@@ -507,14 +509,22 @@ namespace KeeOtp2
         {
             try
             {
-                if (uriToOtpAuthData(new Uri(uriString)) != null)
+                if (checkUri(new Uri(uriString)))
                     return true;
-                return false;
             }
-            catch
+            catch { }
+            return false;
+        }
+
+        public static bool checkUri(Uri uri)
+        {
+            try
             {
-                return false;
+                if (uriToOtpAuthData(uri) != null)
+                    return true;
             }
+            catch { }
+            return false;
         }
 
         public static OtpAuthData uriToOtpAuthData(Uri uri)
@@ -560,6 +570,22 @@ namespace KeeOtp2
             }
             else
                 throw new InvalidUriFormat("Given Uri does not start with 'otpauth://'!");
+        }
+
+        public static Uri bitmapToUri(Bitmap bitmap)
+        {
+            IBarcodeReader reader = new BarcodeReader();
+            var result = reader.Decode(bitmap);
+            if (result != null)
+            {
+                if (result.ToString().StartsWith("otpauth"))
+                {
+                    Uri uri = new Uri(result.ToString());
+                    if (checkUri(uri))
+                        return uri;
+                }
+            }
+            return null;
         }
 
         public static OtpBase getOtp(OtpAuthData data)

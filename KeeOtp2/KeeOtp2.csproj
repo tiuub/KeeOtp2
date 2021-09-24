@@ -71,37 +71,37 @@
     <Compile Include="Forms\About.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\About.designer.cs">
+    <Compile Include="Forms\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\OtpInformation.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\OtpInformation.designer.cs">
+    <Compile Include="Forms\OtpInformation.Designer.cs">
       <DependentUpon>OtpInformation.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Settings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Settings.designer.cs">
+    <Compile Include="Forms\Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ShowOneTimePasswords.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ShowOneTimePasswords.designer.cs">
+    <Compile Include="Forms\ShowOneTimePasswords.Designer.cs">
       <DependentUpon>ShowOneTimePasswords.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ShowQrCode.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\ShowQrCode.designer.cs">
+    <Compile Include="Forms\ShowQrCode.Designer.cs">
       <DependentUpon>ShowQrCode.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Troubleshooting.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Troubleshooting.designer.cs">
+    <Compile Include="Forms\Troubleshooting.Designer.cs">
       <DependentUpon>Troubleshooting.cs</DependentUpon>
     </Compile>
     <Compile Include="KeeOtp2Config.cs" />

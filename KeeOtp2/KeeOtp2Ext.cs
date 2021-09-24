@@ -9,6 +9,7 @@ using KeePassLib.Utility;
 using System.Runtime.InteropServices;
 using NHotkey;
 using KeePassLib.Security;
+using KeePassLib.Native;
 
 namespace KeeOtp2
 {
@@ -91,7 +92,8 @@ namespace KeeOtp2
 
         public override void Terminate()
         {
-            KeeOtp2Config.unregisterHotKey();
+            if (!NativeLib.IsUnix())
+                KeeOtp2Config.unregisterHotKey();
 
             // Remove all of our menu items
             ToolStripItemCollection menu = host.MainWindow.EntryContextMenu.Items;

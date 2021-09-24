@@ -2,6 +2,7 @@
 using System;
 using System.Windows.Forms;
 using NHotkey.WindowsForms;
+using KeePassLib.Native;
 
 namespace KeeOtp2
 {
@@ -13,14 +14,16 @@ namespace KeeOtp2
 
         public static void loadConfig()
         {
-            registerHotKey();
             if (OtpTime.getTimeType() == OtpTimeType.CustomNtpServer)
                 OtpTime.pollCustomNtpServer();
+
+            if (!NativeLib.IsUnix())
+                registerHotKey();
         }
 
         public static void registerHotKey()
         {
-            if (handler != null && !KeePassLib.Native.NativeLib.IsUnix())
+            if (handler != null)
                 HotkeyManager.Current.AddOrReplace(HOTKEY_NAME, KeeOtp2Config.HotKeyKeys, handler);
         }
 
@@ -46,7 +49,9 @@ namespace KeeOtp2
         {
             get
             {
-                return Program.Config.CustomConfig.GetBool(PATH_USE_HOTKEY, true);
+                if (!NativeLib.IsUnix())
+                    return Program.Config.CustomConfig.GetBool(PATH_USE_HOTKEY, true);
+                return false;
             }
             set
             {

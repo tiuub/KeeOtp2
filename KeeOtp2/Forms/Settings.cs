@@ -3,6 +3,7 @@ using KeePass.Forms;
 using KeePass.Plugins;
 using KeePassLib;
 using KeePassLib.Collections;
+using KeePassLib.Native;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -79,7 +80,7 @@ namespace KeeOtp2
             labelUseHotKey.Text = KeeOtp2Statics.SettingsTOTPGlobalAutoType + KeeOtp2Statics.SelectorChar;
             checkBoxUseHotkey.Text = KeeOtp2Statics.SettingsUseGlobalHotkey;
             labelHotKeySequence.Text = KeeOtp2Statics.SettingsHotKeySequence + KeeOtp2Statics.InformationChar + KeeOtp2Statics.SelectorChar;
-            labelGlobalHotkey.Text = KeeOtp2Statics.SettingsGlobalHotKey;
+            labelGlobalHotkey.Text = KeeOtp2Statics.SettingsGlobalHotKey + KeeOtp2Statics.SelectorChar;
             groupBoxTime.Text = KeeOtp2Statics.GlobalTime + KeeOtp2Statics.InformationChar + KeeOtp2Statics.SelectorChar;
             radioButtonSystemTime.Text = KeeOtp2Statics.SettingsUseSystemTime;
             labelTime.Text = String.Format(KeeOtp2Statics.SettingsPreviewUtc, "00:00:00");
@@ -122,6 +123,20 @@ namespace KeeOtp2
                 comboBoxMigrate.SelectedIndex = 0;
 
             loadConfig();
+
+            if (NativeLib.IsUnix())
+            {
+                checkBoxUseHotkey.Enabled = false;
+                textBoxHotKeySequence.Enabled = false;
+                hotKeyControlExGlobalHotkey.Enabled = false;
+                string toolTipHotKeyNotAvailable = KeeOtp2Statics.ToolTipHotKeyNotAvailable;
+                toolTip.SetToolTip(labelUseHotKey, toolTipHotKeyNotAvailable);
+                toolTip.SetToolTip(checkBoxUseHotkey, toolTipHotKeyNotAvailable);
+                toolTip.SetToolTip(labelHotKeySequence, toolTipHotKeyNotAvailable);
+                toolTip.SetToolTip(textBoxHotKeySequence, toolTipHotKeyNotAvailable);
+                toolTip.SetToolTip(labelGlobalHotkey, toolTipHotKeyNotAvailable);
+                toolTip.SetToolTip(hotKeyControlExGlobalHotkey, toolTipHotKeyNotAvailable);
+            }
 
             timerClock.Start();
         }
