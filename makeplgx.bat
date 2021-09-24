@@ -1,3 +1,4 @@
+@@ -1,117 +0,0 @@
 @echo off
 setlocal enableextensions enabledelayedexpansion
 
@@ -7,15 +8,15 @@ cd %~dp0
 set SolutionName=KeeOtp2
 set ProjectName=KeeOtp2
 set SolutionPath=%~dp0
-set PlgXPath=%SolutionPath%\PlgX
-set ReleasesPath=%SolutionPath%\Releases
-set DebugPath=%SolutionPath%\Debug
-set PlgXExculdeDirectoriesPath=%SolutionPath%\PlgXExcludeDirectories.txt
-set PlgXExculdeFilesPath=%SolutionPath%\PlgXExcludeFiles.txt
-set PackagesPath=%SolutionPath%\packages
+set PlgXPath=%SolutionPath%PlgX
+set ReleasesPath=%SolutionPath%Releases
+set DebugPath=%SolutionPath%Debug
+set PlgXExculdeDirectoriesPath=%SolutionPath%PlgXExcludeDirectories.txt
+set PlgXExculdeFilesPath=%SolutionPath%PlgXExcludeFiles.txt
+set PackagesPath=%SolutionPath%packages
 
 set PlgXExculdeDirectories=
-for /f "usebackq tokens=*" %%D in (%PlgXExculdeDirectoriesPath%) do (
+for /f "usebackq tokens=*" %%D in ("%PlgXExculdeDirectoriesPath%") do (
     If NOT "!PlgXExculdeDirectories!"=="" (
         Set PlgXExculdeDirectories=!PlgXExculdeDirectories! "%%D"
     ) Else (
@@ -24,7 +25,7 @@ for /f "usebackq tokens=*" %%D in (%PlgXExculdeDirectoriesPath%) do (
 )
 
 set PlgXExculdeFiles=
-for /f "usebackq tokens=*" %%F in (%PlgXExculdeFilesPath%) do (
+for /f "usebackq tokens=*" %%F in ("%PlgXExculdeFilesPath%") do (
     If NOT "!PlgXExculdeFiles!"=="" (
         Set PlgXExculdeFiles=!PlgXExculdeFiles! "%%F"
     ) Else (
@@ -56,13 +57,13 @@ mkdir "%PlgXPath%"
 
 echo Copying files
 robocopy "%SolutionPath%." "%PlgXPath%" "%SolutionName%.sln" /NDL /NFL /NJH /NJS /NP /NS /NC
-robocopy "%SolutionPath%\%ProjectName%" "%PlgXPath%\%ProjectName%" /MIR /E /NDL /NFL /NJH /NJS /NP /NS /NC /XF !PlgXExculdeFiles! /XD !PlgXExculdeDirectories!
-robocopy "%SolutionPath%\Dependencies" "%PlgXPath%\Dependencies" /MIR /E /NDL /NFL /NJH /NJS /NP /NS /NC /XF !PlgXExculdeFiles! /XD !PlgXExculdeDirectories!
+robocopy "%SolutionPath%%ProjectName%" "%PlgXPath%\%ProjectName%" /MIR /E /NDL /NFL /NJH /NJS /NP /NS /NC /XF !PlgXExculdeFiles! /XD !PlgXExculdeDirectories!
+robocopy "%SolutionPath%Dependencies" "%PlgXPath%\Dependencies" /MIR /E /NDL /NFL /NJH /NJS /NP /NS /NC /XF !PlgXExculdeFiles! /XD !PlgXExculdeDirectories!
 
-for /F "tokens=3 delims=<>" %%a in ( 'find /i "<HintPath>" ^< "%SolutionPath%\%ProjectName%\%ProjectName%.csproj"' ) do (
+for /F "tokens=3 delims=<>" %%a in ( 'find /i "<HintPath>" ^< "%SolutionPath%%ProjectName%\%ProjectName%.csproj"' ) do (
     if %%~xa == .dll (
         echo [+] %%~na%%~xa
-        FOR %%i IN ("%SolutionPath%\%ProjectName%\%%a") DO (
+        FOR %%i IN ("%SolutionPath%%ProjectName%\%%a") DO (
             set origin=%%~dpi
         )
         
