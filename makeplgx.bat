@@ -4,12 +4,15 @@ setlocal enableextensions enabledelayedexpansion
 set arg1=%1
 echo %1
 cd %~dp0
-set PlgXPath=%~dp0PlgX
-set ReleasesPath=%~dp0Releases
-set DebugPath=%~dp0Debug
-set PlgXExculdeDirectoriesPath=%~dp0PlgXExcludeDirectories.txt
-set PlgXExculdeFilesPath=%~dp0PlgXExcludeFiles.txt
-set PackagesPath=%~dp0packages
+set SolutionName=KeeOtp2
+set ProjectName=KeeOtp2
+set SolutionPath=%~dp0
+set PlgXPath=%SolutionPath%\PlgX
+set ReleasesPath=%SolutionPath%\Releases
+set DebugPath=%SolutionPath%\Debug
+set PlgXExculdeDirectoriesPath=%SolutionPath%\PlgXExcludeDirectories.txt
+set PlgXExculdeFilesPath=%SolutionPath%\PlgXExcludeFiles.txt
+set PackagesPath=%SolutionPath%\packages
 
 set PlgXExculdeDirectories=
 for /f "usebackq tokens=*" %%D in (%PlgXExculdeDirectoriesPath%) do (
@@ -52,14 +55,25 @@ echo Creating PlgX folder
 mkdir "%PlgXPath%"
 
 echo Copying files
-robocopy "%~dp0." "%PlgXPath%" "KeeOtp2.sln" /NDL /NJH /NJS /NP /NS /NC
-robocopy "%~dp0KeeOtp2" "%PlgXPath%\KeeOtp2" /MIR /E /NDL /NJH /NJS /NP /NS /NC /XF !PlgXExculdeFiles! /XD !PlgXExculdeDirectories!
-robocopy "%~dp0Dependencies" "%PlgXPath%\Dependencies" /MIR /E /NDL /NJH /NJS /NP /NS /NC /XF !PlgXExculdeFiles! /XD !PlgXExculdeDirectories!
+robocopy "%SolutionPath%." "%PlgXPath%" "%SolutionName%.sln" /NDL /NFL /NJH /NJS /NP /NS /NC
+robocopy "%SolutionPath%\%ProjectName%" "%PlgXPath%\%ProjectName%" /MIR /E /NDL /NFL /NJH /NJS /NP /NS /NC /XF !PlgXExculdeFiles! /XD !PlgXExculdeDirectories!
+robocopy "%SolutionPath%\Dependencies" "%PlgXPath%\Dependencies" /MIR /E /NDL /NFL /NJH /NJS /NP /NS /NC /XF !PlgXExculdeFiles! /XD !PlgXExculdeDirectories!
 
-for /f "usebackq delims=|" %%f in (`dir /b "%PackagesPath%"`) do (
-    echo Copying Dependencie: %%f
-    robocopy "%PackagesPath%\%%f\lib" "%PlgXPath%\packages\%%f\lib" *.dll /MIR /E /NDL /NJH /NJS /NP /NS /NC /XF !PlgXExculdeFiles!
-    
+for /F "tokens=3 delims=<>" %%a in ( 'find /i "<HintPath>" ^< "%SolutionPath%\%ProjectName%\%ProjectName%.csproj"' ) do (
+    if %%~xa == .dll (
+        echo [+] %%~na%%~xa
+        FOR %%i IN ("%SolutionPath%\%ProjectName%\%%a") DO (
+            set origin=%%~dpi
+        )
+        
+        FOR %%i IN ("%PlgXPath%\%ProjectName%\%%a") DO (
+            set destination=%%~dpi
+        )
+        
+        robocopy "!origin!\" "!destination!\" "%%~na%%~xa" /MIR /NDL /NFL /NJH /NJS /NP /NS /NC /XF > nul
+    ) else (
+        echo [-] %%~na%%~xa
+    )
 )
 
 if exist "%ReleasesPath%" (
@@ -81,7 +95,7 @@ echo Compiling PlgX
 
 echo Releasing PlgX
 
-move /y PlgX.plgx "%ReleasesPath%\KeeOtp2.plgx"
+move /y PlgX.plgx "%ReleasesPath%\%SolutionName%.plgx"
 If "%arg1%" == "--visualstudiomode" (
     if exist "%ReleasesPath%\Others\TESTBUILDS" (
         echo Releases\Others\TESTBUILDS folder already exist
@@ -90,11 +104,11 @@ If "%arg1%" == "--visualstudiomode" (
         mkdir "%ReleasesPath%\Others\TESTBUILDS"
     )
     echo Copying PlgX
-    copy "%ReleasesPath%\KeeOtp2.plgx" "%ReleasesPath%\Others\TESTBUILDS\KeeOtp2-%stamp%.plgx"
-    robocopy "%ReleasesPath%" "%DebugPath%/Plugins" "KeeOtp2.plgx" /NDL /NJH /NJS /NP /NS /NC
+    copy "%ReleasesPath%\%SolutionName%.plgx" "%ReleasesPath%\Others\TESTBUILDS\%SolutionName%-%stamp%.plgx"
+    robocopy "%ReleasesPath%" "%DebugPath%/Plugins" "%SolutionName%.plgx" /NDL /NFL /NJH /NJS /NP /NS /NC
 ) ELSE (
     echo Copying PlgX
-    copy "%ReleasesPath%\KeeOtp2.plgx" "%ReleasesPath%\Others\KeeOtp2-%stamp%.plgx"
+    copy "%ReleasesPath%\%SolutionName%.plgx" "%ReleasesPath%\Others\%SolutionName%-%stamp%.plgx"
 )
 
 echo Cleaning up
