@@ -87,12 +87,6 @@ namespace KeeOtp2
             lvi.Tag = Resources.ZXingNetLICENSE;
             clv_Dependencies.Items.Add(lvi);
 
-            lvi = new ListViewItem("Microsoft.Xaml");
-            lvi.SubItems.Add("karelz & bmarshall");
-            lvi.SubItems.Add("None");
-            lvi.Tag = null;
-            clv_Dependencies.Items.Add(lvi);
-
             lvi = new ListViewItem("NHotkey");
             lvi.SubItems.Add("Thomas Levesque");
             lvi.SubItems.Add("Apache 2.0");
