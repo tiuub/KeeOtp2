@@ -20,7 +20,7 @@ namespace KeeOtp2
 
         public static void registerHotKey()
         {
-            if (handler != null)
+            if (handler != null && !KeePassLib.Native.NativeLib.IsUnix())
                 HotkeyManager.Current.AddOrReplace(HOTKEY_NAME, KeeOtp2Config.HotKeyKeys, handler);
         }
 

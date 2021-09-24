@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 using KeeOtp2.Properties;
 using KeePass.Plugins;
@@ -9,23 +10,35 @@ namespace KeeOtp2
 {
     public partial class Troubleshooting : Form
     {
-        IPluginHost host;
+        private IPluginHost host;
 
         public Troubleshooting(IPluginHost host)
         {
             InitializeComponent();
 
+            this.host = host;
+        }
+
+        private void Troubleshooting_Load(object sender, EventArgs e)
+        {
+            Point location = this.Owner.Location;
+            location.Offset(20, 20);
+            this.Location = location;
+
+            this.Icon = this.host.MainWindow.Icon;
+            this.TopMost = this.host.MainWindow.TopMost;
+
+            PluginUtils.CheckKeeTheme(this);
+        }
+
+        public void InitEx()
+        {
             pictureBoxBanner.Image = KeePass.UI.BannerFactory.CreateBanner(pictureBoxBanner.Width,
                 pictureBoxBanner.Height,
                 KeePass.UI.BannerStyle.Default,
                 Resources.help_white,
                 KeeOtp2Statics.Troubleshooting,
                 KeeOtp2Statics.TroubleshootingSubline);
-
-            this.Icon = host.MainWindow.Icon;
-            this.TopMost = host.MainWindow.TopMost;
-
-            this.host = host;
 
             groupBoxInformation.Text = KeeOtp2Statics.Information;
             labelInformation.Text = KeeOtp2Statics.TroubleshootingInformation;
@@ -49,13 +62,6 @@ namespace KeeOtp2
 
             string toolTipTroubleshootingWebsite = KeeOtp2Statics.ToolTipTroubleshootingWebsite;
             toolTip.SetToolTip(buttonTroubleshootingWebsite, toolTipTroubleshootingWebsite);
-
-        }
-
-        private void Troubleshooting_Load(object sender, EventArgs e)
-        {
-            this.Left = this.host.MainWindow.Left + 20;
-            this.Top = this.host.MainWindow.Top + 20;
         }
 
         private void buttonPingGoogle_Click(object sender, EventArgs e)
@@ -72,7 +78,8 @@ namespace KeeOtp2
         private void buttonSettings_Click(object sender, EventArgs e)
         {
             Settings settings = new Settings(this.host);
-            settings.ShowDialog();
+            settings.InitEx();
+            settings.ShowDialog(this);
 
             if (settings.DialogResult == DialogResult.OK)
                 KeeOtp2Config.loadConfig();

@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeeOtp2", "KeeOtp2\KeeOtp2.csproj", "{6239EC51-8EA1-4AEC-883F-086663F24D40}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeeOtp2.Tests", "KeeOtp2.Tests\KeeOtp2.Tests.csproj", "{DCB1C09A-E92C-413F-8927-79E96331F56B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{6239EC51-8EA1-4AEC-883F-086663F24D40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6239EC51-8EA1-4AEC-883F-086663F24D40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6239EC51-8EA1-4AEC-883F-086663F24D40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCB1C09A-E92C-413F-8927-79E96331F56B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCB1C09A-E92C-413F-8927-79E96331F56B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCB1C09A-E92C-413F-8927-79E96331F56B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCB1C09A-E92C-413F-8927-79E96331F56B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -291,6 +291,19 @@ namespace KeeOtp2
             return data;
         }
 
+        public static bool checkEntryMigratable(PwEntry entry, MigrationMode migrateMode)
+        {
+            switch (migrateMode)
+            {
+                case MigrationMode.KeeOtp1ToBuiltIn:
+                    return checkKeeOtp1Mode(entry);
+                case MigrationMode.BuiltInToKeeOtp1:
+                    return checkBuiltInMode(entry);
+                default:
+                    return false;
+            }
+        }
+
         public static PwEntry migrateToKeeOtp1String(OtpAuthData data, PwEntry entry)
         {
             NameValueCollection collection = new NameValueCollection();

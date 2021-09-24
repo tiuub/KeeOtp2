@@ -24,24 +24,36 @@ namespace KeeOtp2
         private ToolTip copyUriToolTip;
         private ToolTip reloadToolTip;
 
-        public ShowQrCode(OtpAuthData data, PwEntry entry, IPluginHost host)
+        public ShowQrCode(IPluginHost host, PwEntry entry, OtpAuthData data)
         {
             InitializeComponent();
 
+            this.host = host;
+            this.data = data;
+            this.uri = OtpAuthUtils.otpAuthDataToUri(entry, data);
+            this.entry = entry;
+        }
+
+        private void ShowQrCode_Load(object sender, EventArgs e)
+        {
+            Point location = this.Owner.Location;
+            location.Offset(20, 20);
+            this.Location = location;
+
+            this.Icon = this.host.MainWindow.Icon;
+            this.TopMost = this.host.MainWindow.TopMost;
+
+            PluginUtils.CheckKeeTheme(this);
+        }
+
+        public void InitEx()
+        {
             pictureBoxBanner.Image = KeePass.UI.BannerFactory.CreateBanner(pictureBoxBanner.Width,
                 pictureBoxBanner.Height,
                 KeePass.UI.BannerStyle.Default,
                 Resources.qr_white,
                 KeeOtp2Statics.ShowQr,
                 KeeOtp2Statics.ShowQrSubline);
-
-            this.Icon = host.MainWindow.Icon;
-            this.TopMost = host.MainWindow.TopMost;
-
-            this.data = data;
-            this.uri = OtpAuthUtils.otpAuthDataToUri(entry, data);
-            this.entry = entry;
-            this.host = host;
 
             groupBoxQRCode.Text = KeeOtp2Statics.ShowQrDisclamer;
             buttonOk.Text = KeeOtp2Statics.OK;
@@ -60,6 +72,11 @@ namespace KeeOtp2
 
             string toolTipReload = KeeOtp2Statics.ToolTipShowQrCodeReload;
             reloadToolTip.SetToolTip(buttonCopyUriReload, toolTipReload);
+
+            if (!data.Proprietary)
+                MessageBox.Show(KeeOtp2Statics.MessageBoxOtpNotProprietary, KeeOtp2Statics.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+            showQrCodeImage();
         }
 
         private void showQrCodeImage()
@@ -82,17 +99,6 @@ namespace KeeOtp2
             pictureBoxQrCode.Image = new Bitmap(result);
 
             timerFormTimeout.Start();
-        }
-
-        private void ShowQrCode_Load(object sender, EventArgs e)
-        {
-            this.Left = this.host.MainWindow.Left + 20;
-            this.Top = this.host.MainWindow.Top + 20;
-
-            if (!data.Proprietary)
-                MessageBox.Show(KeeOtp2Statics.MessageBoxOtpNotProprietary, KeeOtp2Statics.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-            showQrCodeImage();
         }
 
         private void buttonCopyUriReload_Click(object sender, EventArgs e)

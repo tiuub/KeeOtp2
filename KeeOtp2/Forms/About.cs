@@ -18,6 +18,23 @@ namespace KeeOtp2
         {
             InitializeComponent();
 
+            this.host = host;
+        }
+
+        private void About_Load(object sender, EventArgs e)
+        {
+            Point location = this.Owner.Location;
+            location.Offset(20, 20);
+            this.Location = location;
+            
+            this.Icon = this.host.MainWindow.Icon;
+            this.TopMost = this.host.MainWindow.TopMost;
+
+            PluginUtils.CheckKeeTheme(this);
+        }
+
+        public void InitEx()
+        {
             pictureBoxBanner.Image = KeePass.UI.BannerFactory.CreateBanner(pictureBoxBanner.Width,
                 pictureBoxBanner.Height,
                 KeePass.UI.BannerStyle.Default,
@@ -25,22 +42,10 @@ namespace KeeOtp2
                 KeeOtp2Statics.About,
                 KeeOtp2Statics.AboutSubline);
 
-            this.Icon = host.MainWindow.Icon;
-
-            this.host = host;
-            this.TopMost = host.MainWindow.TopMost;
-
             groupBoxDependencies.Text = KeeOtp2Statics.Dependencies;
             linkLabelGitHubRepository.Text = KeeOtp2Statics.GitHubRepository;
             linkLabelDonate.Text = KeeOtp2Statics.Doante;
             buttonOK.Text = KeeOtp2Statics.OK;
-        }
-
-        private void About_Load(object sender, EventArgs e)
-        {
-            this.Left = this.host.MainWindow.Left + 20;
-            this.Top = this.host.MainWindow.Top + 20;
-
             groupBoxAbout.Text = KeeOtp2Statics.About;
 
             Assembly assembly = Assembly.GetExecutingAssembly();

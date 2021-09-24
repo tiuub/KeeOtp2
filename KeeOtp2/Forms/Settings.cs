@@ -6,6 +6,7 @@ using KeePassLib.Collections;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -14,39 +15,12 @@ namespace KeeOtp2
     public partial class Settings : Form
     {
         private IPluginHost host;
-        private readonly BackgroundWorker backgroundWorkerMigrate;
+        private BackgroundWorker backgroundWorkerMigrate;
 
         private bool removeAfterMigration;
         private bool migrateAutoType;
         private MigrationProfile currentMigrationProfile;
         private bool encounteredForcedKeeOtp1Entries;
-
-        public enum MigrationMode
-        {
-            KeeOtp1ToBuiltIn,
-            BuiltInToKeeOtp1
-        }
-
-        public class MigrationProfile
-        {
-            public string name { get; set; }
-            public MigrationMode migrationMode { get; set; }
-            public Dictionary<OtpType, string> findPlaceholder { get; set; }
-            public Dictionary<OtpType, string> replacePlaceholder { get; set; }
-
-            public MigrationProfile(string name)
-            {
-                this.name = name;
-            }
-
-            public MigrationProfile(string name, MigrationMode migrationMode, Dictionary<OtpType, string> findPlaceholder, Dictionary<OtpType, string> replacePlaceholder)
-            {
-                this.name = name;
-                this.migrationMode = migrationMode;
-                this.findPlaceholder = findPlaceholder;
-                this.replacePlaceholder = replacePlaceholder;
-            }
-        }
 
         private Dictionary<MigrationMode, string> migrateModeString = new Dictionary<MigrationMode, string>()
         {
@@ -66,6 +40,23 @@ namespace KeeOtp2
         {
             InitializeComponent();
 
+            this.host = host;
+        }
+
+        private void Settings_Load(object sender, EventArgs e)
+        {
+            Point location = this.Owner.Location;
+            location.Offset(20, 20);
+            this.Location = location;
+
+            this.Icon = this.host.MainWindow.Icon;
+            this.TopMost = this.host.MainWindow.TopMost;
+
+            PluginUtils.CheckKeeTheme(this);
+        }
+
+        public void InitEx()
+        {
             pictureBoxBanner.Image = KeePass.UI.BannerFactory.CreateBanner(pictureBoxBanner.Width,
                 pictureBoxBanner.Height,
                 KeePass.UI.BannerStyle.Default,
@@ -73,15 +64,10 @@ namespace KeeOtp2
                 KeeOtp2Statics.Settings,
                 KeeOtp2Statics.SettingsSubline);
 
-            this.Icon = host.MainWindow.Icon;
-
-            this.host = host;
-            this.TopMost = host.MainWindow.TopMost;
-
             long timeInSeconds = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
             this.numericUpDownFixedTimeOffset.Maximum = timeInSeconds;
             this.numericUpDownFixedTimeOffset.Minimum = -timeInSeconds;
-            
+
             this.backgroundWorkerMigrate = new BackgroundWorker();
             this.backgroundWorkerMigrate.DoWork += backgroundWorkerMigrate_DoWork;
             this.backgroundWorkerMigrate.RunWorkerCompleted += backgroundWorkerMigrate_RunWorkerCompleted;
@@ -126,12 +112,6 @@ namespace KeeOtp2
             string toolTipOverrideBuiltInTime = KeeOtp2Statics.ToolTipOverrideBuiltInTime;
             toolTip.SetToolTip(labelOverrideBuiltInTime, toolTipOverrideBuiltInTime);
             toolTip.SetToolTip(checkBoxOverrideBuiltInTime, toolTipOverrideBuiltInTime);
-        }
-
-        private void Settings_Load(object sender, EventArgs e)
-        {
-            this.Left = this.host.MainWindow.Left + 20;
-            this.Top = this.host.MainWindow.Top + 20;
 
             foreach (MigrationMode migrationMode in Enum.GetValues(typeof(MigrationMode)))
             {
@@ -308,7 +288,7 @@ namespace KeeOtp2
             {
                 if (entry.ParentGroup.Uuid != RecycleBinUuid)
                 {
-                    if (checkEntryMigratable(entry, currentMigrationProfile.migrationMode))
+                    if (OtpAuthUtils.checkEntryMigratable(entry, currentMigrationProfile.migrationMode))
                     {
                         OtpAuthData data = OtpAuthUtils.loadData(entry);
                         if (data != null) {
@@ -389,19 +369,6 @@ namespace KeeOtp2
             else
                 dateTime = OtpTime.getTime();
             labelTime.Text = String.Format(KeeOtp2Statics.SettingsPreviewUtc, dateTime.ToLongTimeString());
-        }
-
-        public static bool checkEntryMigratable(PwEntry entry, MigrationMode migrateMode)
-        {
-            switch (migrateMode)
-            {
-                case MigrationMode.KeeOtp1ToBuiltIn:
-                    return OtpAuthUtils.checkKeeOtp1Mode(entry);
-                case MigrationMode.BuiltInToKeeOtp1:
-                    return OtpAuthUtils.checkBuiltInMode(entry);
-                default:
-                    return false;
-            }
         }
     }
 }

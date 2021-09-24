@@ -147,6 +147,19 @@ Dependencie | Source | NuGet | Author | License
 **NHotkey.WindowsForms** | [source](https://github.com/thomaslevesque/NHotkey) | [NuGet](https://www.nuget.org/packages/NHotkey.WindowsForms/) | [Thomas Levesque](https://github.com/thomaslevesque) | [Apache 2.0](https://github.com/tiuub/KeeOtp2/blob/master/Dependencies/NHotkey.WindowsForms/LICENSE)
 
 
+### Dependencies (KeeOtp2.Tests)
+
+Dependencie | Source | NuGet | Author | License
+--- | --- | --- | --- | ---
+**xunit** | [source](https://github.com/xunit/xunit) | [NuGet](https://www.nuget.org/packages/xunit/) | [xunit](https://github.com/xunit) | [Apache 2.0](https://github.com/xunit/xunit/blob/main/LICENSE)
+**xunit.analyzers** | [source](https://github.com/xunit/xunit.analyzers) | [NuGet](https://www.nuget.org/packages/xunit.analyzers/) | [xunit](https://github.com/xunit) | [Apache 2.0](https://github.com/xunit/xunit.analyzers/blob/main/LICENSE)
+**xunit.assert** | [source](https://github.com/xunit/xunit) | [NuGet](https://www.nuget.org/packages/xunit.assert/) | [xunit](https://github.com/xunit) | [Apache 2.0](https://github.com/xunit/xunit/blob/main/LICENSE)
+**xunit.core** | [source](https://github.com/xunit/xunit) | [NuGet](https://www.nuget.org/packages/xunit.core/) | [xunit](https://github.com/xunit) | [Apache 2.0](https://github.com/xunit/xunit/blob/main/LICENSE)
+**xunit.runner.visualstudio** | [source](https://github.com/xunit/visualstudio.xunit) | [NuGet](https://www.nuget.org/packages/xunit.runner.visualstudio/) | [xunit](https://github.com/xunit) | [Apache 2.0](https://github.com/xunit/visualstudio.xunit/blob/main/License.txt)
+**xunit.extensibility.core** | [source](https://github.com/xunit/xunit) | [NuGet](https://www.nuget.org/packages/xunit.extensibility.core/) | [xunit](https://github.com/xunit) | [Apache 2.0](https://github.com/xunit/xunit/blob/main/LICENSE)
+**xunit.extensibility.execution** | [source](https://github.com/xunit/xunit) | [NuGet](https://www.nuget.org/packages/xunit.extensibility.execution/) | [xunit](https://github.com/xunit) | [Apache 2.0](https://github.com/xunit/xunit/blob/main/LICENSE)
+
+
 ### Icons
 
 Icon | Source | Brand | Author | License

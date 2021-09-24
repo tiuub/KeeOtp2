@@ -7,13 +7,14 @@ using KeeOtp2.Properties;
 using KeePass.Plugins;
 using OtpNet;
 using ZXing;
+using KeePassLib;
 
 namespace KeeOtp2
 {
     public partial class OtpInformation : Form
     {
-        private readonly KeePassLib.PwEntry entry;
-        private readonly IPluginHost host;
+        private IPluginHost host;
+        private PwEntry entry;
         private OtpAuthData data;
 
         bool scanQRMode = true;
@@ -21,24 +22,35 @@ namespace KeeOtp2
         private Dictionary<int, int> comboBoxLengthIndexValue;
         private Dictionary<int, OtpType> comboBoxTypeIndexValue;
 
-        public OtpInformation(OtpAuthData data, KeePassLib.PwEntry entry, IPluginHost host)
+        public OtpInformation(IPluginHost host, PwEntry entry, OtpAuthData data)
         {
             InitializeComponent();
 
+            this.host = host;
+            this.entry = entry;
+            this.data = data;
+        }
+
+        private void OtpInformation_Load(object sender, EventArgs e)
+        {
+            Point location = this.Owner.Location;
+            location.Offset(20, 20);
+            this.Location = location;
+
+            this.Icon = this.host.MainWindow.Icon;
+            this.TopMost = this.host.MainWindow.TopMost;
+
+            PluginUtils.CheckKeeTheme(this);
+        }
+
+        public void InitEx()
+        {
             pictureBoxBanner.Image = KeePass.UI.BannerFactory.CreateBanner(pictureBoxBanner.Width,
                 pictureBoxBanner.Height,
                 KeePass.UI.BannerStyle.Default,
                 Resources.lock_white,
                 KeeOtp2Statics.OtpInformation,
                 KeeOtp2Statics.OtpInformationSubline);
-
-            this.Icon = host.MainWindow.Icon;
-
-            this.data = data;
-            this.entry = entry;
-            this.host = host;
-
-            this.TopMost = host.MainWindow.TopMost;
 
             groupBoxKey.Text = KeeOtp2Statics.OtpInformationKeyUri;
             linkLabelLoadUriScanQR.Text = KeeOtp2Statics.OtpInformationScanQr;
@@ -74,7 +86,7 @@ namespace KeeOtp2
             toolTip.SetToolTip(checkboxOldKeeOtp, KeeOtp2Statics.ToolTipOtpInformationUseOldKeeOtpSaveMode);
 
             comboBoxLengthIndexValue = new Dictionary<int, int>();
-            for (int i = 5; i<=10; i++)
+            for (int i = 5; i <= 10; i++)
             {
                 if (i == 6 || i == 8)
                     comboBoxLengthIndexValue[comboBoxLength.Items.Add(String.Format("{0} ({1})", i, KeeOtp2Statics.CommonAbbreviation.ToLower() + KeeOtp2Statics.InformationChar))] = i;
@@ -82,15 +94,10 @@ namespace KeeOtp2
                     comboBoxLengthIndexValue[comboBoxLength.Items.Add(i.ToString())] = i;
             }
             comboBoxTypeIndexValue = new Dictionary<int, OtpType>();
-            foreach (OtpType type in Enum.GetValues(typeof(OtpType))){
+            foreach (OtpType type in Enum.GetValues(typeof(OtpType)))
+            {
                 comboBoxTypeIndexValue[comboBoxType.Items.Add(type.ToString())] = type;
             }
-        }
-
-        private void OtpInformation_Load(object sender, EventArgs e)
-        {
-            this.Left = this.host.MainWindow.Left + 20;
-            this.Top = this.host.MainWindow.Top + 20;
         }
 
         private void OtpInformation_Shown(object sender, EventArgs e)
@@ -122,9 +129,10 @@ namespace KeeOtp2
                 }
                 
 
-                this.entry.Touch(true);
+                this.entry.Touch(true, false);
                 this.host.MainWindow.ActiveDatabase.Modified = true;
                 this.host.MainWindow.UpdateUI(false, null, false, null, false, null, true);
+                this.host.MainWindow.RefreshEntriesList();
             }
             catch (InvalidBase32FormatException ex)
             {
@@ -540,7 +548,13 @@ namespace KeeOtp2
             Bitmap bmpScreenshot;
             Graphics gfxScreenshot;
 
-            this.Hide();
+            Form p = this;
+            while (p != null)
+            {
+                p.Hide();
+                p = p.Owner;
+            }
+
             foreach (Screen sc in Screen.AllScreens)
             {
                 bmpScreenshot = new Bitmap(sc.Bounds.Width, sc.Bounds.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
@@ -552,7 +566,12 @@ namespace KeeOtp2
                         uri = new Uri(result.ToString());
             }
 
-            this.Show();
+            p = this;
+            while (p != null)
+            {
+                p.Show();
+                p = p.Owner;
+            }
 
             if (uri != null)
             {

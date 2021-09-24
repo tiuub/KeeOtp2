@@ -1,11 +1,11 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using KeeOtp2.Properties;
+﻿using KeeOtp2.Properties;
 using KeePass.Plugins;
 using KeePass.Util;
+using KeePassLib;
 using KeePassLib.Security;
-using OtpNet;
+using System;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace KeeOtp2
 {
@@ -13,8 +13,8 @@ namespace KeeOtp2
     {
         const int reloadDataDelay = 1; // in seconds
 
-        private readonly KeePassLib.PwEntry entry;
-        private readonly IPluginHost host;
+        private IPluginHost host;
+        private PwEntry entry;
         private OtpBase otp;
 
         private OtpAuthData data;
@@ -22,22 +22,34 @@ namespace KeeOtp2
         private bool increaseHotpAfterClosing = false;
         private int reloadCount = 0;
 
-        public ShowOneTimePasswords(KeePassLib.PwEntry entry, IPluginHost host)
+        public ShowOneTimePasswords(IPluginHost host, PwEntry entry)
         {
             InitializeComponent();
 
+            this.host = host;
+            this.entry = entry;
+        }
+
+        private void ShowOneTimePasswords_Load(object sender, EventArgs e)
+        {
+            Point location = this.Owner.Location;
+            location.Offset(20, 20);
+            this.Location = location;
+
+            this.Icon = this.host.MainWindow.Icon;
+            this.TopMost = this.host.MainWindow.TopMost;
+
+            PluginUtils.CheckKeeTheme(this);
+        }
+
+        public void InitEx()
+        {
             pictureBoxBanner.Image = KeePass.UI.BannerFactory.CreateBanner(pictureBoxBanner.Width,
                 pictureBoxBanner.Height,
                 KeePass.UI.BannerStyle.Default,
                 Resources.clock_white,
                 KeeOtp2Statics.ShowOtp,
                 KeeOtp2Statics.ShowOtpSubline);
-
-            this.Icon = host.MainWindow.Icon;
-            this.TopMost = host.MainWindow.TopMost;
-
-            this.host = host;
-            this.entry = entry;
 
             groupboxTotp.Text = KeeOtp2Statics.TOTP;
             linkLabelIncorrectNext.Text = KeeOtp2Statics.ShowOtpIncorrect;
@@ -50,12 +62,6 @@ namespace KeeOtp2
             toolTip.ToolTipTitle = KeeOtp2Statics.ShowOtp;
             toolTip.IsBalloon = true;
             toolTip.SetToolTip(buttonShowQR, KeeOtp2Statics.ToolTipShowQrCode);
-        }
-
-        private void ShowOneTimePasswords_Load(object sender, EventArgs e)
-        {
-            this.Left = this.host.MainWindow.Left + 20;
-            this.Top = this.host.MainWindow.Top + 20;
         }
 
         private void ShowOneTimePasswords_Shown(object sender, EventArgs e)
@@ -74,7 +80,8 @@ namespace KeeOtp2
             if (data.Type == OtpType.Totp || data.Type == OtpType.Steam)
             {
                 Troubleshooting troubleshooting = new Troubleshooting(this.host);
-                troubleshooting.ShowDialog();
+                troubleshooting.InitEx();
+                troubleshooting.ShowDialog(this.host.MainWindow);
             }
             else if (data.Type == OtpType.Hotp)
             {
@@ -92,8 +99,9 @@ namespace KeeOtp2
         {
             if (this.data.Encoding == OtpSecretEncoding.Base32)
             {
-                ShowQrCode sqc = new ShowQrCode(this.data, this.entry, this.host);
-                sqc.ShowDialog();
+                ShowQrCode sqc = new ShowQrCode(this.host, this.entry, this.data);
+                sqc.InitEx();
+                sqc.ShowDialog(this);
             }
             else
             {
@@ -124,9 +132,10 @@ namespace KeeOtp2
             this.labelOtp.Text = insertSpaceInMiddle("000000");
             this.otp = null;
 
-            OtpInformation addEditForm = new OtpInformation(this.data, this.entry, this.host);
+            OtpInformation addEditForm = new OtpInformation(this.host, this.entry, this.data);
+            addEditForm.InitEx();
 
-            var result = addEditForm.ShowDialog();
+            var result = addEditForm.ShowDialog(this);
             if (result == DialogResult.OK)
             {
                 this.data = OtpAuthUtils.loadData(this.entry);

@@ -185,8 +185,9 @@ namespace KeeOtp2
             if (GetSelectedSingleEntry(out entry))
             {
                 OtpAuthData data = OtpAuthUtils.loadData(entry);
-                OtpInformation addEditForm = new OtpInformation(data, entry, host);
-                addEditForm.ShowDialog();
+                OtpInformation addEditForm = new OtpInformation(this.host, entry, data);
+                addEditForm.InitEx();
+                addEditForm.ShowDialog(this.host.MainWindow);
             }
         }
 
@@ -195,8 +196,9 @@ namespace KeeOtp2
             PwEntry entry;
             if (GetSelectedSingleEntry(out entry))
             {
-                ShowOneTimePasswords form = new ShowOneTimePasswords(entry, host);
-                form.ShowDialog();
+                ShowOneTimePasswords sotp = new ShowOneTimePasswords(this.host, entry);
+                sotp.InitEx();
+                sotp.ShowDialog(this.host.MainWindow);
             }
         }
 
@@ -210,8 +212,9 @@ namespace KeeOtp2
                 {
                     if (MessageBox.Show(KeeOtp2Statics.MessageBoxOtpNotConfigured, KeeOtp2Statics.PluginName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
-                        ShowOneTimePasswords form = new ShowOneTimePasswords(entry, host);
-                        form.ShowDialog();
+                        ShowOneTimePasswords sotp = new ShowOneTimePasswords(this.host, entry);
+                        sotp.InitEx();
+                        sotp.ShowDialog(this.host.MainWindow);
                     }
                 }
                 else
@@ -235,7 +238,8 @@ namespace KeeOtp2
         private void settingsToolStripitem_Click(object sender, EventArgs e)
         {
             Settings settings = new Settings(this.host);
-            settings.ShowDialog();
+            settings.InitEx();
+            settings.ShowDialog(this.host.MainWindow);
 
             if (settings.DialogResult == DialogResult.OK)
             {
@@ -247,7 +251,8 @@ namespace KeeOtp2
         private void aboutToolStripitem_Click(object sender, EventArgs e)
         {
             About about = new About(this.host);
-            about.ShowDialog();
+            about.InitEx();
+            about.ShowDialog(this.host.MainWindow);
         }
 
         private bool GetSelectedSingleEntry(out PwEntry entry)

@@ -110,10 +110,12 @@
     <Compile Include="OtpAuthData.cs" />
     <Compile Include="OtpAuthExceptions.cs" />
     <Compile Include="OtpAuthUtils.cs" />
+    <Compile Include="OtpMigration.cs" />
     <Compile Include="OtpSecretEncoding.cs" />
     <Compile Include="OtpTime.cs" />
     <Compile Include="OtpBase.cs" />
     <Compile Include="OtpType.cs" />
+    <Compile Include="PluginUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
