@@ -83,6 +83,12 @@ namespace KeeOtp2
         public static readonly string SettingsUseGlobalHotkey = "Use global Hotkey";
         public static readonly string SettingsHotKeySequence = "HotKey Sequence";
         public static readonly string SettingsGlobalHotKey = "Global HotKey";
+        public static readonly string SettingsContextMenu = "Right-Click Context Menu (changes apply after restart)";
+        public static readonly string SettingsCopyTotpShortcut = "Copy TOTP shourtcut";
+        public static readonly string SettingsShowCopyTotp = "Show \"Copy TOTP\"";
+        public static readonly string SettingsTotpToClipboard = "TOTP to clipboard";
+        public static readonly string SettingsUseLocalHotkey = "Use local Hotkey";
+        public static readonly string SettingsLocalHotKey = "Local Hotkey";
         public static readonly string SettingsUseSystemTime = "Use time of system";
         public static readonly string SettingsPreviewUtc = "Preview (Utc): {0}";
         public static readonly string SettingsFixedTimeOffset = "Fixed time offset (sec.)";
@@ -129,6 +135,7 @@ namespace KeeOtp2
         public static readonly string MessageBoxSelectedMultipleEntries = "Please select only one entry";
         public static readonly string MessageBoxOtpNotConfigured = "Must configure TOTP on this entry. Do you want to do this now?";
         public static readonly string MessageBoxOtpNotProprietary = "Your configuration for your OTP is not proprietary. This might rise up some issues, while sharing this configuration with the uri or the qr code.\n\nPlease remember this, if you run into issues.\n\nPress OK to continue.";
+        public static readonly string MessageBoxSettingsRestartNotification = "You have changed some settings which require a restart of KeePass.\n\nPlease restart KeePass, if you want to use these features.";
         
 
         public static readonly string ToolStripMenuConfigure = "Configure TOTP";
@@ -140,6 +147,7 @@ namespace KeeOtp2
         public static readonly string ToolTipHotKeySequence = "Click inside the box to change the sequence!";
         public static readonly string ToolTipHotKeyCombination = "Click inside the box to change tho combination!";
         public static readonly string ToolTipHotKeyNotAvailable = "HotKeys are currently not supported on your system! They are only supported on Windows right now!";
+        public static readonly string ToolTipContextMenuItem = "This will give you a shortcut to copy the current TOTP to your clipboard. You can access it, by right-clicking on a entry.";
         public static readonly string ToolTipOverrideBuiltInTime = "If set true, this plugin will generate the TOTP even if\n{TIMEOTP} placeholder is set. This will be only done\nwhen using a time offset or a custom NTP server!";
         public static readonly string ToolTipOtpInformationUseCustomSettings = "You should only modify these settings, if you know what you are doing.\nIn the most cases, these settings are not needed to change.";
         public static readonly string ToolTipOtpInformationUseOldKeeOtpSaveMode = "This setting is here to guarantee the compatability to older versions of KeeOtp.\nIt indicates whether you are using the old KeeOtp save mode or the new one.";

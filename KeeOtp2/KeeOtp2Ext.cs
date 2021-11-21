@@ -70,13 +70,19 @@ namespace KeeOtp2
             this.EntryContextMenuMainItem.DropDownItems.Add(this.EntryContextMenuShowOtpSubItem);
             this.EntryContextMenuMainItem.DropDownItems.Add(this.EntryContextMenuConfigureSubItem);
 
-            this.EntryContextMenuCopyItem = new ToolStripMenuItem(KeeOtp2Statics.ToolStripMenuCopyOtp);
-            this.EntryContextMenuCopyItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
-            this.EntryContextMenuCopyItem.Click += otpCopyToolStripItem_Click;
-            this.EntryContextMenuCopyItem.ShortcutKeys = Keys.T | Keys.Control;
+            if (KeeOtp2Config.ShowContextMenuItem)
+            {
+                this.EntryContextMenuCopyItem = new ToolStripMenuItem(KeeOtp2Statics.ToolStripMenuCopyOtp);
+                this.EntryContextMenuCopyItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
+                this.EntryContextMenuCopyItem.Click += otpCopyToolStripItem_Click;
+                if (KeeOtp2Config.UseLocalHotKey && KeeOtp2Config.LocalHotKeyKeys != Keys.None)
+                {
+                    this.EntryContextMenuCopyItem.ShortcutKeys = KeeOtp2Config.LocalHotKeyKeys;
+                }
+                host.MainWindow.EntryContextMenu.Items.Insert(2, this.EntryContextMenuCopyItem);
+            }
 
 
-            host.MainWindow.EntryContextMenu.Items.Insert(2, this.EntryContextMenuCopyItem);
             host.MainWindow.EntryContextMenu.Items.Add(this.EntryContextMenuMainItem);
             host.MainWindow.EntryContextMenu.Opening += entryContextMenu_Opening;
 
@@ -174,7 +180,10 @@ namespace KeeOtp2
                 this.EntryContextMenuCopySubItem.Enabled = configured;
                 this.EntryContextMenuShowOtpSubItem.Enabled = configured;
             }
-            this.EntryContextMenuCopyItem.Enabled =
+            if (this.EntryContextMenuCopyItem != null)
+            {
+                this.EntryContextMenuCopyItem.Enabled = selectedOne;
+            }
             this.EntryContextMenuMainItem.Enabled =
             this.EntryContextMenuConfigureSubItem.Enabled =
             this.EntryContextMenuCopySubItem.Enabled = 
@@ -222,7 +231,7 @@ namespace KeeOtp2
                 else
                 {
                     OtpBase otp = OtpAuthUtils.getOtp(data);
-                    if (data.Type == OtpType.Totp)
+                    if (data.Type == OtpType.Totp || data.Type == OtpType.Steam)
                     {
                         if (ClipboardUtil.CopyAndMinimize(new ProtectedString(true, otp.getTotpString(OtpTime.getTime())), true, this.host.MainWindow, entry, this.host.Database))
                             this.host.MainWindow.StartClipboardCountdown();

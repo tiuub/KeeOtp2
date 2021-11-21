@@ -55,11 +55,19 @@
             this.radioButtonFixedTimeOffset = new System.Windows.Forms.RadioButton();
             this.radioButtonSystemTime = new System.Windows.Forms.RadioButton();
             this.timerClock = new System.Windows.Forms.Timer(this.components);
+            this.groupBoxContextMenu = new System.Windows.Forms.GroupBox();
+            this.labelShowContextMenuItem = new System.Windows.Forms.Label();
+            this.checkBoxShowContextMenuItem = new System.Windows.Forms.CheckBox();
+            this.labelUseLocalHotkey = new System.Windows.Forms.Label();
+            this.hotKeyControlExLocalHotkey = new KeePass.UI.HotKeyControlEx();
+            this.labelLocalHotkey = new System.Windows.Forms.Label();
+            this.checkBoxUseLocalHotkey = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBanner)).BeginInit();
             this.groupBoxMigration.SuspendLayout();
             this.groupBoxHotkey.SuspendLayout();
             this.groupBoxTime.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedTimeOffset)).BeginInit();
+            this.groupBoxContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBoxBanner
@@ -91,15 +99,15 @@
             this.comboBoxMigrate.FormattingEnabled = true;
             this.comboBoxMigrate.Location = new System.Drawing.Point(147, 16);
             this.comboBoxMigrate.Name = "comboBoxMigrate";
-            this.comboBoxMigrate.Size = new System.Drawing.Size(114, 21);
+            this.comboBoxMigrate.Size = new System.Drawing.Size(107, 21);
             this.comboBoxMigrate.TabIndex = 8;
             // 
             // buttonMigrate
             // 
             this.buttonMigrate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonMigrate.Location = new System.Drawing.Point(267, 15);
+            this.buttonMigrate.Location = new System.Drawing.Point(260, 15);
             this.buttonMigrate.Name = "buttonMigrate";
-            this.buttonMigrate.Size = new System.Drawing.Size(30, 23);
+            this.buttonMigrate.Size = new System.Drawing.Size(37, 23);
             this.buttonMigrate.TabIndex = 3;
             this.buttonMigrate.Text = "OK";
             this.buttonMigrate.UseVisualStyleBackColor = true;
@@ -118,7 +126,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(159, 341);
+            this.buttonOK.Location = new System.Drawing.Point(159, 445);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 3;
@@ -129,7 +137,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(240, 341);
+            this.buttonCancel.Location = new System.Drawing.Point(240, 445);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 4;
@@ -141,7 +149,7 @@
             this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStatus.AutoSize = true;
             this.labelStatus.Enabled = false;
-            this.labelStatus.Location = new System.Drawing.Point(9, 346);
+            this.labelStatus.Location = new System.Drawing.Point(9, 450);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(141, 13);
             this.labelStatus.TabIndex = 5;
@@ -234,7 +242,7 @@
             this.groupBoxTime.Controls.Add(this.radioButtonCustomNtpServer);
             this.groupBoxTime.Controls.Add(this.radioButtonFixedTimeOffset);
             this.groupBoxTime.Controls.Add(this.radioButtonSystemTime);
-            this.groupBoxTime.Location = new System.Drawing.Point(12, 215);
+            this.groupBoxTime.Location = new System.Drawing.Point(12, 319);
             this.groupBoxTime.Name = "groupBoxTime";
             this.groupBoxTime.Size = new System.Drawing.Size(303, 120);
             this.groupBoxTime.TabIndex = 8;
@@ -347,11 +355,88 @@
             // 
             this.timerClock.Tick += new System.EventHandler(this.timerClock_Tick);
             // 
+            // groupBoxContextMenu
+            // 
+            this.groupBoxContextMenu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxContextMenu.Controls.Add(this.labelShowContextMenuItem);
+            this.groupBoxContextMenu.Controls.Add(this.checkBoxShowContextMenuItem);
+            this.groupBoxContextMenu.Controls.Add(this.labelUseLocalHotkey);
+            this.groupBoxContextMenu.Controls.Add(this.hotKeyControlExLocalHotkey);
+            this.groupBoxContextMenu.Controls.Add(this.labelLocalHotkey);
+            this.groupBoxContextMenu.Controls.Add(this.checkBoxUseLocalHotkey);
+            this.groupBoxContextMenu.Location = new System.Drawing.Point(12, 215);
+            this.groupBoxContextMenu.Name = "groupBoxContextMenu";
+            this.groupBoxContextMenu.Size = new System.Drawing.Size(303, 98);
+            this.groupBoxContextMenu.TabIndex = 8;
+            this.groupBoxContextMenu.TabStop = false;
+            this.groupBoxContextMenu.Text = "Context Menu (changes apply after restart)";
+            // 
+            // labelShowContextMenuItem
+            // 
+            this.labelShowContextMenuItem.AutoSize = true;
+            this.labelShowContextMenuItem.Location = new System.Drawing.Point(6, 20);
+            this.labelShowContextMenuItem.Name = "labelShowContextMenuItem";
+            this.labelShowContextMenuItem.Size = new System.Drawing.Size(111, 13);
+            this.labelShowContextMenuItem.TabIndex = 6;
+            this.labelShowContextMenuItem.Text = "Copy TOTP shortcut*:";
+            // 
+            // checkBoxShowContextMenuItem
+            // 
+            this.checkBoxShowContextMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxShowContextMenuItem.AutoSize = true;
+            this.checkBoxShowContextMenuItem.Location = new System.Drawing.Point(147, 19);
+            this.checkBoxShowContextMenuItem.Name = "checkBoxShowContextMenuItem";
+            this.checkBoxShowContextMenuItem.Size = new System.Drawing.Size(122, 17);
+            this.checkBoxShowContextMenuItem.TabIndex = 5;
+            this.checkBoxShowContextMenuItem.Text = "Show \"Copy TOTP\"";
+            this.checkBoxShowContextMenuItem.UseVisualStyleBackColor = true;
+            this.checkBoxShowContextMenuItem.CheckedChanged += new System.EventHandler(this.checkBoxShowCopyTotp_CheckedChanged);
+            // 
+            // labelUseLocalHotkey
+            // 
+            this.labelUseLocalHotkey.AutoSize = true;
+            this.labelUseLocalHotkey.Location = new System.Drawing.Point(6, 45);
+            this.labelUseLocalHotkey.Name = "labelUseLocalHotkey";
+            this.labelUseLocalHotkey.Size = new System.Drawing.Size(101, 13);
+            this.labelUseLocalHotkey.TabIndex = 4;
+            this.labelUseLocalHotkey.Text = "TOTP to clipboard*:";
+            // 
+            // hotKeyControlExLocalHotkey
+            // 
+            this.hotKeyControlExLocalHotkey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.hotKeyControlExLocalHotkey.Location = new System.Drawing.Point(147, 67);
+            this.hotKeyControlExLocalHotkey.Name = "hotKeyControlExLocalHotkey";
+            this.hotKeyControlExLocalHotkey.Size = new System.Drawing.Size(150, 20);
+            this.hotKeyControlExLocalHotkey.TabIndex = 3;
+            // 
+            // labelLocalHotkey
+            // 
+            this.labelLocalHotkey.AutoSize = true;
+            this.labelLocalHotkey.Location = new System.Drawing.Point(6, 70);
+            this.labelLocalHotkey.Name = "labelLocalHotkey";
+            this.labelLocalHotkey.Size = new System.Drawing.Size(78, 13);
+            this.labelLocalHotkey.TabIndex = 2;
+            this.labelLocalHotkey.Text = "Local HotKey*:";
+            // 
+            // checkBoxUseLocalHotkey
+            // 
+            this.checkBoxUseLocalHotkey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxUseLocalHotkey.AutoSize = true;
+            this.checkBoxUseLocalHotkey.Location = new System.Drawing.Point(147, 44);
+            this.checkBoxUseLocalHotkey.Name = "checkBoxUseLocalHotkey";
+            this.checkBoxUseLocalHotkey.Size = new System.Drawing.Size(107, 17);
+            this.checkBoxUseLocalHotkey.TabIndex = 1;
+            this.checkBoxUseLocalHotkey.Text = "Use local Hotkey";
+            this.checkBoxUseLocalHotkey.UseVisualStyleBackColor = true;
+            this.checkBoxUseLocalHotkey.CheckedChanged += new System.EventHandler(this.checkBoxUseLocalHotkey_CheckedChanged);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(327, 372);
+            this.ClientSize = new System.Drawing.Size(327, 476);
+            this.Controls.Add(this.groupBoxContextMenu);
             this.Controls.Add(this.groupBoxTime);
             this.Controls.Add(this.groupBoxHotkey);
             this.Controls.Add(this.labelStatus);
@@ -374,6 +459,8 @@
             this.groupBoxTime.ResumeLayout(false);
             this.groupBoxTime.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedTimeOffset)).EndInit();
+            this.groupBoxContextMenu.ResumeLayout(false);
+            this.groupBoxContextMenu.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -407,5 +494,12 @@
         private System.Windows.Forms.Button buttonCustomNTPServerOK;
         private System.Windows.Forms.CheckBox checkBoxOverrideBuiltInTime;
         private System.Windows.Forms.Label labelOverrideBuiltInTime;
+        private System.Windows.Forms.GroupBox groupBoxContextMenu;
+        private System.Windows.Forms.Label labelShowContextMenuItem;
+        private System.Windows.Forms.CheckBox checkBoxShowContextMenuItem;
+        private System.Windows.Forms.Label labelUseLocalHotkey;
+        private KeePass.UI.HotKeyControlEx hotKeyControlExLocalHotkey;
+        private System.Windows.Forms.Label labelLocalHotkey;
+        private System.Windows.Forms.CheckBox checkBoxUseLocalHotkey;
     }
 }

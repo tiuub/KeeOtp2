@@ -76,11 +76,20 @@ namespace KeeOtp2
             groupBoxMigration.Text = KeeOtp2Statics.Migration;
             labelMigrateButton.Text = KeeOtp2Statics.OtpInformationMigrate + KeeOtp2Statics.InformationChar + KeeOtp2Statics.SelectorChar;
             buttonMigrate.Text = KeeOtp2Statics.OK;
+
             groupBoxHotkey.Text = KeeOtp2Statics.HotKey;
             labelUseHotKey.Text = KeeOtp2Statics.SettingsTOTPGlobalAutoType + KeeOtp2Statics.SelectorChar;
             checkBoxUseHotkey.Text = KeeOtp2Statics.SettingsUseGlobalHotkey;
             labelHotKeySequence.Text = KeeOtp2Statics.SettingsHotKeySequence + KeeOtp2Statics.InformationChar + KeeOtp2Statics.SelectorChar;
             labelGlobalHotkey.Text = KeeOtp2Statics.SettingsGlobalHotKey + KeeOtp2Statics.SelectorChar;
+
+            groupBoxContextMenu.Text = KeeOtp2Statics.SettingsContextMenu;
+            labelShowContextMenuItem.Text = KeeOtp2Statics.SettingsCopyTotpShortcut + KeeOtp2Statics.InformationChar + KeeOtp2Statics.SelectorChar;
+            checkBoxShowContextMenuItem.Text = KeeOtp2Statics.SettingsShowCopyTotp;
+            labelUseLocalHotkey.Text = KeeOtp2Statics.SettingsTotpToClipboard + KeeOtp2Statics.SelectorChar;
+            checkBoxUseLocalHotkey.Text = KeeOtp2Statics.SettingsUseLocalHotkey;
+            labelLocalHotkey.Text = KeeOtp2Statics.SettingsLocalHotKey + KeeOtp2Statics.SelectorChar;
+
             groupBoxTime.Text = KeeOtp2Statics.GlobalTime + KeeOtp2Statics.InformationChar + KeeOtp2Statics.SelectorChar;
             radioButtonSystemTime.Text = KeeOtp2Statics.SettingsUseSystemTime;
             labelTime.Text = String.Format(KeeOtp2Statics.SettingsPreviewUtc, "00:00:00");
@@ -109,6 +118,10 @@ namespace KeeOtp2
             string toolTipHotKeyCombination = KeeOtp2Statics.ToolTipHotKeyCombination;
             toolTip.SetToolTip(labelGlobalHotkey, toolTipHotKeyCombination);
             toolTip.SetToolTip(hotKeyControlExGlobalHotkey, toolTipHotKeyCombination);
+
+            string toolTipContextMenuItem = KeeOtp2Statics.ToolTipContextMenuItem;
+            toolTip.SetToolTip(labelShowContextMenuItem, toolTipContextMenuItem);
+            toolTip.SetToolTip(checkBoxShowContextMenuItem, toolTipContextMenuItem);
 
             string toolTipOverrideBuiltInTime = KeeOtp2Statics.ToolTipOverrideBuiltInTime;
             toolTip.SetToolTip(labelOverrideBuiltInTime, toolTipOverrideBuiltInTime);
@@ -159,6 +172,31 @@ namespace KeeOtp2
                 hotKeyControlExGlobalHotkey.Enabled = false;
             }
 
+            if (KeeOtp2Config.ShowContextMenuItem)
+            {
+                checkBoxShowContextMenuItem.Checked = true;
+                checkBoxUseLocalHotkey.Enabled = true;
+                hotKey = KeeOtp2Config.LocalHotKeyKeys;
+                hotKeyControlExLocalHotkey.HotKey = hotKey;
+                if (KeeOtp2Config.UseHotKey && hotKey != Keys.None)
+                {
+                    checkBoxUseLocalHotkey.Checked = true;
+                    hotKeyControlExLocalHotkey.Enabled = true;
+                }
+                else
+                {
+                    checkBoxUseLocalHotkey.Checked = false;
+                    hotKeyControlExLocalHotkey.Enabled = false;
+                }
+            }
+            else
+            {
+                checkBoxShowContextMenuItem.Checked = false;
+                checkBoxUseLocalHotkey.Enabled = false;
+                hotKeyControlExLocalHotkey.Enabled = false;
+            }
+
+
             radioButtonSystemTime.Checked =
                 radioButtonFixedTimeOffset.Checked =
                 numericUpDownFixedTimeOffset.Enabled =
@@ -194,9 +232,18 @@ namespace KeeOtp2
 
             if (this.DialogResult == DialogResult.OK)
             {
+                bool showRestartMessageBox = false;
+
                 KeeOtp2Config.UseHotKey = checkBoxUseHotkey.Checked;
                 KeeOtp2Config.HotKeySequence = textBoxHotKeySequence.Text;
                 KeeOtp2Config.HotKeyKeys = hotKeyControlExGlobalHotkey.HotKey;
+
+                showRestartMessageBox |= KeeOtp2Config.ShowContextMenuItem != checkBoxShowContextMenuItem.Checked;
+                KeeOtp2Config.ShowContextMenuItem = checkBoxShowContextMenuItem.Checked;
+                showRestartMessageBox |= KeeOtp2Config.UseLocalHotKey != checkBoxUseLocalHotkey.Checked;
+                KeeOtp2Config.UseLocalHotKey = checkBoxUseLocalHotkey.Checked;
+                showRestartMessageBox |= KeeOtp2Config.LocalHotKeyKeys != hotKeyControlExLocalHotkey.HotKey;
+                KeeOtp2Config.LocalHotKeyKeys = hotKeyControlExLocalHotkey.HotKey;
 
                 if (radioButtonSystemTime.Checked)
                     KeeOtp2Config.TimeType = OtpTimeType.SystemTime;
@@ -212,6 +259,8 @@ namespace KeeOtp2
                     KeeOtp2Config.CustomNTPServer = textBoxCustomNTPServerAddress.Text;
                     KeeOtp2Config.OverrideBuiltInTime = checkBoxOverrideBuiltInTime.Checked;
                 }
+
+                MessageBox.Show(KeeOtp2Statics.MessageBoxSettingsRestartNotification, KeeOtp2Statics.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -259,6 +308,16 @@ namespace KeeOtp2
         {
             hotKeyControlExGlobalHotkey.Enabled =
                 textBoxHotKeySequence.Enabled = checkBoxUseHotkey.Checked;
+        }
+
+        private void checkBoxShowCopyTotp_CheckedChanged(object sender, EventArgs e)
+        {
+            checkBoxUseLocalHotkey.Enabled = checkBoxShowContextMenuItem.Checked;
+        }
+
+        private void checkBoxUseLocalHotkey_CheckedChanged(object sender, EventArgs e)
+        {
+            hotKeyControlExLocalHotkey.Enabled = (checkBoxShowContextMenuItem.Checked && checkBoxUseLocalHotkey.Checked);
         }
 
         private void radioButtonsTime_CheckedChanged(object sender, EventArgs e)

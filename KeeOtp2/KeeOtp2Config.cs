@@ -39,6 +39,9 @@ namespace KeeOtp2
         private const String PATH_USE_HOTKEY = PATH_PLUGINNAME + ".UseHotKey";
         private const String PATH_HOTKEY_SEQUENCE = PATH_PLUGINNAME + ".HotKeySequence";
         private const String PATH_HOTKEY_KEYS = PATH_PLUGINNAME + ".HotKeyKeys";
+        private const String PATH_SHOW_CONTEXT_MENU_ITEM = PATH_PLUGINNAME + ".ShowContextMenuItem";
+        private const String PATH_USE_LOCAL_HOTKEY = PATH_PLUGINNAME + ".UseLocalHotKey";
+        private const String PATH_LOCAL_HOTKEY_KEYS = PATH_PLUGINNAME + ".LocalHotKeyKeys";
 
         private const String PATH_TIME_TYPE = PATH_PLUGINNAME + ".TimeType";
         private const String PATH_FIXED_TIME_OFFSET = PATH_PLUGINNAME + ".FixedTimeOffset";
@@ -80,6 +83,42 @@ namespace KeeOtp2
             set
             {
                 Program.Config.CustomConfig.SetString(PATH_HOTKEY_KEYS, value.ToString());
+            }
+        }
+
+        internal static bool ShowContextMenuItem
+        {
+            get
+            {
+                return Program.Config.CustomConfig.GetBool(PATH_SHOW_CONTEXT_MENU_ITEM, true);
+            }
+            set
+            {
+                Program.Config.CustomConfig.SetBool(PATH_SHOW_CONTEXT_MENU_ITEM, value);
+            }
+        }
+
+        internal static bool UseLocalHotKey
+        {
+            get
+            {
+                return Program.Config.CustomConfig.GetBool(PATH_USE_LOCAL_HOTKEY, true);
+            }
+            set
+            {
+                Program.Config.CustomConfig.SetBool(PATH_USE_LOCAL_HOTKEY, value);
+            }
+        }
+
+        internal static Keys LocalHotKeyKeys
+        {
+            get
+            {
+                return (Keys)Enum.Parse(typeof(Keys), Program.Config.CustomConfig.GetString(PATH_LOCAL_HOTKEY_KEYS, (Keys.Control | Keys.T).ToString()));
+            }
+            set
+            {
+                Program.Config.CustomConfig.SetString(PATH_LOCAL_HOTKEY_KEYS, value.ToString());
             }
         }
 
