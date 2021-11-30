@@ -36,4 +36,11 @@ namespace KeeOtp2
         public InvalidOtpConfiguration() { }
         public InvalidOtpConfiguration(string message) : base(message) { }
     }
+
+    [Serializable]
+    public class CouldNotFindValidUri : Exception
+    {
+        public CouldNotFindValidUri() { }
+        public CouldNotFindValidUri(string message) : base(message) { }
+    }
 }

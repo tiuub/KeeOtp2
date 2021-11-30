@@ -559,7 +559,15 @@ namespace KeeOtp2
                 bmpScreenshot = new Bitmap(sc.Bounds.Width, sc.Bounds.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                 gfxScreenshot = Graphics.FromImage(bmpScreenshot);
                 gfxScreenshot.CopyFromScreen(sc.Bounds.X, sc.Bounds.Y, 0, 0, sc.Bounds.Size, CopyPixelOperation.SourceCopy);
-                uri = OtpAuthUtils.bitmapToUri(bmpScreenshot);
+                try
+                {
+                    uri = OtpAuthUtils.bitmapToUri(bmpScreenshot);
+                    if (uri != null)
+                    {
+                        break;
+                    }
+                }
+                catch (CouldNotFindValidUri) { }              
             }
 
             p = this;

@@ -585,7 +585,7 @@ namespace KeeOtp2
                         return uri;
                 }
             }
-            return null;
+            throw new CouldNotFindValidUri("Could not find any fitting QR Code on screen!");
         }
 
         public static OtpBase getOtp(OtpAuthData data)
