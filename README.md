@@ -12,7 +12,7 @@ KeeOtp2 is a plugin for [KeePass](http://keepass.info). It provides a form to di
 
 ## Installation
 
- - Download the latest release [here](https://github.com/tiuub/KeeOtp2/releases/latest)
+ - Download the latest release [here](https://github.com/tiuub/KeeOtp2/releases/latest).
  - Copy the KeeOtp2.plgx in the KeePass plugins directory and restart the application.
 
 ### Alternative Installation
@@ -25,7 +25,7 @@ KeeOtp2 is a plugin for [KeePass](http://keepass.info). It provides a form to di
 
 ### Configure TOTP
 
-Rightclick on a entry, click on **KeeOtp2** and press **Configure TOTP**.
+Right-click an entry, click on **KeeOtp2** and press **Configure TOTP**.
 
 This will open the configuration window.
 
@@ -33,7 +33,7 @@ This will open the configuration window.
 
 Enter the key you have received and press **OK**.
 
-Now you can see the TOTP by rightclicking an entry, hovering on **KeeOtp2** and clicking **Show TOTP**.
+Now you can see the TOTP by right-clicking an entry, hovering on **KeeOtp2** and clicking **Show TOTP**.
 
 
 
@@ -48,17 +48,17 @@ There you can migrate all of your entries to KeeOtp2/Built-In OTP by selecting y
 
 ### Another way to migrate
 
-Just right click any entry in your database and click on **Timed One Time Password**.
+Just right-click any entry in your database and click on **Timed One Time Password**.
 
-Rightclick on an entry, hover **KeeOtp2** and click **Configure TOTP**. When the configuration window is opened, click on **Migrate to Built-In** (blue label) in the upper half.
+Right-click an entry, hover **KeeOtp2** and click **Configure TOTP**. When the configuration window is opened, click on **Migrate to Built-In** (blue label) in the upper half.
 
 
 
 ## Auto-Type
 
 
-### HotKey
-Default HotKey: **CTRL + ALT + T**
+### Hotkey
+Default Hotkey: **CTRL + ALT + T**
 
 You can set a global hotkey to auto-type your TOTP.
 Therefore you have to click on **Tools**, navigate to **KeeOtp2** and press **Settings**.
@@ -74,7 +74,7 @@ Placeholder | Usage
 **{TOTP}** | Was used by KeeOtp(1) *(Deprecated)*
 **{TIMEOTP}** | Can be used with KeeOtp2 and built-in TOTP *(Recommended)*
 
-Still you can use **{TOTP}**, but its rather recommended to use the built-in placeholder **{TIMEOTP}**.
+Still you can use **{TOTP}**, but it's rather recommended to use the built-in placeholder **{TIMEOTP}**.
 
 
 
@@ -94,11 +94,11 @@ Setting | Description
 
 ## Sharing OTP Configuration
 
-You can either share your OTP configuration with an uri string (otpauth://...) or with an QR code.
+You can either share your OTP configuration with a URI string (otpauth://...) or with a QR code.
 
-Therefore you have to rightclick the target entry, hover on **KeeOtp2**, click on **Show TOTP** and click on **Show QR**.
+Therefore you have to right-click the target entry, hover on **KeeOtp2**, click on **Show TOTP** and click on **Show QR**.
 
-Then you can scan the shown QR code or click on **Copy URI** to copy the uri string to your clipboard.
+Then you can scan the shown QR code or click on **Copy URI** to copy the URI string to your clipboard.
 
 
 
@@ -107,10 +107,10 @@ Then you can scan the shown QR code or click on **Copy URI** to copy the uri str
 Sometimes the generation of TOTPs will fail. The most common failure is a wrong system time.
 
 The best way to prove this, is by manually checking your system time or let the plugin prove it for you.
-Therefore you have to rightclick an configured entry, hover on **KeeOtp2**, click on **Show TOTP** and if the window opens up, click on **Incorrect?**. 
+Therefore you have to right-click a configured entry, hover on **KeeOtp2**, click on **Show TOTP** and if the window opens up, click on **Incorrect?**. 
 Then you can press on **Ping NTP server**.
 
-If the ping result is over 5 seconds, you should change your time settings. You can do this on system side or inside the plugin.
+If the ping result is over 5 seconds, you should change your time settings. You can do this in the operating system or inside the plugin.
 Therefore you can check out the section [Global Time](#global-time) to set a fixed time offset or a custom NTP server.
 
 
