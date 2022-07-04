@@ -17,14 +17,28 @@ namespace KeeOtp2
             if (OtpTime.getTimeType() == OtpTimeType.CustomNtpServer)
                 OtpTime.pollCustomNtpServer();
 
-            if (!NativeLib.IsUnix())
+            if (KeeOtp2Config.UseHotKey)
                 registerHotKey();
         }
 
         public static void registerHotKey()
         {
-            if (handler != null)
+            if (handler == null)
+                return;
+            if (NativeLib.IsUnix())
+                return;
+            if (KeeOtp2Config.HotKeyKeys == Keys.None)
+                return;
+
+            try
+            {
                 HotkeyManager.Current.AddOrReplace(HOTKEY_NAME, KeeOtp2Config.HotKeyKeys, handler);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(String.Format(KeeOtp2Statics.MessageBoxHotkeyRegistrationFailed, ex.Message), KeeOtp2Statics.Failure, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
         }
 
         public static void unregisterHotKey()

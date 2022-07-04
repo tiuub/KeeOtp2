@@ -167,6 +167,6 @@ namespace KeeOtp2
         public static readonly string InvalidUriFormat = "Invalid Uri Format!";
         public static readonly string MessageBoxException = "There happened an error.Please check your entered key and your settings!\n\nError message:\n{0}";
 
-
+        public static readonly string MessageBoxHotkeyRegistrationFailed = "Registration of the global hotkey failed. The given hotkey may be already used by another program. Try changing the hotkey or deactivate the option, if you dont need it.\n\nError message:\n{0}";
     }
 }

@@ -551,9 +551,14 @@ namespace KeeOtp2
             while (p != null)
             {
                 p.Hide();
+                p.Opacity = 0;
                 p = p.Owner;
             }
+            
+            // Wait until window is closed entirely
+            System.Threading.Thread.Sleep(500);
 
+            int i = 0;
             foreach (Screen sc in Screen.AllScreens)
             {
                 bmpScreenshot = new Bitmap(sc.Bounds.Width, sc.Bounds.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
@@ -567,13 +572,15 @@ namespace KeeOtp2
                         break;
                     }
                 }
-                catch (CouldNotFindValidUri) { }              
+                catch (CouldNotFindValidUri) { }
+                i++;
             }
 
             p = this;
             while (p != null)
             {
                 p.Show();
+                p.Opacity = 1;
                 p = p.Owner;
             }
 
