@@ -168,6 +168,7 @@
             this.Controls.Add(this.groupBoxActions);
             this.Controls.Add(this.groupBoxInformation);
             this.Controls.Add(this.pictureBoxBanner);
+            this.CancelButton = this.buttonCancel;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
