@@ -27,6 +27,7 @@ namespace KeeOtp2
         public ShowQrCode(IPluginHost host, PwEntry entry, OtpAuthData data)
         {
             InitializeComponent();
+            this.ClientSize = new System.Drawing.Size(560, 680);
 
             this.host = host;
             this.data = data;

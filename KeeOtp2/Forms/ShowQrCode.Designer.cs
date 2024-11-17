@@ -88,7 +88,7 @@
             // 
             // buttonCopyUriReload
             // 
-            this.buttonCopyUriReload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonCopyUriReload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCopyUriReload.Location = new System.Drawing.Point(168, 395);
             this.buttonCopyUriReload.Name = "buttonCopyUriReload";
             this.buttonCopyUriReload.Size = new System.Drawing.Size(75, 23);
@@ -124,6 +124,7 @@
             this.Controls.Add(this.groupBoxQRCode);
             this.Controls.Add(this.pictureBoxBanner);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.CancelButton = this.buttonOk;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ShowQrCode";
