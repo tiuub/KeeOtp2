@@ -95,6 +95,7 @@
             // 
             // comboBoxMigrate
             // 
+            this.comboBoxMigrate.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             this.comboBoxMigrate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxMigrate.FormattingEnabled = true;
             this.comboBoxMigrate.Location = new System.Drawing.Point(147, 16);
@@ -174,6 +175,7 @@
             // 
             // textBoxHotKeySequence
             // 
+            this.textBoxHotKeySequence.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             this.textBoxHotKeySequence.Cursor = System.Windows.Forms.Cursors.Hand;
             this.textBoxHotKeySequence.Location = new System.Drawing.Point(147, 42);
             this.textBoxHotKeySequence.Name = "textBoxHotKeySequence";
@@ -223,7 +225,7 @@
             this.checkBoxUseHotkey.AutoSize = true;
             this.checkBoxUseHotkey.Location = new System.Drawing.Point(147, 19);
             this.checkBoxUseHotkey.Name = "checkBoxUseHotkey";
-            this.checkBoxUseHotkey.Size = new System.Drawing.Size(113, 17);
+            this.checkBoxUseHotkey.Size = new System.Drawing.Size(128, 17);
             this.checkBoxUseHotkey.TabIndex = 1;
             this.checkBoxUseHotkey.Text = "Use global Hotkey";
             this.checkBoxUseHotkey.UseVisualStyleBackColor = true;
@@ -260,10 +262,11 @@
             // 
             // checkBoxOverrideBuiltInTime
             // 
+            this.checkBoxOverrideBuiltInTime.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             this.checkBoxOverrideBuiltInTime.AutoSize = true;
             this.checkBoxOverrideBuiltInTime.Location = new System.Drawing.Point(147, 96);
             this.checkBoxOverrideBuiltInTime.Name = "checkBoxOverrideBuiltInTime";
-            this.checkBoxOverrideBuiltInTime.Size = new System.Drawing.Size(121, 17);
+            this.checkBoxOverrideBuiltInTime.Size = new System.Drawing.Size(155, 17);
             this.checkBoxOverrideBuiltInTime.TabIndex = 9;
             this.checkBoxOverrideBuiltInTime.Text = "Override built-in time";
             this.checkBoxOverrideBuiltInTime.UseVisualStyleBackColor = true;
@@ -283,7 +286,7 @@
             // 
             this.labelTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTime.AutoSize = true;
-            this.labelTime.Location = new System.Drawing.Point(178, 21);
+            this.labelTime.Location = new System.Drawing.Point(147, 21);
             this.labelTime.Name = "labelTime";
             this.labelTime.Size = new System.Drawing.Size(119, 13);
             this.labelTime.TabIndex = 10;
@@ -425,7 +428,7 @@
             this.checkBoxUseLocalHotkey.AutoSize = true;
             this.checkBoxUseLocalHotkey.Location = new System.Drawing.Point(147, 44);
             this.checkBoxUseLocalHotkey.Name = "checkBoxUseLocalHotkey";
-            this.checkBoxUseLocalHotkey.Size = new System.Drawing.Size(107, 17);
+            this.checkBoxUseLocalHotkey.Size = new System.Drawing.Size(122, 17);
             this.checkBoxUseLocalHotkey.TabIndex = 1;
             this.checkBoxUseLocalHotkey.Text = "Use local Hotkey";
             this.checkBoxUseLocalHotkey.UseVisualStyleBackColor = true;
@@ -444,9 +447,10 @@
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.groupBoxMigration);
             this.Controls.Add(this.pictureBoxBanner);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.CancelButton = this.buttonCancel;
             this.Name = "Settings";
             this.Text = "Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Settings_FormClosing);

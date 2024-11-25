@@ -40,6 +40,7 @@ namespace KeeOtp2
         public Settings(IPluginHost host)
         {
             InitializeComponent();
+            this.ClientSize = new System.Drawing.Size(600, 660);
 
             this.host = host;
         }
