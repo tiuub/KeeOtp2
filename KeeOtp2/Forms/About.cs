@@ -17,6 +17,7 @@ namespace KeeOtp2
         public About(IPluginHost host)
         {
             InitializeComponent();
+            this.ClientSize = new System.Drawing.Size(627, 548);
 
             this.host = host;
         }
@@ -104,6 +105,8 @@ namespace KeeOtp2
             lvi.SubItems.Add("Apache License Version 2.0");
             lvi.Tag = Resources.MaterialDesignIconsLICENSE;
             clv_Dependencies.Items.Add(lvi);
+
+            clv_Dependencies.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
 
         private void linkLabelGitHubRepository_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -127,7 +130,7 @@ namespace KeeOtp2
 
             if (columnindex < 2)
             {
-                if (MessageBox.Show(KeeOtp2Statics.AboutMessageBoxOpenRepository, KeeOtp2Statics.Dependencies, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show(KeeOtp2Statics.AboutMessageBoxOpenRepository, KeeOtp2Statics.Dependencies, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
                     System.Diagnostics.Process.Start(KeeOtp2Statics.RepositoryLicenseLink);
 
             }
@@ -146,7 +149,9 @@ namespace KeeOtp2
 
         private void showLicense(string dependencie, string author, string license)
         {
-            groupBoxDependencies.Anchor -= AnchorStyles.Bottom;
+            // groupBoxDependencies.Anchor -= AnchorStyles.Bottom;
+            groupBoxDependencies.Anchor &= ~AnchorStyles.Bottom;
+
             int groupBoxLicenseHeight = 101;
             this.Height = this.Height + groupBoxLicenseHeight + groupBoxDependencies.Margin.All * 2;
 
@@ -157,6 +162,7 @@ namespace KeeOtp2
             groupBoxLicense.Width = groupBoxDependencies.Width;
             groupBoxLicense.Height = groupBoxLicenseHeight;
             groupBoxLicense.Margin = groupBoxDependencies.Margin;
+            groupBoxLicense.Anchor = AnchorStyles.Bottom | AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 
             RichTextBox richTextBoxLicense = new RichTextBox();
             richTextBoxLicense.ReadOnly = true;
@@ -166,12 +172,12 @@ namespace KeeOtp2
             groupBoxLicense.Controls.Add(richTextBoxLicense);
 
             this.Controls.Add(groupBoxLicense);
-            groupBoxDependencies.Anchor -= AnchorStyles.Bottom;
+            // groupBoxDependencies.Anchor -= AnchorStyles.Bottom;
         }
 
         private void hideLicense()
         {
-            groupBoxDependencies.Anchor -= AnchorStyles.Bottom;
+            // groupBoxDependencies.Anchor -= AnchorStyles.Bottom;
 
             int groupBoxLicenseHeight = groupBoxLicense.Height;
             this.Height = this.Height - groupBoxLicenseHeight - groupBoxDependencies.Margin.All * 2;
@@ -180,7 +186,8 @@ namespace KeeOtp2
 
             groupBoxLicense = null;
 
-            groupBoxDependencies.Anchor -= AnchorStyles.Bottom;
+            // groupBoxDependencies.Anchor -= AnchorStyles.Bottom;
+            groupBoxDependencies.Anchor |= AnchorStyles.Bottom;
         }
     }
 }
