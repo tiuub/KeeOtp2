@@ -102,7 +102,8 @@ namespace KeeOtp2
         public static readonly string ShowOtpIncorrect = "Incorrect?";
         public static readonly string ShowOtpNextCode = "Next code";
         public static readonly string ShowOtpShowQr = "Show Qr";
-        public static readonly string ShowOtpNextRemaining = TOTP + " - Time remaining: {0} - Next code: {1}";
+        // The original text is too long
+        public static readonly string ShowOtpNextRemaining = TOTP + " - Countdown: {0} - Next code: {1}";
         public static readonly string ShowOtpNextCounter = TOTP + " - Counter: {0} - Next code: {1}";
 
         public static readonly string ShowQr = "QR Code";
