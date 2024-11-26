@@ -69,6 +69,7 @@
             // 
             // textBoxKey
             // 
+            this.textBoxKey.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxKey.Location = new System.Drawing.Point(6, 19);
             this.textBoxKey.Name = "textBoxKey";
             this.textBoxKey.Size = new System.Drawing.Size(330, 20);
@@ -78,7 +79,7 @@
             // 
             // textBoxPeriodCounter
             // 
-            this.textBoxPeriodCounter.Location = new System.Drawing.Point(118, 13);
+            this.textBoxPeriodCounter.Location = new System.Drawing.Point(135, 13);
             this.textBoxPeriodCounter.Name = "textBoxPeriodCounter";
             this.textBoxPeriodCounter.Size = new System.Drawing.Size(23, 20);
             this.textBoxPeriodCounter.TabIndex = 1;
@@ -205,7 +206,7 @@
             this.groupboxHashAlgorithm.Controls.Add(this.radioButtonSha1);
             this.groupboxHashAlgorithm.Controls.Add(this.radioButtonSha512);
             this.groupboxHashAlgorithm.Controls.Add(this.radioButtonSha256);
-            this.groupboxHashAlgorithm.Location = new System.Drawing.Point(247, 190);
+            this.groupboxHashAlgorithm.Location = new System.Drawing.Point(267, 190);
             this.groupboxHashAlgorithm.Name = "groupboxHashAlgorithm";
             this.groupboxHashAlgorithm.Size = new System.Drawing.Size(110, 113);
             this.groupboxHashAlgorithm.TabIndex = 17;
@@ -231,7 +232,7 @@
             this.groupboxEncoding.Controls.Add(this.radioButtonBase32);
             this.groupboxEncoding.Controls.Add(this.radioButtonBase64);
             this.groupboxEncoding.Controls.Add(this.radioButtonHex);
-            this.groupboxEncoding.Location = new System.Drawing.Point(131, 190);
+            this.groupboxEncoding.Location = new System.Drawing.Point(151, 190);
             this.groupboxEncoding.Name = "groupboxEncoding";
             this.groupboxEncoding.Size = new System.Drawing.Size(110, 113);
             this.groupboxEncoding.TabIndex = 5;
@@ -257,7 +258,7 @@
             this.groupboxGeneral.Controls.Add(this.labelLength);
             this.groupboxGeneral.Location = new System.Drawing.Point(15, 190);
             this.groupboxGeneral.Name = "groupboxGeneral";
-            this.groupboxGeneral.Size = new System.Drawing.Size(110, 113);
+            this.groupboxGeneral.Size = new System.Drawing.Size(130, 113);
             this.groupboxGeneral.TabIndex = 12;
             this.groupboxGeneral.TabStop = false;
             this.groupboxGeneral.Text = "General";
@@ -268,7 +269,7 @@
             this.comboBoxType.FormattingEnabled = true;
             this.comboBoxType.Location = new System.Drawing.Point(55, 45);
             this.comboBoxType.Name = "comboBoxType";
-            this.comboBoxType.Size = new System.Drawing.Size(49, 21);
+            this.comboBoxType.Size = new System.Drawing.Size(69, 21);
             this.comboBoxType.TabIndex = 3;
             this.comboBoxType.SelectionChangeCommitted += new System.EventHandler(this.comboBoxType_SelectionChangeCommitted);
             // 
@@ -278,7 +279,7 @@
             this.comboBoxLength.FormattingEnabled = true;
             this.comboBoxLength.Location = new System.Drawing.Point(55, 18);
             this.comboBoxLength.Name = "comboBoxLength";
-            this.comboBoxLength.Size = new System.Drawing.Size(49, 21);
+            this.comboBoxLength.Size = new System.Drawing.Size(69, 21);
             this.comboBoxLength.TabIndex = 2;
             this.comboBoxLength.DropDown += new System.EventHandler(this.comboBoxLength_DropDown);
             this.comboBoxLength.DropDownClosed += new System.EventHandler(this.comboBoxLength_DropDownClosed);
@@ -307,7 +308,7 @@
             this.groupboxInfo.Controls.Add(this.checkboxOldKeeOtp);
             this.groupboxInfo.Location = new System.Drawing.Point(189, 143);
             this.groupboxInfo.Name = "groupboxInfo";
-            this.groupboxInfo.Size = new System.Drawing.Size(168, 41);
+            this.groupboxInfo.Size = new System.Drawing.Size(188, 41);
             this.groupboxInfo.TabIndex = 5;
             this.groupboxInfo.TabStop = false;
             this.groupboxInfo.Text = "KeeOtp1 String (Deprecated)";
@@ -324,14 +325,14 @@
             // 
             // linkLabelLoadUriScanQR
             // 
-            this.linkLabelLoadUriScanQR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkLabelLoadUriScanQR.Location = new System.Drawing.Point(259, 0);
+            // this.linkLabelLoadUriScanQR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabelLoadUriScanQR.Location = new System.Drawing.Point(0, 45);
             this.linkLabelLoadUriScanQR.Name = "linkLabelLoadUriScanQR";
             this.linkLabelLoadUriScanQR.Size = new System.Drawing.Size(80, 13);
             this.linkLabelLoadUriScanQR.TabIndex = 20;
             this.linkLabelLoadUriScanQR.TabStop = true;
             this.linkLabelLoadUriScanQR.Text = "Scan QR Code";
-            this.linkLabelLoadUriScanQR.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.linkLabelLoadUriScanQR.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.linkLabelLoadUriScanQR.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelLoadUriScanQR_LinkClicked);
             // 
             // groupBoxKey
@@ -340,7 +341,7 @@
             this.groupBoxKey.Controls.Add(this.linkLabelLoadUriScanQR);
             this.groupBoxKey.Location = new System.Drawing.Point(15, 64);
             this.groupBoxKey.Name = "groupBoxKey";
-            this.groupBoxKey.Size = new System.Drawing.Size(342, 49);
+            this.groupBoxKey.Size = new System.Drawing.Size(362, 65);
             this.groupBoxKey.TabIndex = 22;
             this.groupBoxKey.TabStop = false;
             this.groupBoxKey.Text = "Key or Uri (otpauth://):";
@@ -354,7 +355,7 @@
             // 
             this.linkLabelMigrate.AutoSize = true;
             this.linkLabelMigrate.Enabled = false;
-            this.linkLabelMigrate.Location = new System.Drawing.Point(263, 121);
+            this.linkLabelMigrate.Location = new System.Drawing.Point(248, 139);
             this.linkLabelMigrate.Name = "linkLabelMigrate";
             this.linkLabelMigrate.Size = new System.Drawing.Size(91, 13);
             this.linkLabelMigrate.TabIndex = 23;
@@ -391,9 +392,10 @@
             this.Controls.Add(this.pictureBoxBanner);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOk);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.CancelButton = this.buttonCancel;
             this.Name = "OtpInformation";
             this.Text = "Configuration";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OtpInformation_FormClosing);

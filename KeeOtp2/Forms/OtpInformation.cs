@@ -26,6 +26,7 @@ namespace KeeOtp2
         public OtpInformation(IPluginHost host, PwEntry entry, OtpAuthData data)
         {
             InitializeComponent();
+            this.ClientSize = new System.Drawing.Size(595, 510);
 
             this.host = host;
             this.entry = entry;
