@@ -33,9 +33,14 @@
             this.groupBoxQRCode = new System.Windows.Forms.GroupBox();
             this.pictureBoxQrCode = new System.Windows.Forms.PictureBox();
             this.buttonOk = new System.Windows.Forms.Button();
+            this.buttonRefresh = new System.Windows.Forms.Button();
             this.buttonCopyUriReload = new System.Windows.Forms.Button();
             this.timerFormTimeout = new System.Windows.Forms.Timer(this.components);
             this.labelStatus = new System.Windows.Forms.Label();
+            this.textBoxIssuer = new System.Windows.Forms.TextBox();
+            this.labelIssuer = new System.Windows.Forms.Label();
+            this.textBoxUsername = new System.Windows.Forms.TextBox();
+            this.labelUsername = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBanner)).BeginInit();
             this.groupBoxQRCode.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxQrCode)).BeginInit();
@@ -50,27 +55,78 @@
             this.pictureBoxBanner.TabIndex = 13;
             this.pictureBoxBanner.TabStop = false;
             // 
+            // labelIssuer
+            // 
+            this.labelIssuer.AutoSize = true;
+            this.labelIssuer.Location = new System.Drawing.Point(12, 69);
+            this.labelIssuer.Name = "labelIssuer";
+            this.labelIssuer.Size = new System.Drawing.Size(10, 13);
+            this.labelIssuer.TabIndex = 20;
+            this.labelIssuer.TabStop = false;
+            this.labelIssuer.Text = "Issuer: ";
+            // 
+            // 
+            // textBoxIssuer
+            // 
+            this.textBoxIssuer.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            this.textBoxIssuer.Location = new System.Drawing.Point(80, 66);
+            this.textBoxIssuer.Name = "textBoxIssuer";
+            this.textBoxIssuer.Size = new System.Drawing.Size(210, 20);
+            this.textBoxIssuer.TabIndex = 16;
+            this.textBoxIssuer.TabStop = false;
+            // 
+            // labelUsername
+            // 
+            this.labelUsername.AutoSize = true;
+            this.labelUsername.Location = new System.Drawing.Point(12, 94);
+            this.labelUsername.Name = "labelUsername";
+            this.labelUsername.Size = new System.Drawing.Size(10, 13);
+            this.labelUsername.TabIndex = 20;
+            this.labelUsername.TabStop = false;
+            this.labelUsername.Text = "Username: ";
+            // 
+            // 
+            // textBoxUsername
+            // 
+            this.textBoxUsername.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            this.textBoxUsername.Location = new System.Drawing.Point(80, 91);
+            this.textBoxUsername.Name = "textBoxUsername";
+            this.textBoxUsername.Size = new System.Drawing.Size(210, 20);
+            this.textBoxUsername.TabIndex = 16;
+            this.textBoxUsername.TabStop = false;
+            // 
+            // buttonRefresh
+            // 
+            this.buttonRefresh.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            this.buttonRefresh.Location = new System.Drawing.Point(299, 78);
+            this.buttonRefresh.Name = "buttonRefresh";
+            this.buttonRefresh.Size = new System.Drawing.Size(75, 23);
+            this.buttonRefresh.TabIndex = 3;
+            this.buttonRefresh.Text = "Refresh";
+            this.buttonRefresh.UseVisualStyleBackColor = true;
+            this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
+            // 
             // groupBoxQRCode
             // 
-            this.groupBoxQRCode.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxQRCode.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxQRCode.Controls.Add(this.pictureBoxQrCode);
-            this.groupBoxQRCode.Location = new System.Drawing.Point(12, 64);
+            this.groupBoxQRCode.Location = new System.Drawing.Point(12, 124);
             this.groupBoxQRCode.Name = "groupBoxQRCode";
-            this.groupBoxQRCode.Size = new System.Drawing.Size(312, 325);
+            this.groupBoxQRCode.Size = new System.Drawing.Size(362, 340);
             this.groupBoxQRCode.TabIndex = 14;
             this.groupBoxQRCode.TabStop = false;
             this.groupBoxQRCode.Text = "QRCode - Scan with your favourite Authenticator App";
             // 
             // pictureBoxQrCode
             // 
-            this.pictureBoxQrCode.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.pictureBoxQrCode.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxQrCode.Location = new System.Drawing.Point(6, 19);
             this.pictureBoxQrCode.Name = "pictureBoxQrCode";
-            this.pictureBoxQrCode.Size = new System.Drawing.Size(300, 300);
+            this.pictureBoxQrCode.Size = new System.Drawing.Size(350, 315);
             this.pictureBoxQrCode.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxQrCode.TabIndex = 17;
             this.pictureBoxQrCode.TabStop = false;
@@ -79,7 +135,7 @@
             // 
             this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOk.Location = new System.Drawing.Point(249, 395);
+            this.buttonOk.Location = new System.Drawing.Point(299, 470);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(75, 23);
             this.buttonOk.TabIndex = 15;
@@ -89,7 +145,7 @@
             // buttonCopyUriReload
             // 
             this.buttonCopyUriReload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCopyUriReload.Location = new System.Drawing.Point(168, 395);
+            this.buttonCopyUriReload.Location = new System.Drawing.Point(218, 470);
             this.buttonCopyUriReload.Name = "buttonCopyUriReload";
             this.buttonCopyUriReload.Size = new System.Drawing.Size(75, 23);
             this.buttonCopyUriReload.TabIndex = 16;
@@ -107,7 +163,7 @@
             this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStatus.AutoSize = true;
             this.labelStatus.Enabled = false;
-            this.labelStatus.Location = new System.Drawing.Point(15, 400);
+            this.labelStatus.Location = new System.Drawing.Point(15, 475);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(141, 13);
             this.labelStatus.TabIndex = 18;
@@ -117,19 +173,26 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(336, 426);
+            this.ClientSize = new System.Drawing.Size(386, 506);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.buttonCopyUriReload);
             this.Controls.Add(this.buttonOk);
+            this.Controls.Add(this.buttonRefresh);
             this.Controls.Add(this.groupBoxQRCode);
+            // this.Controls.Add(this.groupBoxCustom);
             this.Controls.Add(this.pictureBoxBanner);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Controls.Add(this.labelIssuer);
+            this.Controls.Add(this.textBoxIssuer);
+            this.Controls.Add(this.labelUsername);
+            this.Controls.Add(this.textBoxUsername);
+            // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.CancelButton = this.buttonOk;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ShowQrCode";
             this.Text = "QR Code";
             this.Load += new System.EventHandler(this.ShowQrCode_Load);
+            this.SizeChanged += new System.EventHandler(this.OnSizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBanner)).EndInit();
             this.groupBoxQRCode.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxQrCode)).EndInit();
@@ -143,9 +206,14 @@
         private System.Windows.Forms.PictureBox pictureBoxBanner;
         private System.Windows.Forms.GroupBox groupBoxQRCode;
         private System.Windows.Forms.Button buttonOk;
+        private System.Windows.Forms.Button buttonRefresh;
         private System.Windows.Forms.Button buttonCopyUriReload;
         private System.Windows.Forms.PictureBox pictureBoxQrCode;
         private System.Windows.Forms.Timer timerFormTimeout;
         private System.Windows.Forms.Label labelStatus;
+        private System.Windows.Forms.Label labelIssuer;
+        private System.Windows.Forms.TextBox textBoxIssuer;
+        private System.Windows.Forms.Label labelUsername;
+        private System.Windows.Forms.TextBox textBoxUsername;
     }
 }

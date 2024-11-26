@@ -376,7 +376,7 @@ namespace KeeOtp2
                 if (data.Period != 30)
                     entry.Strings.Set(currentOtpPrefix + builtInPeriodSuffix, new ProtectedString(false, data.Period.ToString()));
             }
-            else if(data.Type == OtpType.Hotp)
+            else if (data.Type == OtpType.Hotp)
             {
                 entry.Strings.Set(currentOtpPrefix + builtInCounterSuffix, new ProtectedString(false, data.Counter.ToString()));
             }
@@ -481,16 +481,24 @@ namespace KeeOtp2
             return secret;
         }
 
-        public static Uri otpAuthDataToUri(PwEntry entry, OtpAuthData data)
+        public static Uri otpAuthDataToUri(PwEntry entry, OtpAuthData data, string issuer, string username)
         {
+            if (string.IsNullOrEmpty(issuer))
+            {
+                issuer = entry.Strings.ReadSafe(PwDefs.TitleField);
+            }
+            if (string.IsNullOrEmpty(username))
+            {
+                username = entry.Strings.ReadSafe(PwDefs.UserNameField);
+            }
             UriBuilder uriBuilder = new UriBuilder();
             uriBuilder.Scheme = uriScheme;
             uriBuilder.Host = data.Type.ToString().ToLower();
-            uriBuilder.Path = String.Format("{0}:{1}", entry.Strings.ReadSafe(PwDefs.TitleField), entry.Strings.ReadSafe(PwDefs.UserNameField));
+            uriBuilder.Path = String.Format("{0}:{1}", issuer, username);
 
             List<string> parameters = new List<string>();
             parameters.Add(String.Format("{0}={1}", uriSecretKey, data.GetPlainSecret()));
-            parameters.Add(String.Format("{0}={1}", uriIssuerKey, Uri.EscapeDataString(entry.Strings.ReadSafe(PwDefs.TitleField))));
+            parameters.Add(String.Format("{0}={1}", uriIssuerKey, Uri.EscapeDataString(issuer)));
             if (data.Algorithm != OtpHashMode.Sha1)
                 parameters.Add(String.Format("{0}={1}", uriAlgorithmKey, data.Algorithm.ToString()));
             if (data.Digits != 6)
@@ -500,7 +508,7 @@ namespace KeeOtp2
             if (data.Period != 30)
                 parameters.Add(String.Format("{0}={1}", uriPeriodKey, data.Period));
 
-            uriBuilder.Query = String.Join("&", parameters.ToArray()); 
+            uriBuilder.Query = String.Join("&", parameters.ToArray());
 
             return uriBuilder.Uri;
         }
