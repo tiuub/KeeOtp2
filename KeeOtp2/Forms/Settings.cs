@@ -40,7 +40,7 @@ namespace KeeOtp2
         public Settings(IPluginHost host)
         {
             InitializeComponent();
-            this.ClientSize = new System.Drawing.Size(620, 760);
+            this.ClientSize = new System.Drawing.Size(620, 900);
 
             this.host = host;
         }
@@ -108,6 +108,24 @@ namespace KeeOtp2
             groupBoxOther.Text = KeeOtp2Statics.Other;
             labelBeforeScanQr.Text = KeeOtp2Statics.SettingsBeforeScanningTheQRCode + KeeOtp2Statics.SelectorChar;
             checkBoxAskConfirmScanQr.Text = KeeOtp2Statics.SettingsDisplayConfirmationPrompt;
+
+            groupBoxCompatibleWithKeeTrayTotp.Text = KeeOtp2Statics.CompatibleWithKeeTrayTotp;
+            labelWhenSaveTotpSettings.Text = KeeOtp2Statics.SettingsWhenSaveTotpSettings + KeeOtp2Statics.SelectorChar;
+            checkBoxSetSettingsForKeeTrayTotp.Text = KeeOtp2Statics.SettingsSetSettingsForKeeTrayTotp;
+            labelKeyOfTotpSeed.Text = KeeOtp2Statics.SettingsKeyOfTotpSeed + KeeOtp2Statics.SelectorChar;
+            labelKeyOfTotpSettings.Text = KeeOtp2Statics.SettingsKeyOfTotpSettings + KeeOtp2Statics.SelectorChar;
+
+            if (host.MainWindow.ActiveDatabase.IsOpen)
+            {
+                foreach (var str in host.MainWindow.ActiveDatabase.RootGroup.GetEntries(true).SelectMany(pe => pe.Strings))
+                {
+                    if (!comboBoxKeyOfTotpSeed.Items.Contains(str.Key))
+                    {
+                        comboBoxKeyOfTotpSeed.Items.Add(str.Key);
+                        comboBoxKeyOfTotpSettings.Items.Add(str.Key);
+                    }
+                }
+            }
 
             ToolTip toolTip = new ToolTip();
             toolTip.ToolTipTitle = KeeOtp2Statics.Settings;
@@ -233,6 +251,9 @@ namespace KeeOtp2
             checkBoxOverrideBuiltInTime.Checked = OtpTime.getOverrideBuiltInTime();
 
             checkBoxAskConfirmScanQr.Checked = KeeOtp2Config.AskConfirmScanQr;
+            checkBoxSetSettingsForKeeTrayTotp.Checked = KeeOtp2Config.SetSettingsForKeeTrayTotp;
+            comboBoxKeyOfTotpSeed.Text = KeeOtp2Config.KeyOfTotpSeed;
+            comboBoxKeyOfTotpSettings.Text = KeeOtp2Config.KeyOfTotpSettings;
         }
 
         private void Settings_FormClosing(object sender, FormClosingEventArgs e)
@@ -273,6 +294,9 @@ namespace KeeOtp2
                 }
 
                 KeeOtp2Config.AskConfirmScanQr = checkBoxAskConfirmScanQr.Checked;
+                KeeOtp2Config.SetSettingsForKeeTrayTotp = checkBoxSetSettingsForKeeTrayTotp.Checked;
+                KeeOtp2Config.KeyOfTotpSeed = comboBoxKeyOfTotpSeed.Text;
+                KeeOtp2Config.KeyOfTotpSettings = comboBoxKeyOfTotpSettings.Text;
 
                 if (showRestartMessageBox)
                     MessageBox.Show(KeeOtp2Statics.MessageBoxSettingsRestartNotification, KeeOtp2Statics.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -323,6 +347,10 @@ namespace KeeOtp2
         {
             hotKeyControlExGlobalHotkey.Enabled =
                 textBoxHotKeySequence.Enabled = checkBoxUseHotkey.Checked;
+        }
+
+        private void checkBoxSetSettingsForKeeTrayTotp_CheckedChanged(object sender, EventArgs e)
+        {
         }
 
         private void checkBoxShowCopyTotp_CheckedChanged(object sender, EventArgs e)

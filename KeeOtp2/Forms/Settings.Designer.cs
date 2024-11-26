@@ -39,14 +39,21 @@
             this.labelStatus = new System.Windows.Forms.Label();
             this.groupBoxHotkey = new System.Windows.Forms.GroupBox();
             this.groupBoxOther = new System.Windows.Forms.GroupBox();
+            this.groupBoxCompatibleWithKeeTrayTotp = new System.Windows.Forms.GroupBox();
             this.textBoxHotKeySequence = new System.Windows.Forms.TextBox();
             this.labelHotKeySequence = new System.Windows.Forms.Label();
             this.labelUseHotKey = new System.Windows.Forms.Label();
             this.hotKeyControlExGlobalHotkey = new KeePass.UI.HotKeyControlEx();
             this.labelGlobalHotkey = new System.Windows.Forms.Label();
             this.labelBeforeScanQr = new System.Windows.Forms.Label();
+            this.labelWhenSaveTotpSettings = new System.Windows.Forms.Label();
+            this.labelKeyOfTotpSeed = new System.Windows.Forms.Label();
+            this.labelKeyOfTotpSettings = new System.Windows.Forms.Label();
+            this.comboBoxKeyOfTotpSeed = new System.Windows.Forms.ComboBox();
+            this.comboBoxKeyOfTotpSettings = new System.Windows.Forms.ComboBox();
             this.checkBoxUseHotkey = new System.Windows.Forms.CheckBox();
             this.checkBoxAskConfirmScanQr = new System.Windows.Forms.CheckBox();
+            this.checkBoxSetSettingsForKeeTrayTotp = new System.Windows.Forms.CheckBox();
             this.groupBoxTime = new System.Windows.Forms.GroupBox();
             this.labelOverrideBuiltInTime = new System.Windows.Forms.Label();
             this.checkBoxOverrideBuiltInTime = new System.Windows.Forms.CheckBox();
@@ -63,6 +70,7 @@
             this.checkBoxShowContextMenuItem = new System.Windows.Forms.CheckBox();
             this.labelShowQrCodeContextMenuItem = new System.Windows.Forms.Label();
             this.checkBoxShowQrCodeContextMenuItem = new System.Windows.Forms.CheckBox();
+            this.checkBoxSetSettingsForKeeTrayTotp = new System.Windows.Forms.CheckBox();
             this.labelUseLocalHotkey = new System.Windows.Forms.Label();
             this.hotKeyControlExLocalHotkey = new KeePass.UI.HotKeyControlEx();
             this.labelLocalHotkey = new System.Windows.Forms.Label();
@@ -71,6 +79,7 @@
             this.groupBoxMigration.SuspendLayout();
             this.groupBoxHotkey.SuspendLayout();
             this.groupBoxOther.SuspendLayout();
+            this.groupBoxCompatibleWithKeeTrayTotp.SuspendLayout();
             this.groupBoxTime.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedTimeOffset)).BeginInit();
             this.groupBoxContextMenu.SuspendLayout();
@@ -185,12 +194,92 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxOther.Controls.Add(this.labelBeforeScanQr);
             this.groupBoxOther.Controls.Add(this.checkBoxAskConfirmScanQr);
-            this.groupBoxOther.Location = new System.Drawing.Point(12, 465);
+            this.groupBoxOther.Location = new System.Drawing.Point(12, 565);
             this.groupBoxOther.Name = "groupBoxOther";
             this.groupBoxOther.Size = new System.Drawing.Size(303, 45);
             this.groupBoxOther.TabIndex = 10;
             this.groupBoxOther.TabStop = false;
             this.groupBoxOther.Text = "Other";
+            // 
+            // groupBoxCompatibleWithKeeTrayTotp
+            // 
+            this.groupBoxCompatibleWithKeeTrayTotp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxCompatibleWithKeeTrayTotp.Controls.Add(this.labelWhenSaveTotpSettings);
+            this.groupBoxCompatibleWithKeeTrayTotp.Controls.Add(this.checkBoxSetSettingsForKeeTrayTotp);
+            this.groupBoxCompatibleWithKeeTrayTotp.Controls.Add(this.labelKeyOfTotpSeed);
+            this.groupBoxCompatibleWithKeeTrayTotp.Controls.Add(this.comboBoxKeyOfTotpSeed);
+            this.groupBoxCompatibleWithKeeTrayTotp.Controls.Add(this.labelKeyOfTotpSettings);
+            this.groupBoxCompatibleWithKeeTrayTotp.Controls.Add(this.comboBoxKeyOfTotpSettings);
+            this.groupBoxCompatibleWithKeeTrayTotp.Location = new System.Drawing.Point(12, 465);
+            this.groupBoxCompatibleWithKeeTrayTotp.Name = "groupBoxCompatibleWithKeeTrayTotp";
+            this.groupBoxCompatibleWithKeeTrayTotp.Size = new System.Drawing.Size(303, 95);
+            this.groupBoxCompatibleWithKeeTrayTotp.TabIndex = 10;
+            this.groupBoxCompatibleWithKeeTrayTotp.TabStop = false;
+            this.groupBoxCompatibleWithKeeTrayTotp.Text = "Compatible With KeeTrayTOTP";
+            // 
+            // labelWhenSaveTotpSettings
+            // 
+            this.labelWhenSaveTotpSettings.AutoSize = true;
+            this.labelWhenSaveTotpSettings.Location = new System.Drawing.Point(6, 20);
+            this.labelWhenSaveTotpSettings.Name = "labelWhenSaveTotpSettings";
+            this.labelWhenSaveTotpSettings.Size = new System.Drawing.Size(117, 13);
+            this.labelWhenSaveTotpSettings.TabIndex = 2;
+            this.labelWhenSaveTotpSettings.Text = "When Save TOTP Settings:";
+            // 
+            // checkBoxSetSettingsForKeeTrayTotp
+            // 
+            this.checkBoxSetSettingsForKeeTrayTotp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxSetSettingsForKeeTrayTotp.AutoSize = true;
+            this.checkBoxSetSettingsForKeeTrayTotp.Location = new System.Drawing.Point(147, 19);
+            this.checkBoxSetSettingsForKeeTrayTotp.Name = "checkBoxSetSettingsForKeeTrayTotp";
+            this.checkBoxSetSettingsForKeeTrayTotp.Size = new System.Drawing.Size(153, 17);
+            this.checkBoxSetSettingsForKeeTrayTotp.TabIndex = 1;
+            this.checkBoxSetSettingsForKeeTrayTotp.Text = "Set Settings For KeeTrayTOTP";
+            this.checkBoxSetSettingsForKeeTrayTotp.UseVisualStyleBackColor = true;
+            this.checkBoxSetSettingsForKeeTrayTotp.CheckedChanged += new System.EventHandler(this.checkBoxSetSettingsForKeeTrayTotp_CheckedChanged);
+            // 
+            // labelKeyOfTotpSeed
+            // 
+            this.labelKeyOfTotpSeed.AutoSize = true;
+            this.labelKeyOfTotpSeed.Location = new System.Drawing.Point(6, 45);
+            this.labelKeyOfTotpSeed.Name = "labelKeyOfTotpSeed";
+            this.labelKeyOfTotpSeed.Size = new System.Drawing.Size(117, 13);
+            this.labelKeyOfTotpSeed.TabIndex = 2;
+            this.labelKeyOfTotpSeed.Text = "Key of TOTP Seed:";
+            //
+            // comboBoxKeyOfTotpSeed
+            //
+            this.comboBoxKeyOfTotpSeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxKeyOfTotpSeed.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.comboBoxKeyOfTotpSeed.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.comboBoxKeyOfTotpSeed.FormattingEnabled = true;
+            this.comboBoxKeyOfTotpSeed.Location = new System.Drawing.Point(147, 40);
+            this.comboBoxKeyOfTotpSeed.Name = "ComboBoxTOTPSettingsStringName";
+            this.comboBoxKeyOfTotpSeed.Size = new System.Drawing.Size(150, 21);
+            this.comboBoxKeyOfTotpSeed.TabIndex = 2;
+            this.comboBoxKeyOfTotpSeed.Tag = "";
+            // 
+            // labelKeyOfTotpSettings
+            // 
+            this.labelKeyOfTotpSettings.AutoSize = true;
+            this.labelKeyOfTotpSettings.Location = new System.Drawing.Point(6, 70);
+            this.labelKeyOfTotpSettings.Name = "labelKeyOfTotpSettings";
+            this.labelKeyOfTotpSettings.Size = new System.Drawing.Size(117, 13);
+            this.labelKeyOfTotpSettings.TabIndex = 2;
+            this.labelKeyOfTotpSettings.Text = "Key of TOTP Settings:";
+            //
+            // comboBoxKeyOfTotpSettings
+            //
+            this.comboBoxKeyOfTotpSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxKeyOfTotpSettings.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.comboBoxKeyOfTotpSettings.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.comboBoxKeyOfTotpSettings.FormattingEnabled = true;
+            this.comboBoxKeyOfTotpSettings.Location = new System.Drawing.Point(147, 65);
+            this.comboBoxKeyOfTotpSettings.Name = "ComboBoxTOTPSettingsStringName";
+            this.comboBoxKeyOfTotpSettings.Size = new System.Drawing.Size(150, 21);
+            this.comboBoxKeyOfTotpSettings.TabIndex = 2;
+            this.comboBoxKeyOfTotpSettings.Tag = "";
             // 
             // textBoxHotKeySequence
             // 
@@ -505,6 +594,7 @@
             this.Controls.Add(this.groupBoxTime);
             this.Controls.Add(this.groupBoxHotkey);
             this.Controls.Add(this.groupBoxOther);
+            this.Controls.Add(this.groupBoxCompatibleWithKeeTrayTotp);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
@@ -525,6 +615,8 @@
             this.groupBoxHotkey.PerformLayout();
             this.groupBoxOther.ResumeLayout(false);
             this.groupBoxOther.PerformLayout();
+            this.groupBoxCompatibleWithKeeTrayTotp.ResumeLayout(false);
+            this.groupBoxCompatibleWithKeeTrayTotp.PerformLayout();
             this.groupBoxTime.ResumeLayout(false);
             this.groupBoxTime.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedTimeOffset)).EndInit();
@@ -546,6 +638,13 @@
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.GroupBox groupBoxHotkey;
         private System.Windows.Forms.GroupBox groupBoxOther;
+        private System.Windows.Forms.GroupBox groupBoxCompatibleWithKeeTrayTotp;
+        private System.Windows.Forms.Label labelWhenSaveTotpSettings;
+        private System.Windows.Forms.CheckBox checkBoxSetSettingsForKeeTrayTotp;
+        private System.Windows.Forms.Label labelKeyOfTotpSeed;
+        private System.Windows.Forms.ComboBox comboBoxKeyOfTotpSeed;
+        private System.Windows.Forms.Label labelKeyOfTotpSettings;
+        private System.Windows.Forms.ComboBox comboBoxKeyOfTotpSettings;
         private System.Windows.Forms.Label labelUseHotKey;
         private KeePass.UI.HotKeyControlEx hotKeyControlExGlobalHotkey;
         private System.Windows.Forms.Label labelGlobalHotkey;

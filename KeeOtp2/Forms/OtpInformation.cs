@@ -9,6 +9,7 @@ using KeePass.Plugins;
 using OtpNet;
 using ZXing;
 using KeePassLib;
+using KeePassLib.Security;
 
 namespace KeeOtp2
 {
@@ -130,6 +131,29 @@ namespace KeeOtp2
                     OtpAuthUtils.migrateToBuiltInOtp(this.data, this.entry);
                 }
                 
+                if (KeeOtp2Config.SetSettingsForKeeTrayTotp
+                    && data.Encoding == OtpSecretEncoding.Base32
+                    && data.Algorithm == OtpHashMode.Sha1
+                    && (data.Type == OtpType.Totp || data.Type == OtpType.Steam))
+                {
+                    if (!string.IsNullOrEmpty(KeeOtp2Config.KeyOfTotpSeed))
+                    {
+                        entry.Strings.Set(KeeOtp2Config.KeyOfTotpSeed, new ProtectedString(true, data.GetPlainSecret()));
+                    }
+                    if (!string.IsNullOrEmpty(KeeOtp2Config.KeyOfTotpSettings))
+                    {
+                        string settings = data.Period.ToString() + ";";
+                        if (data.Type == OtpType.Totp)
+                        {
+                            settings += data.Digits.ToString();
+                        }
+                        else
+                        {
+                            settings += "S";
+                        }
+                        entry.Strings.Set(KeeOtp2Config.KeyOfTotpSettings, new ProtectedString(false, settings));
+                    }
+                }
 
                 this.entry.Touch(true, false);
                 this.host.MainWindow.ActiveDatabase.Modified = true;

@@ -55,6 +55,9 @@ namespace KeeOtp2
         private const String PATH_HOTKEY_KEYS = PATH_PLUGINNAME + ".HotKeyKeys";
         private const String PATH_SHOW_CONTEXT_MENU_ITEM = PATH_PLUGINNAME + ".ShowContextMenuItem";
         private const String PATH_SHOW_QR_CODE_CONTEXT_MENU_ITEM = PATH_PLUGINNAME + ".ShowQrCodeContextMenuItem";
+        private const String PATH_SET_SETTINGS_FOR_KEE_TRAY_TOTP = PATH_PLUGINNAME + ".SetSettingsForKeeTrayTotp";
+        private const String PATH_KEY_OF_TOTP_SEED = PATH_PLUGINNAME + ".KeyOfTotpSeed";
+        private const String PATH_KEY_OF_TOTP_SETTINGS = PATH_PLUGINNAME + ".KeyOfTotpSettings";
         private const String PATH_ASK_CONFIRM_SCAN_QR = PATH_PLUGINNAME + ".AskConfirmScanQr";
         private const String PATH_USE_LOCAL_HOTKEY = PATH_PLUGINNAME + ".UseLocalHotKey";
         private const String PATH_LOCAL_HOTKEY_KEYS = PATH_PLUGINNAME + ".LocalHotKeyKeys";
@@ -123,6 +126,42 @@ namespace KeeOtp2
             set
             {
                 Program.Config.CustomConfig.SetBool(PATH_SHOW_QR_CODE_CONTEXT_MENU_ITEM, value);
+            }
+        }
+
+        internal static bool SetSettingsForKeeTrayTotp
+        {
+            get
+            {
+                return Program.Config.CustomConfig.GetBool(PATH_SET_SETTINGS_FOR_KEE_TRAY_TOTP, false);
+            }
+            set
+            {
+                Program.Config.CustomConfig.SetBool(PATH_SET_SETTINGS_FOR_KEE_TRAY_TOTP, value);
+            }
+        }
+
+        internal static string KeyOfTotpSeed
+        {
+            get
+            {
+                return Program.Config.CustomConfig.GetString(PATH_KEY_OF_TOTP_SEED, "TOTP Seed");
+            }
+            set
+            {
+                Program.Config.CustomConfig.SetString(PATH_KEY_OF_TOTP_SEED, value);
+            }
+        }
+
+        internal static string KeyOfTotpSettings
+        {
+            get
+            {
+                return Program.Config.CustomConfig.GetString(PATH_KEY_OF_TOTP_SETTINGS, "TOTP Settings");
+            }
+            set
+            {
+                Program.Config.CustomConfig.SetString(PATH_KEY_OF_TOTP_SETTINGS, value);
             }
         }
 
