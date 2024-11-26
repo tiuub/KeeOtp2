@@ -54,6 +54,7 @@ namespace KeeOtp2
         private const String PATH_HOTKEY_SEQUENCE = PATH_PLUGINNAME + ".HotKeySequence";
         private const String PATH_HOTKEY_KEYS = PATH_PLUGINNAME + ".HotKeyKeys";
         private const String PATH_SHOW_CONTEXT_MENU_ITEM = PATH_PLUGINNAME + ".ShowContextMenuItem";
+        private const String PATH_ASK_CONFIRM_SCAN_QR = PATH_PLUGINNAME + ".AskConfirmScanQr";
         private const String PATH_USE_LOCAL_HOTKEY = PATH_PLUGINNAME + ".UseLocalHotKey";
         private const String PATH_LOCAL_HOTKEY_KEYS = PATH_PLUGINNAME + ".LocalHotKeyKeys";
 
@@ -109,6 +110,18 @@ namespace KeeOtp2
             set
             {
                 Program.Config.CustomConfig.SetBool(PATH_SHOW_CONTEXT_MENU_ITEM, value);
+            }
+        }
+
+        internal static bool AskConfirmScanQr
+        {
+            get
+            {
+                return Program.Config.CustomConfig.GetBool(PATH_ASK_CONFIRM_SCAN_QR, true);
+            }
+            set
+            {
+                Program.Config.CustomConfig.SetBool(PATH_ASK_CONFIRM_SCAN_QR, value);
             }
         }
 

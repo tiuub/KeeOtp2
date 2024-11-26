@@ -38,12 +38,15 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelStatus = new System.Windows.Forms.Label();
             this.groupBoxHotkey = new System.Windows.Forms.GroupBox();
+            this.groupBoxOther = new System.Windows.Forms.GroupBox();
             this.textBoxHotKeySequence = new System.Windows.Forms.TextBox();
             this.labelHotKeySequence = new System.Windows.Forms.Label();
             this.labelUseHotKey = new System.Windows.Forms.Label();
             this.hotKeyControlExGlobalHotkey = new KeePass.UI.HotKeyControlEx();
             this.labelGlobalHotkey = new System.Windows.Forms.Label();
+            this.labelBeforeScanQr = new System.Windows.Forms.Label();
             this.checkBoxUseHotkey = new System.Windows.Forms.CheckBox();
+            this.checkBoxAskConfirmScanQr = new System.Windows.Forms.CheckBox();
             this.groupBoxTime = new System.Windows.Forms.GroupBox();
             this.labelOverrideBuiltInTime = new System.Windows.Forms.Label();
             this.checkBoxOverrideBuiltInTime = new System.Windows.Forms.CheckBox();
@@ -65,6 +68,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBanner)).BeginInit();
             this.groupBoxMigration.SuspendLayout();
             this.groupBoxHotkey.SuspendLayout();
+            this.groupBoxOther.SuspendLayout();
             this.groupBoxTime.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedTimeOffset)).BeginInit();
             this.groupBoxContextMenu.SuspendLayout();
@@ -173,6 +177,19 @@
             this.groupBoxHotkey.TabStop = false;
             this.groupBoxHotkey.Text = "HotKey";
             // 
+            // groupBoxOther
+            // 
+            this.groupBoxOther.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxOther.Controls.Add(this.labelBeforeScanQr);
+            this.groupBoxOther.Controls.Add(this.checkBoxAskConfirmScanQr);
+            this.groupBoxOther.Location = new System.Drawing.Point(12, 445);
+            this.groupBoxOther.Name = "groupBoxOther";
+            this.groupBoxOther.Size = new System.Drawing.Size(303, 45);
+            this.groupBoxOther.TabIndex = 10;
+            this.groupBoxOther.TabStop = false;
+            this.groupBoxOther.Text = "Other";
+            // 
             // textBoxHotKeySequence
             // 
             this.textBoxHotKeySequence.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
@@ -230,6 +247,27 @@
             this.checkBoxUseHotkey.Text = "Use global Hotkey";
             this.checkBoxUseHotkey.UseVisualStyleBackColor = true;
             this.checkBoxUseHotkey.CheckedChanged += new System.EventHandler(this.checkBoxUseHotkey_CheckedChanged);
+            // 
+            // labelBeforeScanQr
+            // 
+            this.labelBeforeScanQr.AutoSize = true;
+            this.labelBeforeScanQr.Location = new System.Drawing.Point(6, 20);
+            this.labelBeforeScanQr.Name = "labelBeforeScanQr";
+            this.labelBeforeScanQr.Size = new System.Drawing.Size(117, 13);
+            this.labelBeforeScanQr.TabIndex = 2;
+            this.labelBeforeScanQr.Text = "Before scanning the QR code:";
+            // 
+            // checkBoxAskConfirmScan
+            // 
+            this.checkBoxAskConfirmScanQr.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxAskConfirmScanQr.AutoSize = true;
+            this.checkBoxAskConfirmScanQr.Location = new System.Drawing.Point(147, 19);
+            this.checkBoxAskConfirmScanQr.Name = "checkBoxAskConfirmScan";
+            this.checkBoxAskConfirmScanQr.Size = new System.Drawing.Size(153, 17);
+            this.checkBoxAskConfirmScanQr.TabIndex = 1;
+            this.checkBoxAskConfirmScanQr.Text = "Display confirmation prompt";
+            this.checkBoxAskConfirmScanQr.UseVisualStyleBackColor = true;
+            this.checkBoxAskConfirmScanQr.CheckedChanged += new System.EventHandler(this.checkBoxUseHotkey_CheckedChanged);
             // 
             // groupBoxTime
             // 
@@ -442,6 +480,7 @@
             this.Controls.Add(this.groupBoxContextMenu);
             this.Controls.Add(this.groupBoxTime);
             this.Controls.Add(this.groupBoxHotkey);
+            this.Controls.Add(this.groupBoxOther);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
@@ -460,6 +499,8 @@
             this.groupBoxMigration.PerformLayout();
             this.groupBoxHotkey.ResumeLayout(false);
             this.groupBoxHotkey.PerformLayout();
+            this.groupBoxOther.ResumeLayout(false);
+            this.groupBoxOther.PerformLayout();
             this.groupBoxTime.ResumeLayout(false);
             this.groupBoxTime.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedTimeOffset)).EndInit();
@@ -480,10 +521,13 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.GroupBox groupBoxHotkey;
+        private System.Windows.Forms.GroupBox groupBoxOther;
         private System.Windows.Forms.Label labelUseHotKey;
         private KeePass.UI.HotKeyControlEx hotKeyControlExGlobalHotkey;
         private System.Windows.Forms.Label labelGlobalHotkey;
+        private System.Windows.Forms.Label labelBeforeScanQr;
         private System.Windows.Forms.CheckBox checkBoxUseHotkey;
+        private System.Windows.Forms.CheckBox checkBoxAskConfirmScanQr;
         private System.Windows.Forms.ComboBox comboBoxMigrate;
         private System.Windows.Forms.TextBox textBoxHotKeySequence;
         private System.Windows.Forms.Label labelHotKeySequence;

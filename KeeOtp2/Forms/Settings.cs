@@ -40,7 +40,7 @@ namespace KeeOtp2
         public Settings(IPluginHost host)
         {
             InitializeComponent();
-            this.ClientSize = new System.Drawing.Size(600, 660);
+            this.ClientSize = new System.Drawing.Size(620, 740);
 
             this.host = host;
         }
@@ -102,6 +102,10 @@ namespace KeeOtp2
             labelStatus.Text = KeeOtp2Statics.HoverInformation;
             buttonOK.Text = KeeOtp2Statics.OK;
             buttonCancel.Text = KeeOtp2Statics.Cancel;
+
+            groupBoxOther.Text = KeeOtp2Statics.Other;
+            labelBeforeScanQr.Text = KeeOtp2Statics.SettingsBeforeScanningTheQRCode + KeeOtp2Statics.SelectorChar;
+            checkBoxAskConfirmScanQr.Text = KeeOtp2Statics.SettingsDisplayConfirmationPrompt;
 
             ToolTip toolTip = new ToolTip();
             toolTip.ToolTipTitle = KeeOtp2Statics.Settings;
@@ -224,6 +228,8 @@ namespace KeeOtp2
             numericUpDownFixedTimeOffset.Value = OtpTime.getFixedTimeOffset();
             textBoxCustomNTPServerAddress.Text = OtpTime.getCustomNtpServer();
             checkBoxOverrideBuiltInTime.Checked = OtpTime.getOverrideBuiltInTime();
+
+            checkBoxAskConfirmScanQr.Checked = KeeOtp2Config.AskConfirmScanQr;
         }
 
         private void Settings_FormClosing(object sender, FormClosingEventArgs e)
@@ -261,7 +267,10 @@ namespace KeeOtp2
                     KeeOtp2Config.OverrideBuiltInTime = checkBoxOverrideBuiltInTime.Checked;
                 }
 
-                MessageBox.Show(KeeOtp2Statics.MessageBoxSettingsRestartNotification, KeeOtp2Statics.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                KeeOtp2Config.AskConfirmScanQr = checkBoxAskConfirmScanQr.Checked;
+
+                if (showRestartMessageBox)
+                    MessageBox.Show(KeeOtp2Statics.MessageBoxSettingsRestartNotification, KeeOtp2Statics.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

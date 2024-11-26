@@ -44,6 +44,7 @@ namespace KeeOtp2
         public static readonly string Sha512 = "Sha-512";
         public static readonly string Migration = "Migration";
         public static readonly string HotKey = "HotKey";
+        public static readonly string Other = "Other";
         public static readonly string GlobalTime = "Global Time";
         public static readonly string TOTP = "TOTP";
         public static readonly string Information = "Information";
@@ -81,6 +82,8 @@ namespace KeeOtp2
         public static readonly string SettingsMigratieEntryTo = "Migrate every entry to";
         public static readonly string SettingsTOTPGlobalAutoType = "TOTP global auto-type";
         public static readonly string SettingsUseGlobalHotkey = "Use global Hotkey";
+        public static readonly string SettingsBeforeScanningTheQRCode = "Before scanning the QR code";
+        public static readonly string SettingsDisplayConfirmationPrompt = "Display confirmation prompt";
         public static readonly string SettingsHotKeySequence = "HotKey Sequence";
         public static readonly string SettingsGlobalHotKey = "Global HotKey";
         public static readonly string SettingsContextMenu = "Right-Click Context Menu (changes apply after restart)";

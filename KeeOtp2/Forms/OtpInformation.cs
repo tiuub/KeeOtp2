@@ -178,7 +178,14 @@ namespace KeeOtp2
         {
             if (scanQRMode)
             {
-                if (MessageBox.Show(KeeOtp2Statics.MessageBoxScanQrCode, KeeOtp2Statics.OtpInformationScanQr, MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
+                if (KeeOtp2Config.AskConfirmScanQr)
+                {
+                    if (MessageBox.Show(KeeOtp2Statics.MessageBoxScanQrCode, KeeOtp2Statics.OtpInformationScanQr, MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
+                    {
+                        scanQRCode();
+                    }
+                }
+                else
                 {
                     scanQRCode();
                 }
