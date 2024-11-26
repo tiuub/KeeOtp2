@@ -326,7 +326,7 @@
             // linkLabelLoadUriScanQR
             // 
             // this.linkLabelLoadUriScanQR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkLabelLoadUriScanQR.Location = new System.Drawing.Point(0, 45);
+            this.linkLabelLoadUriScanQR.Location = new System.Drawing.Point(2, 45);
             this.linkLabelLoadUriScanQR.Name = "linkLabelLoadUriScanQR";
             this.linkLabelLoadUriScanQR.Size = new System.Drawing.Size(80, 13);
             this.linkLabelLoadUriScanQR.TabIndex = 20;
