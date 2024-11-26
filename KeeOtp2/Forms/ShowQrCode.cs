@@ -20,6 +20,8 @@ namespace KeeOtp2
         private PwEntry entry;
         private OtpAuthData data;
         private Uri uri;
+        private string issuer;
+        private string username;
 
         private ToolTip copyUriToolTip;
         private ToolTip reloadToolTip;
@@ -27,10 +29,13 @@ namespace KeeOtp2
         public ShowQrCode(IPluginHost host, PwEntry entry, OtpAuthData data)
         {
             InitializeComponent();
+            // this.ClientSize = new System.Drawing.Size(560, 680);
 
             this.host = host;
             this.data = data;
-            this.uri = OtpAuthUtils.otpAuthDataToUri(entry, data);
+            issuer = entry.Strings.ReadSafe(PwDefs.TitleField);
+            username = entry.Strings.ReadSafe(PwDefs.UserNameField);
+            uri = OtpAuthUtils.otpAuthDataToUri(entry, data, issuer, username);
             this.entry = entry;
         }
 
@@ -73,13 +78,25 @@ namespace KeeOtp2
             string toolTipReload = KeeOtp2Statics.ToolTipShowQrCodeReload;
             reloadToolTip.SetToolTip(buttonCopyUriReload, toolTipReload);
 
+            textBoxIssuer.Text = issuer;
+            textBoxUsername.Text = username;
+
             if (!data.Proprietary)
                 MessageBox.Show(KeeOtp2Statics.MessageBoxOtpNotProprietary, KeeOtp2Statics.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-            showQrCodeImage();
+            ShowQrCodeImage();
         }
 
-        private void showQrCodeImage()
+        private void OnSizeChanged(object sender, EventArgs e)
+        {
+            if (sharingExpired)
+            {
+                return;
+            }
+            GenerateQRCode();
+        }
+
+        private void ShowQrCodeImage()
         {
             sharingExpired = false;
             buttonCopyUriReload.Text = KeeOtp2Statics.ShowQrCopyUri + KeeOtp2Statics.InformationChar;
@@ -87,7 +104,17 @@ namespace KeeOtp2
             copyUriToolTip.Active = true;
 
             formTimeout = SHARINGTIMEOUT;
+            GenerateQRCode();
 
+            timerFormTimeout.Start();
+        }
+
+        private void GenerateQRCode()
+        {
+            if (pictureBoxQrCode == null || uri == null)
+            {
+                return;
+            }
             EncodingOptions options = new EncodingOptions();
             options.Width = pictureBoxQrCode.Width;
             options.Height = pictureBoxQrCode.Height;
@@ -97,15 +124,13 @@ namespace KeeOtp2
             writer.Options = options;
             var result = writer.Write(this.uri.AbsoluteUri);
             pictureBoxQrCode.Image = new Bitmap(result);
-
-            timerFormTimeout.Start();
         }
 
         private void buttonCopyUriReload_Click(object sender, EventArgs e)
         {
             if (sharingExpired)
             {
-                showQrCodeImage();
+                ShowQrCodeImage();
             }
             else
             {
@@ -114,6 +139,16 @@ namespace KeeOtp2
 
                 this.Close();
             }
+        }
+
+        private void buttonRefresh_Click(object sender, EventArgs e)
+        {
+            issuer = textBoxIssuer.Text;
+            username = textBoxUsername.Text;
+            this.uri = OtpAuthUtils.otpAuthDataToUri(entry, data, issuer, username);
+            string toolTipCopyUri = String.Format(KeeOtp2Statics.ToolTipShowQrCodeCopyUri, this.uri.AbsoluteUri);
+            copyUriToolTip.SetToolTip(buttonCopyUriReload, toolTipCopyUri);
+            ShowQrCodeImage();
         }
 
         private int formTimeout = SHARINGTIMEOUT;

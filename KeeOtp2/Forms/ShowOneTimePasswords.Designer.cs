@@ -65,7 +65,7 @@
             // 
             this.buttonClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonClose.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonClose.Location = new System.Drawing.Point(288, 170);
+            this.buttonClose.Location = new System.Drawing.Point(288, 140);
             this.buttonClose.Name = "buttonClose";
             this.buttonClose.Size = new System.Drawing.Size(75, 23);
             this.buttonClose.TabIndex = 4;
@@ -75,7 +75,7 @@
             // buttonEdit
             // 
             this.buttonEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonEdit.Location = new System.Drawing.Point(93, 170);
+            this.buttonEdit.Location = new System.Drawing.Point(93, 140);
             this.buttonEdit.Name = "buttonEdit";
             this.buttonEdit.Size = new System.Drawing.Size(75, 23);
             this.buttonEdit.TabIndex = 5;
@@ -87,7 +87,7 @@
             // 
             this.pictureBoxBanner.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBoxBanner.Location = new System.Drawing.Point(-2, 0);
+            this.pictureBoxBanner.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxBanner.Name = "pictureBoxBanner";
             this.pictureBoxBanner.Size = new System.Drawing.Size(379, 58);
             this.pictureBoxBanner.TabIndex = 7;
@@ -103,7 +103,7 @@
             this.groupboxTotp.Controls.Add(this.labelOtp);
             this.groupboxTotp.Location = new System.Drawing.Point(12, 64);
             this.groupboxTotp.Name = "groupboxTotp";
-            this.groupboxTotp.Size = new System.Drawing.Size(351, 96);
+            this.groupboxTotp.Size = new System.Drawing.Size(351, 66);
             this.groupboxTotp.TabIndex = 8;
             this.groupboxTotp.TabStop = false;
             this.groupboxTotp.Text = "TOTP";
@@ -112,7 +112,7 @@
             // 
             this.linkLabelIncorrectNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabelIncorrectNext.AutoSize = true;
-            this.linkLabelIncorrectNext.Location = new System.Drawing.Point(290, 0);
+            this.linkLabelIncorrectNext.Location = new System.Drawing.Point(285, 0);
             this.linkLabelIncorrectNext.Name = "linkLabelIncorrectNext";
             this.linkLabelIncorrectNext.Size = new System.Drawing.Size(55, 13);
             this.linkLabelIncorrectNext.TabIndex = 11;
@@ -123,7 +123,7 @@
             // buttonCopyTotp
             // 
             this.buttonCopyTotp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCopyTotp.Location = new System.Drawing.Point(207, 170);
+            this.buttonCopyTotp.Location = new System.Drawing.Point(207, 140);
             this.buttonCopyTotp.Name = "buttonCopyTotp";
             this.buttonCopyTotp.Size = new System.Drawing.Size(75, 23);
             this.buttonCopyTotp.TabIndex = 9;
@@ -133,7 +133,8 @@
             // 
             // buttonShowQR
             // 
-            this.buttonShowQR.Location = new System.Drawing.Point(12, 170);
+            this.buttonShowQR.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonShowQR.Location = new System.Drawing.Point(12, 140);
             this.buttonShowQR.Name = "buttonShowQR";
             this.buttonShowQR.Size = new System.Drawing.Size(75, 23);
             this.buttonShowQR.TabIndex = 10;
@@ -146,7 +147,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(375, 208);
+            this.ClientSize = new System.Drawing.Size(375, 175);
             this.Controls.Add(this.buttonShowQR);
             this.Controls.Add(this.buttonCopyTotp);
             this.Controls.Add(this.buttonEdit);
@@ -156,6 +157,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.CancelButton = this.buttonClose;
             this.Name = "ShowOneTimePasswords";
             this.Text = "Timed Passwords";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ShowOneTimePasswords_FormClosing);

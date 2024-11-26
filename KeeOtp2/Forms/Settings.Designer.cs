@@ -38,12 +38,22 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelStatus = new System.Windows.Forms.Label();
             this.groupBoxHotkey = new System.Windows.Forms.GroupBox();
+            this.groupBoxOther = new System.Windows.Forms.GroupBox();
+            this.groupBoxCompatibleWithKeeTrayTotp = new System.Windows.Forms.GroupBox();
             this.textBoxHotKeySequence = new System.Windows.Forms.TextBox();
             this.labelHotKeySequence = new System.Windows.Forms.Label();
             this.labelUseHotKey = new System.Windows.Forms.Label();
             this.hotKeyControlExGlobalHotkey = new KeePass.UI.HotKeyControlEx();
             this.labelGlobalHotkey = new System.Windows.Forms.Label();
+            this.labelBeforeScanQr = new System.Windows.Forms.Label();
+            this.labelWhenSaveTotpSettings = new System.Windows.Forms.Label();
+            this.labelKeyOfTotpSeed = new System.Windows.Forms.Label();
+            this.labelKeyOfTotpSettings = new System.Windows.Forms.Label();
+            this.comboBoxKeyOfTotpSeed = new System.Windows.Forms.ComboBox();
+            this.comboBoxKeyOfTotpSettings = new System.Windows.Forms.ComboBox();
             this.checkBoxUseHotkey = new System.Windows.Forms.CheckBox();
+            this.checkBoxAskConfirmScanQr = new System.Windows.Forms.CheckBox();
+            this.checkBoxSetSettingsForKeeTrayTotp = new System.Windows.Forms.CheckBox();
             this.groupBoxTime = new System.Windows.Forms.GroupBox();
             this.labelOverrideBuiltInTime = new System.Windows.Forms.Label();
             this.checkBoxOverrideBuiltInTime = new System.Windows.Forms.CheckBox();
@@ -58,6 +68,9 @@
             this.groupBoxContextMenu = new System.Windows.Forms.GroupBox();
             this.labelShowContextMenuItem = new System.Windows.Forms.Label();
             this.checkBoxShowContextMenuItem = new System.Windows.Forms.CheckBox();
+            this.labelShowQrCodeContextMenuItem = new System.Windows.Forms.Label();
+            this.checkBoxShowQrCodeContextMenuItem = new System.Windows.Forms.CheckBox();
+            this.checkBoxSetSettingsForKeeTrayTotp = new System.Windows.Forms.CheckBox();
             this.labelUseLocalHotkey = new System.Windows.Forms.Label();
             this.hotKeyControlExLocalHotkey = new KeePass.UI.HotKeyControlEx();
             this.labelLocalHotkey = new System.Windows.Forms.Label();
@@ -65,6 +78,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBanner)).BeginInit();
             this.groupBoxMigration.SuspendLayout();
             this.groupBoxHotkey.SuspendLayout();
+            this.groupBoxOther.SuspendLayout();
+            this.groupBoxCompatibleWithKeeTrayTotp.SuspendLayout();
             this.groupBoxTime.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedTimeOffset)).BeginInit();
             this.groupBoxContextMenu.SuspendLayout();
@@ -95,6 +110,7 @@
             // 
             // comboBoxMigrate
             // 
+            this.comboBoxMigrate.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             this.comboBoxMigrate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxMigrate.FormattingEnabled = true;
             this.comboBoxMigrate.Location = new System.Drawing.Point(147, 16);
@@ -172,8 +188,102 @@
             this.groupBoxHotkey.TabStop = false;
             this.groupBoxHotkey.Text = "HotKey";
             // 
+            // groupBoxOther
+            // 
+            this.groupBoxOther.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxOther.Controls.Add(this.labelBeforeScanQr);
+            this.groupBoxOther.Controls.Add(this.checkBoxAskConfirmScanQr);
+            this.groupBoxOther.Location = new System.Drawing.Point(12, 565);
+            this.groupBoxOther.Name = "groupBoxOther";
+            this.groupBoxOther.Size = new System.Drawing.Size(303, 45);
+            this.groupBoxOther.TabIndex = 10;
+            this.groupBoxOther.TabStop = false;
+            this.groupBoxOther.Text = "Other";
+            // 
+            // groupBoxCompatibleWithKeeTrayTotp
+            // 
+            this.groupBoxCompatibleWithKeeTrayTotp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxCompatibleWithKeeTrayTotp.Controls.Add(this.labelWhenSaveTotpSettings);
+            this.groupBoxCompatibleWithKeeTrayTotp.Controls.Add(this.checkBoxSetSettingsForKeeTrayTotp);
+            this.groupBoxCompatibleWithKeeTrayTotp.Controls.Add(this.labelKeyOfTotpSeed);
+            this.groupBoxCompatibleWithKeeTrayTotp.Controls.Add(this.comboBoxKeyOfTotpSeed);
+            this.groupBoxCompatibleWithKeeTrayTotp.Controls.Add(this.labelKeyOfTotpSettings);
+            this.groupBoxCompatibleWithKeeTrayTotp.Controls.Add(this.comboBoxKeyOfTotpSettings);
+            this.groupBoxCompatibleWithKeeTrayTotp.Location = new System.Drawing.Point(12, 465);
+            this.groupBoxCompatibleWithKeeTrayTotp.Name = "groupBoxCompatibleWithKeeTrayTotp";
+            this.groupBoxCompatibleWithKeeTrayTotp.Size = new System.Drawing.Size(303, 95);
+            this.groupBoxCompatibleWithKeeTrayTotp.TabIndex = 10;
+            this.groupBoxCompatibleWithKeeTrayTotp.TabStop = false;
+            this.groupBoxCompatibleWithKeeTrayTotp.Text = "Compatible With KeeTrayTOTP";
+            // 
+            // labelWhenSaveTotpSettings
+            // 
+            this.labelWhenSaveTotpSettings.AutoSize = true;
+            this.labelWhenSaveTotpSettings.Location = new System.Drawing.Point(6, 20);
+            this.labelWhenSaveTotpSettings.Name = "labelWhenSaveTotpSettings";
+            this.labelWhenSaveTotpSettings.Size = new System.Drawing.Size(117, 13);
+            this.labelWhenSaveTotpSettings.TabIndex = 2;
+            this.labelWhenSaveTotpSettings.Text = "When Save TOTP Settings:";
+            // 
+            // checkBoxSetSettingsForKeeTrayTotp
+            // 
+            this.checkBoxSetSettingsForKeeTrayTotp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxSetSettingsForKeeTrayTotp.AutoSize = true;
+            this.checkBoxSetSettingsForKeeTrayTotp.Location = new System.Drawing.Point(147, 19);
+            this.checkBoxSetSettingsForKeeTrayTotp.Name = "checkBoxSetSettingsForKeeTrayTotp";
+            this.checkBoxSetSettingsForKeeTrayTotp.Size = new System.Drawing.Size(153, 17);
+            this.checkBoxSetSettingsForKeeTrayTotp.TabIndex = 1;
+            this.checkBoxSetSettingsForKeeTrayTotp.Text = "Set Settings For KeeTrayTOTP";
+            this.checkBoxSetSettingsForKeeTrayTotp.UseVisualStyleBackColor = true;
+            this.checkBoxSetSettingsForKeeTrayTotp.CheckedChanged += new System.EventHandler(this.checkBoxSetSettingsForKeeTrayTotp_CheckedChanged);
+            // 
+            // labelKeyOfTotpSeed
+            // 
+            this.labelKeyOfTotpSeed.AutoSize = true;
+            this.labelKeyOfTotpSeed.Location = new System.Drawing.Point(6, 45);
+            this.labelKeyOfTotpSeed.Name = "labelKeyOfTotpSeed";
+            this.labelKeyOfTotpSeed.Size = new System.Drawing.Size(117, 13);
+            this.labelKeyOfTotpSeed.TabIndex = 2;
+            this.labelKeyOfTotpSeed.Text = "Key of TOTP Seed:";
+            //
+            // comboBoxKeyOfTotpSeed
+            //
+            this.comboBoxKeyOfTotpSeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxKeyOfTotpSeed.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.comboBoxKeyOfTotpSeed.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.comboBoxKeyOfTotpSeed.FormattingEnabled = true;
+            this.comboBoxKeyOfTotpSeed.Location = new System.Drawing.Point(147, 40);
+            this.comboBoxKeyOfTotpSeed.Name = "ComboBoxTOTPSettingsStringName";
+            this.comboBoxKeyOfTotpSeed.Size = new System.Drawing.Size(150, 21);
+            this.comboBoxKeyOfTotpSeed.TabIndex = 2;
+            this.comboBoxKeyOfTotpSeed.Tag = "";
+            // 
+            // labelKeyOfTotpSettings
+            // 
+            this.labelKeyOfTotpSettings.AutoSize = true;
+            this.labelKeyOfTotpSettings.Location = new System.Drawing.Point(6, 70);
+            this.labelKeyOfTotpSettings.Name = "labelKeyOfTotpSettings";
+            this.labelKeyOfTotpSettings.Size = new System.Drawing.Size(117, 13);
+            this.labelKeyOfTotpSettings.TabIndex = 2;
+            this.labelKeyOfTotpSettings.Text = "Key of TOTP Settings:";
+            //
+            // comboBoxKeyOfTotpSettings
+            //
+            this.comboBoxKeyOfTotpSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxKeyOfTotpSettings.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.comboBoxKeyOfTotpSettings.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.comboBoxKeyOfTotpSettings.FormattingEnabled = true;
+            this.comboBoxKeyOfTotpSettings.Location = new System.Drawing.Point(147, 65);
+            this.comboBoxKeyOfTotpSettings.Name = "ComboBoxTOTPSettingsStringName";
+            this.comboBoxKeyOfTotpSettings.Size = new System.Drawing.Size(150, 21);
+            this.comboBoxKeyOfTotpSettings.TabIndex = 2;
+            this.comboBoxKeyOfTotpSettings.Tag = "";
+            // 
             // textBoxHotKeySequence
             // 
+            this.textBoxHotKeySequence.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             this.textBoxHotKeySequence.Cursor = System.Windows.Forms.Cursors.Hand;
             this.textBoxHotKeySequence.Location = new System.Drawing.Point(147, 42);
             this.textBoxHotKeySequence.Name = "textBoxHotKeySequence";
@@ -223,11 +333,32 @@
             this.checkBoxUseHotkey.AutoSize = true;
             this.checkBoxUseHotkey.Location = new System.Drawing.Point(147, 19);
             this.checkBoxUseHotkey.Name = "checkBoxUseHotkey";
-            this.checkBoxUseHotkey.Size = new System.Drawing.Size(113, 17);
+            this.checkBoxUseHotkey.Size = new System.Drawing.Size(128, 17);
             this.checkBoxUseHotkey.TabIndex = 1;
             this.checkBoxUseHotkey.Text = "Use global Hotkey";
             this.checkBoxUseHotkey.UseVisualStyleBackColor = true;
             this.checkBoxUseHotkey.CheckedChanged += new System.EventHandler(this.checkBoxUseHotkey_CheckedChanged);
+            // 
+            // labelBeforeScanQr
+            // 
+            this.labelBeforeScanQr.AutoSize = true;
+            this.labelBeforeScanQr.Location = new System.Drawing.Point(6, 20);
+            this.labelBeforeScanQr.Name = "labelBeforeScanQr";
+            this.labelBeforeScanQr.Size = new System.Drawing.Size(117, 13);
+            this.labelBeforeScanQr.TabIndex = 2;
+            this.labelBeforeScanQr.Text = "Before scanning the QR code:";
+            // 
+            // checkBoxAskConfirmScan
+            // 
+            this.checkBoxAskConfirmScanQr.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxAskConfirmScanQr.AutoSize = true;
+            this.checkBoxAskConfirmScanQr.Location = new System.Drawing.Point(147, 19);
+            this.checkBoxAskConfirmScanQr.Name = "checkBoxAskConfirmScan";
+            this.checkBoxAskConfirmScanQr.Size = new System.Drawing.Size(153, 17);
+            this.checkBoxAskConfirmScanQr.TabIndex = 1;
+            this.checkBoxAskConfirmScanQr.Text = "Display confirmation prompt";
+            this.checkBoxAskConfirmScanQr.UseVisualStyleBackColor = true;
+            this.checkBoxAskConfirmScanQr.CheckedChanged += new System.EventHandler(this.checkBoxUseHotkey_CheckedChanged);
             // 
             // groupBoxTime
             // 
@@ -242,7 +373,7 @@
             this.groupBoxTime.Controls.Add(this.radioButtonCustomNtpServer);
             this.groupBoxTime.Controls.Add(this.radioButtonFixedTimeOffset);
             this.groupBoxTime.Controls.Add(this.radioButtonSystemTime);
-            this.groupBoxTime.Location = new System.Drawing.Point(12, 319);
+            this.groupBoxTime.Location = new System.Drawing.Point(12, 339);
             this.groupBoxTime.Name = "groupBoxTime";
             this.groupBoxTime.Size = new System.Drawing.Size(303, 120);
             this.groupBoxTime.TabIndex = 8;
@@ -260,10 +391,11 @@
             // 
             // checkBoxOverrideBuiltInTime
             // 
+            this.checkBoxOverrideBuiltInTime.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             this.checkBoxOverrideBuiltInTime.AutoSize = true;
             this.checkBoxOverrideBuiltInTime.Location = new System.Drawing.Point(147, 96);
             this.checkBoxOverrideBuiltInTime.Name = "checkBoxOverrideBuiltInTime";
-            this.checkBoxOverrideBuiltInTime.Size = new System.Drawing.Size(121, 17);
+            this.checkBoxOverrideBuiltInTime.Size = new System.Drawing.Size(155, 17);
             this.checkBoxOverrideBuiltInTime.TabIndex = 9;
             this.checkBoxOverrideBuiltInTime.Text = "Override built-in time";
             this.checkBoxOverrideBuiltInTime.UseVisualStyleBackColor = true;
@@ -283,7 +415,7 @@
             // 
             this.labelTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTime.AutoSize = true;
-            this.labelTime.Location = new System.Drawing.Point(178, 21);
+            this.labelTime.Location = new System.Drawing.Point(147, 21);
             this.labelTime.Name = "labelTime";
             this.labelTime.Size = new System.Drawing.Size(119, 13);
             this.labelTime.TabIndex = 10;
@@ -361,13 +493,15 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxContextMenu.Controls.Add(this.labelShowContextMenuItem);
             this.groupBoxContextMenu.Controls.Add(this.checkBoxShowContextMenuItem);
+            this.groupBoxContextMenu.Controls.Add(this.labelShowQrCodeContextMenuItem);
+            this.groupBoxContextMenu.Controls.Add(this.checkBoxShowQrCodeContextMenuItem);
             this.groupBoxContextMenu.Controls.Add(this.labelUseLocalHotkey);
             this.groupBoxContextMenu.Controls.Add(this.hotKeyControlExLocalHotkey);
             this.groupBoxContextMenu.Controls.Add(this.labelLocalHotkey);
             this.groupBoxContextMenu.Controls.Add(this.checkBoxUseLocalHotkey);
             this.groupBoxContextMenu.Location = new System.Drawing.Point(12, 215);
             this.groupBoxContextMenu.Name = "groupBoxContextMenu";
-            this.groupBoxContextMenu.Size = new System.Drawing.Size(303, 98);
+            this.groupBoxContextMenu.Size = new System.Drawing.Size(303, 118);
             this.groupBoxContextMenu.TabIndex = 8;
             this.groupBoxContextMenu.TabStop = false;
             this.groupBoxContextMenu.Text = "Context Menu (changes apply after restart)";
@@ -392,6 +526,26 @@
             this.checkBoxShowContextMenuItem.Text = "Show \"Copy TOTP\"";
             this.checkBoxShowContextMenuItem.UseVisualStyleBackColor = true;
             this.checkBoxShowContextMenuItem.CheckedChanged += new System.EventHandler(this.checkBoxShowCopyTotp_CheckedChanged);
+            // 
+            // labelShowQrCodeContextMenuItem
+            // 
+            this.labelShowQrCodeContextMenuItem.AutoSize = true;
+            this.labelShowQrCodeContextMenuItem.Location = new System.Drawing.Point(6, 95);
+            this.labelShowQrCodeContextMenuItem.Name = "labelShowQrCodeContextMenuItem";
+            this.labelShowQrCodeContextMenuItem.Size = new System.Drawing.Size(111, 13);
+            this.labelShowQrCodeContextMenuItem.TabIndex = 6;
+            this.labelShowQrCodeContextMenuItem.Text = "QR Code context menu:";
+            // 
+            // checkBoxShowQrCodeContextMenuItem
+            // 
+            this.checkBoxShowQrCodeContextMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxShowQrCodeContextMenuItem.AutoSize = true;
+            this.checkBoxShowQrCodeContextMenuItem.Location = new System.Drawing.Point(147, 94);
+            this.checkBoxShowQrCodeContextMenuItem.Name = "checkBoxShowQrCodeContextMenuItem";
+            this.checkBoxShowQrCodeContextMenuItem.Size = new System.Drawing.Size(140, 17);
+            this.checkBoxShowQrCodeContextMenuItem.TabIndex = 8;
+            this.checkBoxShowQrCodeContextMenuItem.Text = "Show \"Show QR Code\"";
+            this.checkBoxShowQrCodeContextMenuItem.UseVisualStyleBackColor = true;
             // 
             // labelUseLocalHotkey
             // 
@@ -425,7 +579,7 @@
             this.checkBoxUseLocalHotkey.AutoSize = true;
             this.checkBoxUseLocalHotkey.Location = new System.Drawing.Point(147, 44);
             this.checkBoxUseLocalHotkey.Name = "checkBoxUseLocalHotkey";
-            this.checkBoxUseLocalHotkey.Size = new System.Drawing.Size(107, 17);
+            this.checkBoxUseLocalHotkey.Size = new System.Drawing.Size(122, 17);
             this.checkBoxUseLocalHotkey.TabIndex = 1;
             this.checkBoxUseLocalHotkey.Text = "Use local Hotkey";
             this.checkBoxUseLocalHotkey.UseVisualStyleBackColor = true;
@@ -439,14 +593,17 @@
             this.Controls.Add(this.groupBoxContextMenu);
             this.Controls.Add(this.groupBoxTime);
             this.Controls.Add(this.groupBoxHotkey);
+            this.Controls.Add(this.groupBoxOther);
+            this.Controls.Add(this.groupBoxCompatibleWithKeeTrayTotp);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.groupBoxMigration);
             this.Controls.Add(this.pictureBoxBanner);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            // this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.CancelButton = this.buttonCancel;
             this.Name = "Settings";
             this.Text = "Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Settings_FormClosing);
@@ -456,6 +613,10 @@
             this.groupBoxMigration.PerformLayout();
             this.groupBoxHotkey.ResumeLayout(false);
             this.groupBoxHotkey.PerformLayout();
+            this.groupBoxOther.ResumeLayout(false);
+            this.groupBoxOther.PerformLayout();
+            this.groupBoxCompatibleWithKeeTrayTotp.ResumeLayout(false);
+            this.groupBoxCompatibleWithKeeTrayTotp.PerformLayout();
             this.groupBoxTime.ResumeLayout(false);
             this.groupBoxTime.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedTimeOffset)).EndInit();
@@ -476,10 +637,20 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.GroupBox groupBoxHotkey;
+        private System.Windows.Forms.GroupBox groupBoxOther;
+        private System.Windows.Forms.GroupBox groupBoxCompatibleWithKeeTrayTotp;
+        private System.Windows.Forms.Label labelWhenSaveTotpSettings;
+        private System.Windows.Forms.CheckBox checkBoxSetSettingsForKeeTrayTotp;
+        private System.Windows.Forms.Label labelKeyOfTotpSeed;
+        private System.Windows.Forms.ComboBox comboBoxKeyOfTotpSeed;
+        private System.Windows.Forms.Label labelKeyOfTotpSettings;
+        private System.Windows.Forms.ComboBox comboBoxKeyOfTotpSettings;
         private System.Windows.Forms.Label labelUseHotKey;
         private KeePass.UI.HotKeyControlEx hotKeyControlExGlobalHotkey;
         private System.Windows.Forms.Label labelGlobalHotkey;
+        private System.Windows.Forms.Label labelBeforeScanQr;
         private System.Windows.Forms.CheckBox checkBoxUseHotkey;
+        private System.Windows.Forms.CheckBox checkBoxAskConfirmScanQr;
         private System.Windows.Forms.ComboBox comboBoxMigrate;
         private System.Windows.Forms.TextBox textBoxHotKeySequence;
         private System.Windows.Forms.Label labelHotKeySequence;
@@ -497,6 +668,8 @@
         private System.Windows.Forms.GroupBox groupBoxContextMenu;
         private System.Windows.Forms.Label labelShowContextMenuItem;
         private System.Windows.Forms.CheckBox checkBoxShowContextMenuItem;
+        private System.Windows.Forms.Label labelShowQrCodeContextMenuItem;
+        private System.Windows.Forms.CheckBox checkBoxShowQrCodeContextMenuItem;
         private System.Windows.Forms.Label labelUseLocalHotkey;
         private KeePass.UI.HotKeyControlEx hotKeyControlExLocalHotkey;
         private System.Windows.Forms.Label labelLocalHotkey;

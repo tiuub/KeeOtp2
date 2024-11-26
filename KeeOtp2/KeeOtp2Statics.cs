@@ -44,6 +44,8 @@ namespace KeeOtp2
         public static readonly string Sha512 = "Sha-512";
         public static readonly string Migration = "Migration";
         public static readonly string HotKey = "HotKey";
+        public static readonly string Other = "Other";
+        public static readonly string CompatibleWithKeeTrayTotp = "Compatible With KeeTrayTOTP";
         public static readonly string GlobalTime = "Global Time";
         public static readonly string TOTP = "TOTP";
         public static readonly string Information = "Information";
@@ -57,7 +59,7 @@ namespace KeeOtp2
 
         public static readonly string About = "About";
         public static readonly string AboutSubline = "KeeOtp2 Plugin.";
-        public static readonly string AboutDisclaimer = "KeeOtp2 by tiuub.\nVersion: {0}\nLicense: MIT\n\nKeeOtp2 is based on KeeOtp(1).\nOriginally developed by devinmartin.";
+        public static readonly string AboutDisclaimer = "KeeOtp2 by tiuub.\nVersion: {0}\nLicense: MIT\n\nKeeOtp2 is based on KeeOtp(1).\nOriginally developed by devinmartin.\nMod by mfz v1.0.0";
         public static readonly string AboutMessageBoxOpenRepository = "The GitHub Repository will now be opened.\nYou can open the ReadMe and scroll down, until you see Dependencies. There you will find references to the source code, the author and the license of the dependencies.\n\nDo you want to continue?";
         public static readonly string AboutMessageBoxCantLoadLicense = "Cant load license of {0}.\n\nJust try to open the GitHub Repository and scroll down, until Dependencies.There are all licenses!";
 
@@ -81,6 +83,12 @@ namespace KeeOtp2
         public static readonly string SettingsMigratieEntryTo = "Migrate every entry to";
         public static readonly string SettingsTOTPGlobalAutoType = "TOTP global auto-type";
         public static readonly string SettingsUseGlobalHotkey = "Use global Hotkey";
+        public static readonly string SettingsBeforeScanningTheQRCode = "Before scanning the QR code";
+        public static readonly string SettingsDisplayConfirmationPrompt = "Display confirmation prompt";
+        public static readonly string SettingsWhenSaveTotpSettings = "When Save TOTP Settings";
+        public static readonly string SettingsKeyOfTotpSeed = "Key of TOTP Seed";
+        public static readonly string SettingsKeyOfTotpSettings = "Key of TOTP Settings";
+        public static readonly string SettingsSetSettingsForKeeTrayTotp = "Set Settings For KeeTrayTOTP";
         public static readonly string SettingsHotKeySequence = "HotKey Sequence";
         public static readonly string SettingsGlobalHotKey = "Global HotKey";
         public static readonly string SettingsContextMenu = "Right-Click Context Menu (changes apply after restart)";
@@ -88,6 +96,8 @@ namespace KeeOtp2
         public static readonly string SettingsShowCopyTotp = "Show \"Copy TOTP\"";
         public static readonly string SettingsTotpToClipboard = "TOTP to clipboard";
         public static readonly string SettingsUseLocalHotkey = "Use local Hotkey";
+        public static readonly string SettingsShowQrCode = "Show \"Show QR Code\"";
+        public static readonly string SettingsQrCodeContextMenu = "QR Code context menu";
         public static readonly string SettingsLocalHotKey = "Local Hotkey";
         public static readonly string SettingsUseSystemTime = "Use time of system";
         public static readonly string SettingsPreviewUtc = "Preview (Utc): {0}";
@@ -102,7 +112,8 @@ namespace KeeOtp2
         public static readonly string ShowOtpIncorrect = "Incorrect?";
         public static readonly string ShowOtpNextCode = "Next code";
         public static readonly string ShowOtpShowQr = "Show Qr";
-        public static readonly string ShowOtpNextRemaining = TOTP + " - Time remaining: {0} - Next code: {1}";
+        // The original text is too long
+        public static readonly string ShowOtpNextRemaining = TOTP + " - Countdown: {0} - Next code: {1}";
         public static readonly string ShowOtpNextCounter = TOTP + " - Counter: {0} - Next code: {1}";
 
         public static readonly string ShowQr = "QR Code";
@@ -140,6 +151,7 @@ namespace KeeOtp2
 
         public static readonly string ToolStripMenuConfigure = "Configure TOTP";
         public static readonly string ToolStripMenuShowOtp = "Show TOTP";
+        public static readonly string ToolStripMenuShowQrCode = "Show QR Code";
         public static readonly string ToolStripMenuCopyOtp = "Copy TOTP";
 
         public static readonly string ToolTipMigrateHeadline = "Why I am seeing this?";

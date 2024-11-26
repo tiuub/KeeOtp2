@@ -40,6 +40,7 @@ namespace KeeOtp2
         public Settings(IPluginHost host)
         {
             InitializeComponent();
+            this.ClientSize = new System.Drawing.Size(620, 900);
 
             this.host = host;
         }
@@ -89,6 +90,8 @@ namespace KeeOtp2
             labelUseLocalHotkey.Text = KeeOtp2Statics.SettingsTotpToClipboard + KeeOtp2Statics.SelectorChar;
             checkBoxUseLocalHotkey.Text = KeeOtp2Statics.SettingsUseLocalHotkey;
             labelLocalHotkey.Text = KeeOtp2Statics.SettingsLocalHotKey + KeeOtp2Statics.SelectorChar;
+            checkBoxShowQrCodeContextMenuItem.Text = KeeOtp2Statics.SettingsShowQrCode;
+            labelShowQrCodeContextMenuItem.Text = KeeOtp2Statics.SettingsQrCodeContextMenu + KeeOtp2Statics.SelectorChar;
 
             groupBoxTime.Text = KeeOtp2Statics.GlobalTime + KeeOtp2Statics.InformationChar + KeeOtp2Statics.SelectorChar;
             radioButtonSystemTime.Text = KeeOtp2Statics.SettingsUseSystemTime;
@@ -101,6 +104,28 @@ namespace KeeOtp2
             labelStatus.Text = KeeOtp2Statics.HoverInformation;
             buttonOK.Text = KeeOtp2Statics.OK;
             buttonCancel.Text = KeeOtp2Statics.Cancel;
+
+            groupBoxOther.Text = KeeOtp2Statics.Other;
+            labelBeforeScanQr.Text = KeeOtp2Statics.SettingsBeforeScanningTheQRCode + KeeOtp2Statics.SelectorChar;
+            checkBoxAskConfirmScanQr.Text = KeeOtp2Statics.SettingsDisplayConfirmationPrompt;
+
+            groupBoxCompatibleWithKeeTrayTotp.Text = KeeOtp2Statics.CompatibleWithKeeTrayTotp;
+            labelWhenSaveTotpSettings.Text = KeeOtp2Statics.SettingsWhenSaveTotpSettings + KeeOtp2Statics.SelectorChar;
+            checkBoxSetSettingsForKeeTrayTotp.Text = KeeOtp2Statics.SettingsSetSettingsForKeeTrayTotp;
+            labelKeyOfTotpSeed.Text = KeeOtp2Statics.SettingsKeyOfTotpSeed + KeeOtp2Statics.SelectorChar;
+            labelKeyOfTotpSettings.Text = KeeOtp2Statics.SettingsKeyOfTotpSettings + KeeOtp2Statics.SelectorChar;
+
+            if (host.MainWindow.ActiveDatabase.IsOpen)
+            {
+                foreach (var str in host.MainWindow.ActiveDatabase.RootGroup.GetEntries(true).SelectMany(pe => pe.Strings))
+                {
+                    if (!comboBoxKeyOfTotpSeed.Items.Contains(str.Key))
+                    {
+                        comboBoxKeyOfTotpSeed.Items.Add(str.Key);
+                        comboBoxKeyOfTotpSettings.Items.Add(str.Key);
+                    }
+                }
+            }
 
             ToolTip toolTip = new ToolTip();
             toolTip.ToolTipTitle = KeeOtp2Statics.Settings;
@@ -195,6 +220,7 @@ namespace KeeOtp2
                 checkBoxUseLocalHotkey.Enabled = false;
                 hotKeyControlExLocalHotkey.Enabled = false;
             }
+            checkBoxShowQrCodeContextMenuItem.Checked = KeeOtp2Config.ShowQrCodeContextMenuItem;
 
 
             radioButtonSystemTime.Checked =
@@ -223,6 +249,11 @@ namespace KeeOtp2
             numericUpDownFixedTimeOffset.Value = OtpTime.getFixedTimeOffset();
             textBoxCustomNTPServerAddress.Text = OtpTime.getCustomNtpServer();
             checkBoxOverrideBuiltInTime.Checked = OtpTime.getOverrideBuiltInTime();
+
+            checkBoxAskConfirmScanQr.Checked = KeeOtp2Config.AskConfirmScanQr;
+            checkBoxSetSettingsForKeeTrayTotp.Checked = KeeOtp2Config.SetSettingsForKeeTrayTotp;
+            comboBoxKeyOfTotpSeed.Text = KeeOtp2Config.KeyOfTotpSeed;
+            comboBoxKeyOfTotpSettings.Text = KeeOtp2Config.KeyOfTotpSettings;
         }
 
         private void Settings_FormClosing(object sender, FormClosingEventArgs e)
@@ -244,6 +275,8 @@ namespace KeeOtp2
                 KeeOtp2Config.UseLocalHotKey = checkBoxUseLocalHotkey.Checked;
                 showRestartMessageBox |= KeeOtp2Config.LocalHotKeyKeys != hotKeyControlExLocalHotkey.HotKey;
                 KeeOtp2Config.LocalHotKeyKeys = hotKeyControlExLocalHotkey.HotKey;
+                showRestartMessageBox |= KeeOtp2Config.ShowQrCodeContextMenuItem != checkBoxShowQrCodeContextMenuItem.Checked;
+                KeeOtp2Config.ShowQrCodeContextMenuItem = checkBoxShowQrCodeContextMenuItem.Checked;
 
                 if (radioButtonSystemTime.Checked)
                     KeeOtp2Config.TimeType = OtpTimeType.SystemTime;
@@ -260,7 +293,13 @@ namespace KeeOtp2
                     KeeOtp2Config.OverrideBuiltInTime = checkBoxOverrideBuiltInTime.Checked;
                 }
 
-                MessageBox.Show(KeeOtp2Statics.MessageBoxSettingsRestartNotification, KeeOtp2Statics.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                KeeOtp2Config.AskConfirmScanQr = checkBoxAskConfirmScanQr.Checked;
+                KeeOtp2Config.SetSettingsForKeeTrayTotp = checkBoxSetSettingsForKeeTrayTotp.Checked;
+                KeeOtp2Config.KeyOfTotpSeed = comboBoxKeyOfTotpSeed.Text;
+                KeeOtp2Config.KeyOfTotpSettings = comboBoxKeyOfTotpSettings.Text;
+
+                if (showRestartMessageBox)
+                    MessageBox.Show(KeeOtp2Statics.MessageBoxSettingsRestartNotification, KeeOtp2Statics.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -308,6 +347,10 @@ namespace KeeOtp2
         {
             hotKeyControlExGlobalHotkey.Enabled =
                 textBoxHotKeySequence.Enabled = checkBoxUseHotkey.Checked;
+        }
+
+        private void checkBoxSetSettingsForKeeTrayTotp_CheckedChanged(object sender, EventArgs e)
+        {
         }
 
         private void checkBoxShowCopyTotp_CheckedChanged(object sender, EventArgs e)

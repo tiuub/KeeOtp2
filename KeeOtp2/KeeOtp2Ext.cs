@@ -21,6 +21,7 @@ namespace KeeOtp2
         private ToolStripMenuItem EntryContextMenuCopyItem;
         private ToolStripMenuItem EntryContextMenuConfigureSubItem;
         private ToolStripMenuItem EntryContextMenuShowOtpSubItem;
+        private ToolStripMenuItem EntryContextMenuShowQrCodeSubItem;
         private ToolStripMenuItem EntryContextMenuCopySubItem;
 
         private ToolStripMenuItem ToolsMenuMainItem;
@@ -68,6 +69,15 @@ namespace KeeOtp2
             this.EntryContextMenuMainItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
             this.EntryContextMenuMainItem.DropDownItems.Add(this.EntryContextMenuCopySubItem);
             this.EntryContextMenuMainItem.DropDownItems.Add(this.EntryContextMenuShowOtpSubItem);
+
+            if (KeeOtp2Config.ShowQrCodeContextMenuItem)
+            {
+                this.EntryContextMenuShowQrCodeSubItem = new ToolStripMenuItem(KeeOtp2Statics.ToolStripMenuShowQrCode);
+                this.EntryContextMenuShowQrCodeSubItem.Image = host.MainWindow.ClientIcons.Images[(int)PwIcon.Clock];
+                this.EntryContextMenuShowQrCodeSubItem.Click += otpShowQrCodeStripItem_Click;
+                this.EntryContextMenuMainItem.DropDownItems.Add(this.EntryContextMenuShowQrCodeSubItem);
+            }
+
             this.EntryContextMenuMainItem.DropDownItems.Add(this.EntryContextMenuConfigureSubItem);
 
             if (KeeOtp2Config.ShowContextMenuItem)
@@ -124,7 +134,7 @@ namespace KeeOtp2
                     OtpAuthData data = OtpAuthUtils.loadData(entry);
                     if (data != null)
                     {
-                        
+
                         if (!OtpAuthUtils.checkBuiltInMode(entry) ||
                         (OtpAuthUtils.checkEntry(entry) && OtpTime.getOverrideBuiltInTime() && (OtpTime.getTimeType() == OtpTimeType.FixedOffset || OtpTime.getTimeType() == OtpTimeType.CustomNtpServer)) ||
                         !data.Proprietary)
@@ -186,8 +196,12 @@ namespace KeeOtp2
             }
             this.EntryContextMenuMainItem.Enabled =
             this.EntryContextMenuConfigureSubItem.Enabled =
-            this.EntryContextMenuCopySubItem.Enabled = 
+            this.EntryContextMenuCopySubItem.Enabled =
             this.EntryContextMenuShowOtpSubItem.Enabled = selectedOne;
+            if (this.EntryContextMenuShowQrCodeSubItem != null)
+            {
+                this.EntryContextMenuShowQrCodeSubItem.Enabled = selectedOne;
+            }
         }
 
         private void otpConfigureToolStripItem_Click(object sender, EventArgs e)
@@ -210,6 +224,27 @@ namespace KeeOtp2
                 ShowOneTimePasswords sotp = new ShowOneTimePasswords(this.host, entry);
                 sotp.InitEx();
                 sotp.ShowDialog(this.host.MainWindow);
+            }
+        }
+
+        private void otpShowQrCodeStripItem_Click(object sender, EventArgs e)
+        {
+            PwEntry entry;
+            if (GetSelectedSingleEntry(out entry))
+            {
+                var data = OtpAuthUtils.loadData(entry);
+                if (data == null)
+                {
+                    OtpInformation addEditForm = new OtpInformation(this.host, entry, data);
+                    addEditForm.InitEx();
+                    addEditForm.ShowDialog(this.host.MainWindow);
+                }
+                else
+                {
+                    ShowQrCode sotp = new ShowQrCode(this.host, entry, data);
+                    sotp.InitEx();
+                    sotp.ShowDialog(this.host.MainWindow);
+                }
             }
         }
 
