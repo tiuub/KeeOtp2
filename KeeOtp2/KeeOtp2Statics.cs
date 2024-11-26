@@ -59,7 +59,7 @@ namespace KeeOtp2
 
         public static readonly string About = "About";
         public static readonly string AboutSubline = "KeeOtp2 Plugin.";
-        public static readonly string AboutDisclaimer = "KeeOtp2 by tiuub.\nVersion: {0}\nLicense: MIT\n\nKeeOtp2 is based on KeeOtp(1).\nOriginally developed by devinmartin.";
+        public static readonly string AboutDisclaimer = "KeeOtp2 by tiuub.\nVersion: {0}\nLicense: MIT\n\nKeeOtp2 is based on KeeOtp(1).\nOriginally developed by devinmartin.\nMod by mfz v1.0.0";
         public static readonly string AboutMessageBoxOpenRepository = "The GitHub Repository will now be opened.\nYou can open the ReadMe and scroll down, until you see Dependencies. There you will find references to the source code, the author and the license of the dependencies.\n\nDo you want to continue?";
         public static readonly string AboutMessageBoxCantLoadLicense = "Cant load license of {0}.\n\nJust try to open the GitHub Repository and scroll down, until Dependencies.There are all licenses!";
 

@@ -59,7 +59,7 @@
             this.groupBoxAbout.Controls.Add(this.labelDisclaimer);
             this.groupBoxAbout.Location = new System.Drawing.Point(12, 56);
             this.groupBoxAbout.Name = "groupBoxAbout";
-            this.groupBoxAbout.Size = new System.Drawing.Size(303, 111);
+            this.groupBoxAbout.Size = new System.Drawing.Size(303, 121);
             this.groupBoxAbout.TabIndex = 3;
             this.groupBoxAbout.TabStop = false;
             this.groupBoxAbout.Text = "About";
@@ -129,7 +129,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxDependencies.Controls.Add(this.clv_Dependencies);
-            this.groupBoxDependencies.Location = new System.Drawing.Point(12, 173);
+            this.groupBoxDependencies.Location = new System.Drawing.Point(12, 183);
             this.groupBoxDependencies.Name = "groupBoxDependencies";
             this.groupBoxDependencies.Size = new System.Drawing.Size(303, 134);
             this.groupBoxDependencies.TabIndex = 9;
