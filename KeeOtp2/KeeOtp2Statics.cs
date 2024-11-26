@@ -91,6 +91,8 @@ namespace KeeOtp2
         public static readonly string SettingsShowCopyTotp = "Show \"Copy TOTP\"";
         public static readonly string SettingsTotpToClipboard = "TOTP to clipboard";
         public static readonly string SettingsUseLocalHotkey = "Use local Hotkey";
+        public static readonly string SettingsShowQrCode = "Show \"Show QR Code\"";
+        public static readonly string SettingsQrCodeContextMenu = "QR Code context menu";
         public static readonly string SettingsLocalHotKey = "Local Hotkey";
         public static readonly string SettingsUseSystemTime = "Use time of system";
         public static readonly string SettingsPreviewUtc = "Preview (Utc): {0}";
@@ -144,6 +146,7 @@ namespace KeeOtp2
 
         public static readonly string ToolStripMenuConfigure = "Configure TOTP";
         public static readonly string ToolStripMenuShowOtp = "Show TOTP";
+        public static readonly string ToolStripMenuShowQrCode = "Show QR Code";
         public static readonly string ToolStripMenuCopyOtp = "Copy TOTP";
 
         public static readonly string ToolTipMigrateHeadline = "Why I am seeing this?";

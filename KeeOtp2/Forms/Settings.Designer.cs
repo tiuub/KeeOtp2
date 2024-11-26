@@ -61,6 +61,8 @@
             this.groupBoxContextMenu = new System.Windows.Forms.GroupBox();
             this.labelShowContextMenuItem = new System.Windows.Forms.Label();
             this.checkBoxShowContextMenuItem = new System.Windows.Forms.CheckBox();
+            this.labelShowQrCodeContextMenuItem = new System.Windows.Forms.Label();
+            this.checkBoxShowQrCodeContextMenuItem = new System.Windows.Forms.CheckBox();
             this.labelUseLocalHotkey = new System.Windows.Forms.Label();
             this.hotKeyControlExLocalHotkey = new KeePass.UI.HotKeyControlEx();
             this.labelLocalHotkey = new System.Windows.Forms.Label();
@@ -183,7 +185,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxOther.Controls.Add(this.labelBeforeScanQr);
             this.groupBoxOther.Controls.Add(this.checkBoxAskConfirmScanQr);
-            this.groupBoxOther.Location = new System.Drawing.Point(12, 445);
+            this.groupBoxOther.Location = new System.Drawing.Point(12, 465);
             this.groupBoxOther.Name = "groupBoxOther";
             this.groupBoxOther.Size = new System.Drawing.Size(303, 45);
             this.groupBoxOther.TabIndex = 10;
@@ -282,7 +284,7 @@
             this.groupBoxTime.Controls.Add(this.radioButtonCustomNtpServer);
             this.groupBoxTime.Controls.Add(this.radioButtonFixedTimeOffset);
             this.groupBoxTime.Controls.Add(this.radioButtonSystemTime);
-            this.groupBoxTime.Location = new System.Drawing.Point(12, 319);
+            this.groupBoxTime.Location = new System.Drawing.Point(12, 339);
             this.groupBoxTime.Name = "groupBoxTime";
             this.groupBoxTime.Size = new System.Drawing.Size(303, 120);
             this.groupBoxTime.TabIndex = 8;
@@ -402,13 +404,15 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxContextMenu.Controls.Add(this.labelShowContextMenuItem);
             this.groupBoxContextMenu.Controls.Add(this.checkBoxShowContextMenuItem);
+            this.groupBoxContextMenu.Controls.Add(this.labelShowQrCodeContextMenuItem);
+            this.groupBoxContextMenu.Controls.Add(this.checkBoxShowQrCodeContextMenuItem);
             this.groupBoxContextMenu.Controls.Add(this.labelUseLocalHotkey);
             this.groupBoxContextMenu.Controls.Add(this.hotKeyControlExLocalHotkey);
             this.groupBoxContextMenu.Controls.Add(this.labelLocalHotkey);
             this.groupBoxContextMenu.Controls.Add(this.checkBoxUseLocalHotkey);
             this.groupBoxContextMenu.Location = new System.Drawing.Point(12, 215);
             this.groupBoxContextMenu.Name = "groupBoxContextMenu";
-            this.groupBoxContextMenu.Size = new System.Drawing.Size(303, 98);
+            this.groupBoxContextMenu.Size = new System.Drawing.Size(303, 118);
             this.groupBoxContextMenu.TabIndex = 8;
             this.groupBoxContextMenu.TabStop = false;
             this.groupBoxContextMenu.Text = "Context Menu (changes apply after restart)";
@@ -433,6 +437,26 @@
             this.checkBoxShowContextMenuItem.Text = "Show \"Copy TOTP\"";
             this.checkBoxShowContextMenuItem.UseVisualStyleBackColor = true;
             this.checkBoxShowContextMenuItem.CheckedChanged += new System.EventHandler(this.checkBoxShowCopyTotp_CheckedChanged);
+            // 
+            // labelShowQrCodeContextMenuItem
+            // 
+            this.labelShowQrCodeContextMenuItem.AutoSize = true;
+            this.labelShowQrCodeContextMenuItem.Location = new System.Drawing.Point(6, 95);
+            this.labelShowQrCodeContextMenuItem.Name = "labelShowQrCodeContextMenuItem";
+            this.labelShowQrCodeContextMenuItem.Size = new System.Drawing.Size(111, 13);
+            this.labelShowQrCodeContextMenuItem.TabIndex = 6;
+            this.labelShowQrCodeContextMenuItem.Text = "QR Code context menu:";
+            // 
+            // checkBoxShowQrCodeContextMenuItem
+            // 
+            this.checkBoxShowQrCodeContextMenuItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxShowQrCodeContextMenuItem.AutoSize = true;
+            this.checkBoxShowQrCodeContextMenuItem.Location = new System.Drawing.Point(147, 94);
+            this.checkBoxShowQrCodeContextMenuItem.Name = "checkBoxShowQrCodeContextMenuItem";
+            this.checkBoxShowQrCodeContextMenuItem.Size = new System.Drawing.Size(140, 17);
+            this.checkBoxShowQrCodeContextMenuItem.TabIndex = 8;
+            this.checkBoxShowQrCodeContextMenuItem.Text = "Show \"Show QR Code\"";
+            this.checkBoxShowQrCodeContextMenuItem.UseVisualStyleBackColor = true;
             // 
             // labelUseLocalHotkey
             // 
@@ -545,6 +569,8 @@
         private System.Windows.Forms.GroupBox groupBoxContextMenu;
         private System.Windows.Forms.Label labelShowContextMenuItem;
         private System.Windows.Forms.CheckBox checkBoxShowContextMenuItem;
+        private System.Windows.Forms.Label labelShowQrCodeContextMenuItem;
+        private System.Windows.Forms.CheckBox checkBoxShowQrCodeContextMenuItem;
         private System.Windows.Forms.Label labelUseLocalHotkey;
         private KeePass.UI.HotKeyControlEx hotKeyControlExLocalHotkey;
         private System.Windows.Forms.Label labelLocalHotkey;

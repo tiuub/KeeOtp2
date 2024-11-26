@@ -40,7 +40,7 @@ namespace KeeOtp2
         public Settings(IPluginHost host)
         {
             InitializeComponent();
-            this.ClientSize = new System.Drawing.Size(620, 740);
+            this.ClientSize = new System.Drawing.Size(620, 760);
 
             this.host = host;
         }
@@ -90,6 +90,8 @@ namespace KeeOtp2
             labelUseLocalHotkey.Text = KeeOtp2Statics.SettingsTotpToClipboard + KeeOtp2Statics.SelectorChar;
             checkBoxUseLocalHotkey.Text = KeeOtp2Statics.SettingsUseLocalHotkey;
             labelLocalHotkey.Text = KeeOtp2Statics.SettingsLocalHotKey + KeeOtp2Statics.SelectorChar;
+            checkBoxShowQrCodeContextMenuItem.Text = KeeOtp2Statics.SettingsShowQrCode;
+            labelShowQrCodeContextMenuItem.Text = KeeOtp2Statics.SettingsQrCodeContextMenu + KeeOtp2Statics.SelectorChar;
 
             groupBoxTime.Text = KeeOtp2Statics.GlobalTime + KeeOtp2Statics.InformationChar + KeeOtp2Statics.SelectorChar;
             radioButtonSystemTime.Text = KeeOtp2Statics.SettingsUseSystemTime;
@@ -200,6 +202,7 @@ namespace KeeOtp2
                 checkBoxUseLocalHotkey.Enabled = false;
                 hotKeyControlExLocalHotkey.Enabled = false;
             }
+            checkBoxShowQrCodeContextMenuItem.Checked = KeeOtp2Config.ShowQrCodeContextMenuItem;
 
 
             radioButtonSystemTime.Checked =
@@ -251,6 +254,8 @@ namespace KeeOtp2
                 KeeOtp2Config.UseLocalHotKey = checkBoxUseLocalHotkey.Checked;
                 showRestartMessageBox |= KeeOtp2Config.LocalHotKeyKeys != hotKeyControlExLocalHotkey.HotKey;
                 KeeOtp2Config.LocalHotKeyKeys = hotKeyControlExLocalHotkey.HotKey;
+                showRestartMessageBox |= KeeOtp2Config.ShowQrCodeContextMenuItem != checkBoxShowQrCodeContextMenuItem.Checked;
+                KeeOtp2Config.ShowQrCodeContextMenuItem = checkBoxShowQrCodeContextMenuItem.Checked;
 
                 if (radioButtonSystemTime.Checked)
                     KeeOtp2Config.TimeType = OtpTimeType.SystemTime;
