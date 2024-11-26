@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 using System.Linq;
 using KeeOtp2.Properties;
@@ -544,8 +545,8 @@ namespace KeeOtp2
         private void scanQRCode()
         {
             Uri uri = null;
-            Bitmap bmpScreenshot;
-            Graphics gfxScreenshot;
+            // Bitmap bmpScreenshot;
+            // Graphics gfxScreenshot;
 
             Form p = this;
             while (p != null)
@@ -558,21 +559,65 @@ namespace KeeOtp2
             // Wait until window is closed entirely
             System.Threading.Thread.Sleep(500);
 
+            // int i = 0;
+            // foreach (Screen sc in Screen.AllScreens)
+            // {
+            //     bmpScreenshot = new Bitmap(sc.Bounds.Width, sc.Bounds.Height, PixelFormat.Format32bppArgb);
+            //     gfxScreenshot = Graphics.FromImage(bmpScreenshot);
+            //     gfxScreenshot.CopyFromScreen(sc.Bounds.X, sc.Bounds.Y, 0, 0, sc.Bounds.Size, CopyPixelOperation.SourceCopy);
+            //     try
+            //     {
+            //         uri = OtpAuthUtils.bitmapToUri(bmpScreenshot);
+            //         if (uri != null)
+            //         {
+            //             break;
+            //         }
+            //     }
+            //     catch (CouldNotFindValidUri) { }
+            //     i++;
+            // }
             int i = 0;
             foreach (Screen sc in Screen.AllScreens)
             {
-                bmpScreenshot = new Bitmap(sc.Bounds.Width, sc.Bounds.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-                gfxScreenshot = Graphics.FromImage(bmpScreenshot);
-                gfxScreenshot.CopyFromScreen(sc.Bounds.X, sc.Bounds.Y, 0, 0, sc.Bounds.Size, CopyPixelOperation.SourceCopy);
-                try
+                float scaleX = ScreenUtils.getDpiScale(sc);
+                float scaleY = scaleX;
+
+                int width = sc.Bounds.Width;
+                int height = sc.Bounds.Height;
+                int screenshotWidth = (int)(width / scaleX);
+                int screenshotHeight = (int)(height / scaleY);
+                // using (Bitmap bmpScreenshot = new Bitmap(width, height, PixelFormat.Format32bppArgb))
+                using (var screenshot = new Bitmap(screenshotWidth, screenshotHeight, PixelFormat.Format32bppArgb))
                 {
-                    uri = OtpAuthUtils.bitmapToUri(bmpScreenshot);
-                    if (uri != null)
+                    // string filePath;
+                    using (var graphics = Graphics.FromImage(screenshot))
                     {
-                        break;
+                        // float scaleX = 1;
+                        // float scaleY = 1;
+                        int sourceX = (int)(sc.Bounds.X / scaleX);
+                        int sourceY = (int)(sc.Bounds.Y / scaleY);
+                        // int sourceX = sc.Bounds.X;
+                        // int sourceY = sc.Bounds.Y;
+                        // int width = (int)(sc.Bounds.Width * scaleX);
+                        // int height = (int)(sc.Bounds.Height * scaleY);
+                        var size = new Size(width, height);
+                        graphics.CopyFromScreen(sourceX, sourceY, 0, 0, size, CopyPixelOperation.SourceCopy);
+                        // filePath = "screenshot_" + i + "_" + scaleX + "_" + sc.Bounds.Width + "x" + sc.Bounds.Height
+                        //         + "_" + sourceX + "," + sourceY
+                        //         + "-" + width + "," + height + ".png";
                     }
+                    // filePath = "screenshot_" + i + "_" + sc.Bounds.Size.Width + "x" + sc.Bounds.Size.Height + ".png";
+                    // screenshot.Save(filePath, ImageFormat.Png);
+                    try
+                    {
+                        uri = OtpAuthUtils.bitmapToUri(screenshot);
+                        if (uri != null)
+                        {
+                            break;
+                        }
+                    }
+                    catch (CouldNotFindValidUri) { }
                 }
-                catch (CouldNotFindValidUri) { }
                 i++;
             }
 
