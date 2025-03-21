@@ -58,8 +58,8 @@ namespace KeeOtp2
             linkLabelMigrate.Text = KeeOtp2Statics.OtpInformationMigrate + KeeOtp2Statics.InformationChar;
             groupBoxPeriodCounter.Text = KeeOtp2Statics.Period;
             labelPeriodCounter.Text = KeeOtp2Statics.OtpInformationPeriodSeconds;
-            groupboxInfo.Text = KeeOtp2Statics.OtpInformationKeeOtp1String;
-            checkboxOldKeeOtp.Text = KeeOtp2Statics.OtpInformationKeeOtp1SaveMode + KeeOtp2Statics.InformationChar;
+            groupboxInfo.Text = KeeOtp2Statics.OtpInformationNonProprietarySaveMode;
+            checkboxUtilizeCustomOtpField.Text = KeeOtp2Statics.OtpInformationUtilizeCustomOtpField + KeeOtp2Statics.InformationChar;
             groupboxGeneral.Text = KeeOtp2Statics.General;
             labelLength.Text = KeeOtp2Statics.Length;
             labelType.Text = KeeOtp2Statics.Type;
@@ -83,7 +83,7 @@ namespace KeeOtp2
 
             toolTip.ToolTipTitle = KeeOtp2Statics.OtpInformation;
             toolTip.IsBalloon = true;
-            toolTip.SetToolTip(checkboxOldKeeOtp, KeeOtp2Statics.ToolTipOtpInformationUseOldKeeOtpSaveMode);
+            toolTip.SetToolTip(checkboxUtilizeCustomOtpField, KeeOtp2Statics.ToolTipOtpInformationNonProprietarySaveMode);
 
             comboBoxLengthIndexValue = new Dictionary<int, int>();
             for (int i = 5; i <= 10; i++)
@@ -119,9 +119,9 @@ namespace KeeOtp2
                 if (this.data.loadedFields != null && !string.IsNullOrEmpty(OtpAuthUtils.getOtpString(this.data)))
                     OtpAuthUtils.purgeLoadedFields(this.data, this.entry);
 
-                if (this.data.KeeOtp1Mode)
+                if (!this.data.Proprietary)
                 {
-                    OtpAuthUtils.migrateToKeeOtp1String(this.data, this.entry);
+                    OtpAuthUtils.migrateToNonProprietary(this.data, this.entry);
                 }
                 else
                 {
@@ -239,7 +239,7 @@ namespace KeeOtp2
                     OtpAuthUtils.replacePlaceholder(this.entry, KeeOtp2Ext.KeeOtp1PlaceHolder, KeeOtp2Ext.BuiltInHotpPlaceHolder);
             }
 
-            checkboxOldKeeOtp.Checked = false;
+            checkboxUtilizeCustomOtpField.Checked = false;
             this.DialogResult = DialogResult.OK;
         }
 
@@ -396,7 +396,7 @@ namespace KeeOtp2
                     else if (this.radioButtonSha512.Checked)
                         data.Algorithm = OtpHashMode.Sha512;
 
-                    data.KeeOtp1Mode = checkboxOldKeeOtp.Checked;
+                    data.Proprietary = !checkboxUtilizeCustomOtpField.Checked;
                 }
 
                 data.SetPlainSecret(secret);
@@ -442,7 +442,7 @@ namespace KeeOtp2
                 labelPeriodCounter.Text = KeeOtp2Statics.Counter;
             }
 
-            this.checkboxOldKeeOtp.Checked = this.data.KeeOtp1Mode;
+            this.checkboxUtilizeCustomOtpField.Checked = !this.data.Proprietary;
 
             this.comboBoxLength.SelectedIndex = comboBoxLengthIndexValue.FirstOrDefault(x => x.Value == this.data.Digits).Key;
             this.comboBoxType.SelectedIndex = comboBoxTypeIndexValue.FirstOrDefault(x => x.Value == this.data.Type).Key;
@@ -496,7 +496,7 @@ namespace KeeOtp2
                 this.radioButtonSha512.Checked = false;
             }
 
-            if (this.data != null && this.data.KeeOtp1Mode && !this.data.isForcedKeeOtp1Mode())
+            if (this.data != null && (!this.data.Proprietary || this.data.KeeOtp1Mode) && !this.data.isForcedNonProprietary())
             {
                 linkLabelMigrate.Visible = true;
                 linkLabelMigrate.Enabled = true;
@@ -534,10 +534,10 @@ namespace KeeOtp2
                 this.radioButtonSha256.Enabled =
                 this.radioButtonSha512.Enabled = useCustom;
 
-            if (this.data != null && this.data.isForcedKeeOtp1Mode())
-                this.checkboxOldKeeOtp.Enabled = false;
+            if (this.data != null && this.data.isForcedNonProprietary())
+                this.checkboxUtilizeCustomOtpField.Enabled = false;
             else
-                this.checkboxOldKeeOtp.Enabled = useCustom;
+                this.checkboxUtilizeCustomOtpField.Enabled = useCustom;
         }
 
 

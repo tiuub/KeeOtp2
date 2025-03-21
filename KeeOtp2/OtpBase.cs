@@ -118,7 +118,7 @@ namespace KeeOtp2
                 Array.Reverse(codeInterval);
 
             InMemoryKey key = new InMemoryKey(data.Key.ReadData());
-            byte[] hash = key.ComputeHmac(OtpHashMode.Sha1, codeInterval);
+            byte[] hash = key.ComputeHmac(data.Algorithm, codeInterval);
 
             int start = hash[hash.Length - 1] & 0xf;
             byte[] totp = new byte[4];

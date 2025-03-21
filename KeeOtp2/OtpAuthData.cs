@@ -76,7 +76,7 @@ namespace KeeOtp2
                 this.Key = new ProtectedBinary(true, StrUtil.Utf8.GetBytes(""));
         }
 
-        public bool isForcedKeeOtp1Mode()
+        public bool isForcedNonProprietary()
         {
             if (this.Type == OtpType.Steam)
                 return true;

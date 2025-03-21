@@ -370,7 +370,7 @@ namespace KeeOtp2
                             switch (currentMigrationProfile.migrationMode)
                             {
                                 case MigrationMode.KeeOtp1ToBuiltIn:
-                                    if (!data.isForcedKeeOtp1Mode())
+                                    if (!data.isForcedNonProprietary())
                                     {
                                         OtpAuthUtils.migrateToBuiltInOtp(data, entry);
                                         if (OtpAuthUtils.loadDataFromKeeOtp1String(entry) != null)

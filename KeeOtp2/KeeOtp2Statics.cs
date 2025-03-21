@@ -28,7 +28,7 @@ namespace KeeOtp2
         public static readonly string RepositoryLicenseLink = PluginRepository + "#license";
         public static readonly string RepositoryTroubleshooting = PluginRepository + "#troubleshooting";
         public static readonly string Doante = "Donate";
-        public static readonly string DonateLink = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5F5QB7744AD5G&source=url";
+        public static readonly string DonateLink = "https://github.com/sponsors/tiuub";
         public static readonly string Error = "Error";
         public static readonly string Failure = "Failure";
         public static readonly string Period = "Time Step";
@@ -72,8 +72,8 @@ namespace KeeOtp2
         public static readonly string OtpInformationCustomSettings = "Use Custom Settings";
         public static readonly string OtpInformationMigrate = "Migrate to built-in";
         public static readonly string OtpInformationPeriodSeconds = Period + " (Seconds)";
-        public static readonly string OtpInformationKeeOtp1String = "KeeOtp1 String (Deprecated)";
-        public static readonly string OtpInformationKeeOtp1SaveMode = "Use old KeeOtp save mode";
+        public static readonly string OtpInformationNonProprietarySaveMode = "Non-proprietary save-mode";
+        public static readonly string OtpInformationUtilizeCustomOtpField = "Utilize custom otp field";
         public static readonly string OtpInformationCommonAbbreviationExplanation = "(*cmn = common)";
 
         public static readonly string Settings = "Settings";
@@ -150,7 +150,7 @@ namespace KeeOtp2
         public static readonly string ToolTipContextMenuItem = "This will give you a shortcut to copy the current TOTP to your clipboard. You can access it, by right-clicking on a entry.";
         public static readonly string ToolTipOverrideBuiltInTime = "If set true, this plugin will generate the TOTP even if\n{TIMEOTP} placeholder is set. This will be only done\nwhen using a time offset or a custom NTP server!";
         public static readonly string ToolTipOtpInformationUseCustomSettings = "You should only modify these settings, if you know what you are doing.\nIn the most cases, these settings are not needed to change.";
-        public static readonly string ToolTipOtpInformationUseOldKeeOtpSaveMode = "This setting is here to guarantee the compatability to older versions of KeeOtp.\nIt indicates whether you are using the old KeeOtp save mode or the new one.";
+        public static readonly string ToolTipOtpInformationNonProprietarySaveMode = "This setting is can be utilized to take advantage of non-proprietary authentication types, like Steam.";
         public static readonly string ToolTipShowQrCode = "Through this QR Code you can configure this OTP on other devices. You can scan this QR Code with Google Authenticator for example.";
         public static readonly string ToolTipShowQrCodeCopyUri = "This will set an uri string to your clipboard.\n\nCurrent uri string:\n{0}";
         public static readonly string ToolTipShowQrCodeReload = "Due to security reasons, the QR code will become invisble after a while.\nThis is, because an QR code can be easily scanned by everyone who walks by your computer.\nThis process can be done within a few seconds, without your knowledge.";

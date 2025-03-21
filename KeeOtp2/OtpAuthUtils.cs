@@ -48,9 +48,11 @@ namespace KeeOtp2
         const string uriSecretKey = "secret";
         const string uriIssuerKey = "issuer";
         const string uriAlgorithmKey = "algorithm";
+        const string uriSizeKey = "size"; // inofficial for "digits", only in uriToOtpAuthData
         const string uriDigitsKey = "digits";
         const string uriCounterKey = "counter";
         const string uriPeriodKey = "period";
+        const string uriEncoderKey = "encoder"; // inofficial for Steam support
 
         public static OtpAuthData loadData(PwEntry entry)
         {
@@ -343,6 +345,13 @@ namespace KeeOtp2
             return entry;
         }
 
+        public static PwEntry migrateToNonProprietary(OtpAuthData data, PwEntry entry)
+        {
+            entry.Strings.Set(StringDictionaryKey, new ProtectedString(true, otpAuthDataToUri(entry, data).AbsoluteUri));
+
+            return entry;
+        }
+
         public static PwEntry migrateToBuiltInOtp(OtpAuthData data, PwEntry entry)
         {
             string currentOtpPrefix = builtInTotpPrefix;
@@ -486,6 +495,7 @@ namespace KeeOtp2
             UriBuilder uriBuilder = new UriBuilder();
             uriBuilder.Scheme = uriScheme;
             uriBuilder.Host = data.Type.ToString().ToLower();
+
             uriBuilder.Path = String.Format("{0}:{1}", entry.Strings.ReadSafe(PwDefs.TitleField), entry.Strings.ReadSafe(PwDefs.UserNameField));
 
             List<string> parameters = new List<string>();
@@ -499,6 +509,13 @@ namespace KeeOtp2
                 parameters.Add(String.Format("{0}={1}", uriCounterKey, data.Counter));
             if (data.Period != 30)
                 parameters.Add(String.Format("{0}={1}", uriPeriodKey, data.Period));
+
+            // Special configuration for Steam, set Host to TOTP and parameter encoder=steam
+            if (data.Type == OtpType.Steam)
+            {
+                uriBuilder.Host = OtpType.Totp.ToString().ToLower();
+                parameters.Add(String.Format("{0}={1}", uriEncoderKey, OtpType.Steam.ToString().ToLower()));
+            }
 
             uriBuilder.Query = String.Join("&", parameters.ToArray()); 
 
@@ -529,47 +546,49 @@ namespace KeeOtp2
 
         public static OtpAuthData uriToOtpAuthData(Uri uri)
         {
-            if (uri.Scheme == "otpauth")
-            {
-                OtpAuthData data = new OtpAuthData();
-                data.Type = (OtpType)Enum.Parse(typeof(OtpType), uri.Host, true);
-
-                string query = uri.Query;
-                if (query.StartsWith("?"))
-                    query = query.TrimStart('?');
-
-                NameValueCollection parameters = ParseQueryString(query);
-                if (parameters[uriSecretKey] != null)
-                {
-                    if (data.Type == OtpType.Totp && parameters[KeeOtp1EncoderParameter] != null)
-                        data.Type = (OtpType)Enum.Parse(typeof(OtpType), parameters[KeeOtp1EncoderParameter], true);
-
-                    data.Encoding = OtpSecretEncoding.Base32;
-
-                    string secret = correctPlainSecret(parameters[uriSecretKey], data.Encoding);
-
-                    // Validate secret (catch)
-                    OtpAuthUtils.validatePlainSecret(secret, data.Encoding);
-
-                    data.SetPlainSecret(secret);
-
-                    if (parameters[uriAlgorithmKey] != null)
-                        data.Algorithm = (OtpHashMode)Enum.Parse(typeof(OtpHashMode), parameters[uriAlgorithmKey], true);
-
-                    if (data.Type == OtpType.Totp)
-                        data.Period = GetIntOrDefault(parameters, uriPeriodKey, 30);
-                    else if (data.Type == OtpType.Hotp)
-                        data.Counter = GetIntOrDefault(parameters, uriCounterKey, 0);
-
-                    data.Digits = GetIntOrDefault(parameters, uriDigitsKey, 6);
-
-                    return data;
-                }
-                else
-                    throw new InvalidUriFormat("The Uri does not contain a secret. A secret is required!");
-            }
-            else
+            if (uri.Scheme != "otpauth")
                 throw new InvalidUriFormat("Given Uri does not start with 'otpauth://'!");
+
+            OtpAuthData data = new OtpAuthData();
+            data.Type = (OtpType)Enum.Parse(typeof(OtpType), uri.Host, true);
+
+            string query = uri.Query;
+            if (query.StartsWith("?"))
+                query = query.TrimStart('?');
+
+            NameValueCollection parameters = ParseQueryString(query);
+
+            if (parameters[uriSecretKey] == null)
+                throw new InvalidUriFormat("The Uri does not contain a secret. A secret is required!");
+
+            if (data.Type == OtpType.Totp && parameters[uriEncoderKey] != null)
+            {
+                data.Type = (OtpType)Enum.Parse(typeof(OtpType), parameters[uriEncoderKey], true);
+                data.Proprietary = false;
+            }
+                
+
+            data.Encoding = OtpSecretEncoding.Base32;
+
+            string secret = correctPlainSecret(parameters[uriSecretKey], data.Encoding);
+
+            // Validate secret (catch)
+            OtpAuthUtils.validatePlainSecret(secret, data.Encoding);
+
+            data.SetPlainSecret(secret);
+
+            if (parameters[uriAlgorithmKey] != null)
+                data.Algorithm = (OtpHashMode)Enum.Parse(typeof(OtpHashMode), parameters[uriAlgorithmKey], true);
+
+            if (data.Type == OtpType.Totp)
+                data.Period = GetIntOrDefault(parameters, uriPeriodKey, 30);
+            else if (data.Type == OtpType.Hotp)
+                data.Counter = GetIntOrDefault(parameters, uriCounterKey, 0);
+
+            data.Digits = GetIntOrDefault(parameters, uriDigitsKey, 6);
+
+            return data;                   
+                
         }
 
         public static Uri bitmapToUri(Bitmap bitmap)
