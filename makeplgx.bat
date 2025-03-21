@@ -1,4 +1,3 @@
-@@ -1,117 +0,0 @@
 @echo off
 setlocal enableextensions enabledelayedexpansion
 
@@ -82,11 +81,11 @@ for /F "tokens=3 delims=<>" %%a in ( 'find /i "<HintPath>" ^< "%SolutionPath%%Pr
         FOR %%i IN ("%SolutionPath%%ProjectName%\%%a") DO (
             set origin=%%~dpi
         )
-        
+
         FOR %%i IN ("%PlgXPath%\%ProjectName%\%%a") DO (
             set destination=%%~dpi
         )
-        
+
         robocopy "!origin!\" "!destination!\" "%%~na%%~xa" /MIR /NDL /NFL /NJH /NJS /NP /NS /NC /XF > nul
     ) else (
         echo [-] %%~na%%~xa
