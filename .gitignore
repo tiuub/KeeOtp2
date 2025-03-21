@@ -11,3 +11,4 @@ Releases/
 Debug/
 *.user
 /packages/*
+/*/KeePass.config.xml

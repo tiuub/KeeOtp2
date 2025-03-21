@@ -38,6 +38,7 @@ namespace KeeOtp2
 
             this.Icon = this.host.MainWindow.Icon;
             this.TopMost = this.host.MainWindow.TopMost;
+            this.buttonCopyTotp.Select();
 
             PluginUtils.CheckKeeTheme(this);
         }
@@ -56,7 +57,9 @@ namespace KeeOtp2
             buttonShowQR.Text = KeeOtp2Statics.ShowOtpShowQr + KeeOtp2Statics.InformationChar;
             buttonEdit.Text = KeeOtp2Statics.Edit;
             buttonCopyTotp.Text = KeeOtp2Statics.Copy;
-            buttonClose.Text = KeeOtp2Statics.Close;
+            //buttonClose.Text = KeeOtp2Statics.Close; // Removed, because the close button does not have any relevant function
+            linkLabelDonate.Text = KeeOtp2Statics.Doante;
+            labelStatus.Text = KeeOtp2Statics.HoverInformation;
 
             ToolTip toolTip = new ToolTip();
             toolTip.ToolTipTitle = KeeOtp2Statics.ShowOtp;
@@ -235,6 +238,12 @@ namespace KeeOtp2
                 return string.Format("{0}{1}{2}", s.Substring(0, (int)Math.Ceiling(Convert.ToDouble(l) / 2)), ' ', s.Substring((int)Math.Ceiling(Convert.ToDouble(l) / 2)));
             else
                 return s;
+        }
+
+        private void linkLabelDonate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(KeeOtp2Statics.DonateLink);
+            linkLabelDonate.LinkVisited = true;
         }
     }
 }
