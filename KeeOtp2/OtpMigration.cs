@@ -8,6 +8,7 @@ namespace KeeOtp2
 {
     public enum MigrationMode
     {
+        None,
         KeeOtp1ToBuiltIn,
         BuiltInToKeeOtp1
     }
