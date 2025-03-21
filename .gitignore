@@ -4,6 +4,7 @@
 
 *.plgx
 /.vs/*
+/*/.vs/*
 /*/bin/*
 /*/obj/*
 Releases/

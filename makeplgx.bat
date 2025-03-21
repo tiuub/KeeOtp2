@@ -9,11 +9,27 @@ set SolutionName=KeeOtp2
 set ProjectName=KeeOtp2
 set SolutionPath=%~dp0
 set PlgXPath=%SolutionPath%PlgX
+set KeePassPath=%SolutionPath%KeePass
 set ReleasesPath=%SolutionPath%Releases
 set DebugPath=%SolutionPath%Debug
 set PlgXExculdeDirectoriesPath=%SolutionPath%PlgXExcludeDirectories.txt
 set PlgXExculdeFilesPath=%SolutionPath%PlgXExcludeFiles.txt
 set PackagesPath=%SolutionPath%packages
+
+if not exist "%KeePassPath%" (
+	echo "Could not find KeePass directory. Please create a directory and place the KeePass.exe inside!"
+	exit \b 1
+)
+
+if not exist "%KeePassPath%\KeePass.exe" (
+	echo "Could not find the KeePass executeable. Please place the KeePass.exe inside the KeePass folder!"
+	exit \b 2
+)
+
+if not exist "%KeePassPath%\KeePass.exe.config" (
+	echo "Could not find the config for the KeePass executeable. Please place the KeePass.exe.config inside the KeePass folder!"
+	exit \b 3
+)
 
 set PlgXExculdeDirectories=
 for /f "usebackq tokens=*" %%D in ("%PlgXExculdeDirectoriesPath%") do (
@@ -91,12 +107,33 @@ if exist "%ReleasesPath%\Others" (
     mkdir "%ReleasesPath%\Others"
 )
 
+if exist "%DebugPath%" (
+    echo Debug folder already exist
+) ELSE (
+    echo Create Debug folder
+    mkdir "%DebugPath%"
+)
+
+if exist "%DebugPath%\KeePass.exe" (
+    echo Keepass.exe already in the Debug folder
+) ELSE (
+    echo Setting up Debug folder. Copying KeePass.exe
+    copy "%KeePassPath%\KeePass.exe" "%DebugPath%\KeePass.exe"
+)
+
+if exist "%DebugPath%\KeePass.exe.config" (
+    echo Keepass.exe.config already in the Debug folder
+) ELSE (
+    echo Setting up Debug folder. Copying KeePass.exe
+    copy "%KeePassPath%\KeePass.exe.config" "%DebugPath%\KeePass.exe.config"
+)
+
 echo Compiling PlgX
-"%PROGRAMFILES(X86)%\KeePass Password Safe 2\KeePass.exe" --plgx-create "%PlgXPath%" --plgx-prereq-net:4.0
+"%KeePassPath%\KeePass.exe" --plgx-create "%PlgXPath%" --plgx-prereq-net:4.0
 
 echo Releasing PlgX
-
 move /y PlgX.plgx "%ReleasesPath%\%SolutionName%.plgx"
+
 If "%arg1%" == "--visualstudiomode" (
     if exist "%ReleasesPath%\Others\TESTBUILDS" (
         echo Releases\Others\TESTBUILDS folder already exist
@@ -106,11 +143,12 @@ If "%arg1%" == "--visualstudiomode" (
     )
     echo Copying PlgX
     copy "%ReleasesPath%\%SolutionName%.plgx" "%ReleasesPath%\Others\TESTBUILDS\%SolutionName%-%stamp%.plgx"
-    robocopy "%ReleasesPath%" "%DebugPath%/Plugins" "%SolutionName%.plgx" /NDL /NFL /NJH /NJS /NP /NS /NC
 ) ELSE (
     echo Copying PlgX
     copy "%ReleasesPath%\%SolutionName%.plgx" "%ReleasesPath%\Others\%SolutionName%-%stamp%.plgx"
 )
+
+robocopy "%ReleasesPath%" "%DebugPath%/Plugins" "%SolutionName%.plgx" /NDL /NFL /NJH /NJS /NP /NS /NC
 
 echo Cleaning up
 rmdir /s /q "%PlgXPath%"

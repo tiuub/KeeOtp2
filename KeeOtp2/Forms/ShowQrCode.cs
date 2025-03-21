@@ -92,7 +92,7 @@ namespace KeeOtp2
             options.Width = pictureBoxQrCode.Width;
             options.Height = pictureBoxQrCode.Height;
 
-            IBarcodeWriter writer = new BarcodeWriter();
+            BarcodeWriter writer = new BarcodeWriter();
             writer.Format = BarcodeFormat.QR_CODE;
             writer.Options = options;
             var result = writer.Write(this.uri.AbsoluteUri);
